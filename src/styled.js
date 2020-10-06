@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { device } from './device';
 
 export const Wrapper = styled.div`
     width: 100%;
@@ -7,15 +8,27 @@ export const Wrapper = styled.div`
     background-color:  #F0F2F5;
 `
 
-export const Form = styled.div`
+export const Form = styled.form`
     position: relative;
-    width: 380px;
+    
     padding: 1.2rem 1.2rem 1.5rem;
     margin: 1rem auto;
     border: 1px solid  #DDDFE2;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(0, 0, 0, 0.1) 0px 8px 16px 0px;
     border-radius: 8px;
     background-color: #fff;
+
+    @media ${device.mobileS} {
+        max-width: 100;
+    }
+
+    @media ${device.mobileL} {
+        max-width: 95%;
+    }
+
+    @media ${device.tablet}{
+        width: 380px;
+    }
 `
 
 export const InputGroup = styled.div`
@@ -71,6 +84,9 @@ export const Button = styled.button`
     &:hover{
         background-color: ${props => props.theme.color.secondaryShadow}
     }
+`
+export const SubmitButton = styled(Button)`
+
 `
 
 export const SubTitle = styled.h2`

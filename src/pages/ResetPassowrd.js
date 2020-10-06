@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import HeaderDefault from '../components/HeaderDefault';
-import { Button, Form, Input, InputGroup, Wrapper } from '../styled';
+import { Button, Form, Input, InputGroup, SubmitButton, Wrapper } from '../styled';
 import { RiLockPasswordFill } from 'react-icons/ri'
 import { ThemeProvider } from 'styled-components';
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
@@ -17,11 +17,15 @@ function ResetPassowrd(props) {
         inputPasswordRef.current.focus()
     }, [])
 
+    const onFormSubmit = e => {
+        e.preventDefault();
+    }
+
     return (
         <ThemeProvider theme={lightTheme}>
             <Wrapper>
                 <HeaderDefault />
-                <Form>
+                <Form onSubmit={onFormSubmit}>
                     <InputGroup>
                         <RiLockPasswordFill />
                         <Input type='password' placeholder='Nova Senha' ref={inputPasswordRef} {...bindPassword} />
@@ -30,7 +34,7 @@ function ResetPassowrd(props) {
                         <RiLockPasswordFill />
                         <Input type='password' placeholder='Confirmar Nova Senha' {...bindConfirmPassword} />
                     </InputGroup>
-                    <Button>Resetar a senha</Button>
+                    <SubmitButton>Resetar a senha</SubmitButton>
                 </Form>
             </Wrapper>
         </ThemeProvider>

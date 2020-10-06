@@ -4,7 +4,7 @@ import lightTheme from '../themes/light'
 import { FaAddressCard, FaLock } from "react-icons/fa";
 import { Link } from 'react-router-dom'
 import HeaderDefault from '../components/HeaderDefault';
-import { Wrapper, Form, InputGroup, Input, Button, SimpleLink } from '../styled';
+import { Wrapper, Form, InputGroup, Input, Button, SimpleLink, SubmitButton } from '../styled';
 
 
 function Login(props) {
@@ -17,11 +17,15 @@ function Login(props) {
         inputMatriculaRef.current.focus();
     }, [])
 
+    const onFormSubmit = e => {
+        e.preventDefault();
+    }
+
     return (
         <ThemeProvider theme={lightTheme}>
             <Wrapper>
                 <HeaderDefault />
-                <Form>
+                <Form onSubmit={onFormSubmit}>
 
                     <Title>
                         Gestor de <span>TCC</span>
@@ -48,8 +52,8 @@ function Login(props) {
                         />
                     </InputGroup>
 
-                    <Button >Entrar
-                    </Button>
+                    <SubmitButton type='submit' >Entrar
+                    </SubmitButton>
                     <SimpleLink to='/forgot_password'>Esqueceu a senha?</SimpleLink>
                 </Form>
             </Wrapper>

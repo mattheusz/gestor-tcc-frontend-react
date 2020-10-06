@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import HeaderDefault from '../components/HeaderDefault';
-import { Button, Form, Input, InputGroup, Paragraph, SimpleLink, SubTitle, Wrapper } from '../styled';
+import { Button, Form, Input, InputGroup, Paragraph, SimpleLink, SubmitButton, SubTitle, Wrapper } from '../styled';
 import lightTheme from '../themes/light'
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { FcLock } from "react-icons/fc";
@@ -18,11 +18,15 @@ function ForgotPassword(props) {
         inputEmailRef.current.focus()
     }, [])
 
+    const onFormSubmit = e => {
+        e.preventDefault();
+    }
+
     return (
         <ThemeProvider theme={lightTheme}>
             <Wrapper>
                 <HeaderDefault />
-                <Form>
+                <Form onSubmit={onFormSubmit}>
                     <ForgotIcon />
                     <SubTitle>Problemas para entrar?</SubTitle>
                     <Paragraph>
@@ -32,7 +36,7 @@ function ForgotPassword(props) {
                         <FaEnvelope />
                         <Input type='email' placeholder='E-mail' {...bindEmail} ref={inputEmailRef} />
                     </InputGroup>
-                    <Button>Enviar link para login</Button>
+                    <SubmitButton>Enviar link para login</SubmitButton>
                     <SimpleLink to='/login'>Voltar para o Login</SimpleLink>
                 </Form>
             </Wrapper>
