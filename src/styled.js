@@ -54,6 +54,7 @@ export const Input = styled.input`
     }
 `
 
+
 export const Button = styled.button`
     color: white;
     background-color: ${props => props.theme.color.secondary};
@@ -65,6 +66,7 @@ export const Button = styled.button`
     font-size: 1rem;
     cursor: pointer;
     margin-top: .7rem;
+    outline:none;
 
     &:hover{
         background-color: ${props => props.theme.color.secondaryShadow}
