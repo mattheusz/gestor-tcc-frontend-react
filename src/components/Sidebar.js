@@ -8,11 +8,11 @@ function Sidebar(props) {
     return (
         <Wrapper>
             <Menu>
-                <MenuItem><LinkMenuItem>Home</LinkMenuItem></MenuItem>
-                <MenuItem><LinkMenuItem>Home</LinkMenuItem></MenuItem>
-                <MenuItem><LinkMenuItem>Home</LinkMenuItem></MenuItem>
-                <MenuItem><LinkMenuItem>Home</LinkMenuItem></MenuItem>
-                <MenuItem><LinkMenuItem>Home</LinkMenuItem></MenuItem>
+                <MenuItem><LinkMenuItem>Item 1</LinkMenuItem></MenuItem>
+                <MenuItem><LinkMenuItem>Item 2</LinkMenuItem></MenuItem>
+                <MenuItem><LinkMenuItem>Item 3</LinkMenuItem></MenuItem>
+                <MenuItem><LinkMenuItem>Item 4</LinkMenuItem></MenuItem>
+                <MenuItem><LinkMenuItem>Item 5</LinkMenuItem></MenuItem>
             </Menu>
         </Wrapper>
     );
@@ -28,22 +28,20 @@ const Wrapper = styled.nav`
     height: 100vh;
     overflow-y: auto;
     margin-top: 60px;
-    background-color: white;
+    background-color: #FEFEFE;
 `
 
 const Menu = styled.ul`
-    padding: .5rem 0 0;
+    padding: .2rem 0 0;
 `
 
 const MenuItem = styled.li`
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 300;
     display: block;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    border-top: 1px solid rgba(225, 225, 225, 0.05);
 `
 const LinkMenuItem = styled(Link)`
     display: block;
-    padding: 1rem 2.5rem 1rem;
+    padding: .8rem 2.5rem .8rem;
     color: black;
 `

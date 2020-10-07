@@ -43,10 +43,10 @@ const Content = styled.div`
 
 const Main = styled.main`
     flex-grow: 1;
-    background-color: green;
+    background-color: white;
 `
 
 const Footer = styled.footer`
     height: 70px;
-    background-color: yellow;
+    background-color: white;
 `

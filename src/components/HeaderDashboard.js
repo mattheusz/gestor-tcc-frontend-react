@@ -37,6 +37,9 @@ const Header = styled.header`
     justify-content: space-between;
     align-items: center;
     background-color: white;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 .3px 5px grey;
+    z-index: 5;
 `
 const LogoDashboard = styled(Logo)`
     display: inline-block;
