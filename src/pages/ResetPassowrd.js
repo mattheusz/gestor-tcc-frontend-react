@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import HeaderDefault from '../components/HeaderDefault';
-import { Button, Form, Input, InputGroup, SubmitButton, Wrapper } from '../styled';
+import { Button, Form, Input, InputGroup, SubmitButton, SubTitle, Wrapper } from '../styled';
 import { RiLockPasswordFill } from 'react-icons/ri'
 import { ThemeProvider } from 'styled-components';
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
@@ -26,6 +26,7 @@ function ResetPassowrd(props) {
             <Wrapper>
                 <HeaderDefault />
                 <Form onSubmit={onFormSubmit}>
+                    <SubTitle>Agora é a hora de voltar!</SubTitle>
                     <InputGroup>
                         <RiLockPasswordFill />
                         <Input type='password' placeholder='Nova Senha' ref={inputPasswordRef} {...bindPassword} />

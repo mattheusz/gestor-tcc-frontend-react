@@ -4,7 +4,7 @@ import lightTheme from '../themes/light'
 import { FaAddressCard, FaLock } from "react-icons/fa";
 import { Link } from 'react-router-dom'
 import HeaderDefault from '../components/HeaderDefault';
-import { Wrapper, Form, InputGroup, Input, Button, SimpleLink, SubmitButton } from '../styled';
+import { Wrapper, Form, InputGroup, Input, Button, SimpleLink, SubmitButton, Logo } from '../styled';
 
 
 function Login(props) {
@@ -27,9 +27,9 @@ function Login(props) {
                 <HeaderDefault />
                 <Form onSubmit={onFormSubmit}>
 
-                    <Title>
+                    <Logo>
                         Gestor de <span>TCC</span>
-                    </Title>
+                    </Logo>
                     <InputGroup>
                         <FaAddressCard />
                         <Input
@@ -62,28 +62,6 @@ function Login(props) {
 }
 
 export default Login;
-
-
-const Title = styled.h1`
-    text-align: center;
-    margin: .7rem auto 1.4rem;
-    font-size: 2.2rem;
-    font-weight: 200;
-    color: ${props => props.theme.color.primary};
-    font-weight: 300;
-
-    span {
-        color: ${props => props.theme.color.secondary};
-        font-weight: 600;
-    }
-`
-
-
-
-
-
-
-
 
 
 

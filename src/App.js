@@ -4,6 +4,7 @@ import './App.css';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassowrd from './pages/ResetPassowrd';
+import Home from './pages/Home';
 
 function App() {
   return (
@@ -20,11 +21,16 @@ function App() {
         <Route path='/reset_password'>
           <ResetPassowrd />
         </Route>
+        <Route path='/home'>
+          <Home />
+        </Route>
         <Route exact path='/'>
           <Link to='/login'>Login</Link><hr />
           <Link to='/forgot_password'>Esqueci a senha</Link><hr />
           <Link to='/reset_password'>Resetar a senha</Link><hr />
+          <Link to='/home'>Home (em construção)</Link>
         </Route>
+
       </BrowserRouter>
     </>
   );
