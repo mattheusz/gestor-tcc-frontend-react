@@ -44,12 +44,12 @@ const Header = styled.header`
     align-items: center;
     background-color: white;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 0 .3px 5px grey;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     z-index: 5;
 `
 const LogoDashboard = styled(Logo)`
     display: inline-block;
-    font-size: 1.9rem;
+    font-size: 1.6rem;
     margin: 0;
     margin-left: 15px;
 `
@@ -59,9 +59,9 @@ const LinkToHome = styled(Link)`
 
 const Hamburguer = styled(FiMenu)`
     position: absolute;
-    left: 228px;
+    left: 208px;
     color: ${props => props.theme.color.primary};
-    font-size: 2rem;;
+    font-size: 1.6rem;;
     cursor: pointer;
 `
 
