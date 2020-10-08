@@ -1,22 +1,49 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import lightTheme from '../themes/light'
 import HeaderDashboard from './HeaderDashboard';
 import Sidebar from './Sidebar';
 
+const UserContext = React.createContext();
+export const SidebarContext = React.createContext({
+    showSidebar: () => { },
+});
+
+const value = {
+    userName: 'LocalStorageName',
+    userType: 'LocalStorageType'
+}
+
+
 function DashboardLayout(props) {
-    const [activeSidebar, setActiveSidebar] = useState(true);
+
+    const [showSidebar, setShowSidebar] = useState(true);
+
+    const valueSidebarContext = {
+        showSidebar,
+        setShowSidebar: () => {
+            setShowSidebar(!showSidebar)
+            console.log(showSidebar);
+        }
+    }
+
+    console.log('showSideBar', showSidebar);
+
     return (
-        <ThemeProvider theme={lightTheme}>
-            <Wrapper>
-                <HeaderDashboard />
-                <Sidebar />
-                <Content>
-                    <Main />
-                    <Footer />
-                </Content>
-            </Wrapper>
-        </ThemeProvider>
+        <SidebarContext.Provider value={valueSidebarContext}>
+            <UserContext.Provider value={value}>
+                <ThemeProvider theme={lightTheme}>
+                    <Wrapper>
+                        <HeaderDashboard />
+                        <Sidebar />
+                        <Content>
+                            <Main />
+                            <Footer />
+                        </Content>
+                    </Wrapper>
+                </ThemeProvider>
+            </UserContext.Provider>
+        </SidebarContext.Provider>
     );
 }
 

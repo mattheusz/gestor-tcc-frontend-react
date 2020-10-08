@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { SidebarContext } from './DashboardLayout';
 
 function Sidebar(props) {
 
 
+    const sidebarContext = useContext(SidebarContext);
+    const { showSidebar } = sidebarContext;
+
     return (
-        <Wrapper>
+        <Wrapper showSidebar={showSidebar}>
             <Menu>
                 <MenuItem><LinkMenuItem>Item 1</LinkMenuItem></MenuItem>
                 <MenuItem><LinkMenuItem>Item 2</LinkMenuItem></MenuItem>
@@ -20,15 +24,17 @@ function Sidebar(props) {
 
 export default Sidebar;
 
+
 const Wrapper = styled.nav`
     position: fixed;
     top: 0;
-    left: 0;
+    left: ${props => props.showSidebar ? 0 : '-230px'};
     width: 270px;
     height: 100vh;
     overflow-y: auto;
     margin-top: 60px;
     background-color: #FEFEFE;
+    transition: left .3s;
 `
 
 const Menu = styled.ul`

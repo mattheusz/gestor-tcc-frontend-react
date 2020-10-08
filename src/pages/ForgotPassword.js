@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import HeaderDefault from '../components/HeaderDefault';
-import { Button, Form, Input, InputGroup, Paragraph, SimpleLink, SubmitButton, SubTitle, Wrapper } from '../styled';
+import { Form, Input, InputGroup, Paragraph, SimpleLink, SubmitButton, SubTitle, Wrapper } from '../styled';
 import lightTheme from '../themes/light'
-import { FaEnvelope, FaLock } from "react-icons/fa";
-import { FcLock } from "react-icons/fc";
+import { FaEnvelope } from "react-icons/fa";
 import { BsFillShieldLockFill } from "react-icons/bs";
 import useInput from '../hooks/useInput';
 
@@ -34,7 +33,7 @@ function ForgotPassword(props) {
                     </Paragraph>
                     <InputGroup>
                         <FaEnvelope />
-                        <Input type='email' placeholder='E-mail' {...bindEmail} ref={inputEmailRef} />
+                        <Input type='email' placeholder='E-mail' value={email} {...bindEmail} ref={inputEmailRef} />
                     </InputGroup>
                     <SubmitButton>Enviar link para login</SubmitButton>
                     <SimpleLink to='/login'>Voltar para o Login</SimpleLink>

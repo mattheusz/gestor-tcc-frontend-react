@@ -28,7 +28,7 @@ const Logo = styled.img`
     width: 100px;
     height: auto;
 `
-
+/*
 const Title = styled.h1`
     text-align: center;
     margin: .3rem auto .5rem;
@@ -42,3 +42,4 @@ const Title = styled.h1`
         font-weight: 600;
     }
 `
+*/

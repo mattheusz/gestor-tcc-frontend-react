@@ -1,16 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import styled, { ThemeProvider } from 'styled-components'
+import { ThemeProvider } from 'styled-components'
 import lightTheme from '../themes/light'
 import { FaAddressCard, FaLock } from "react-icons/fa";
-import { Link } from 'react-router-dom'
 import HeaderDefault from '../components/HeaderDefault';
-import { Wrapper, Form, InputGroup, Input, Button, SimpleLink, SubmitButton, Logo } from '../styled';
+import { Wrapper, Form, InputGroup, Input, SimpleLink, SubmitButton, Logo } from '../styled';
 
 
 function Login(props) {
     const [registration, setRegistration] = useState('');
     const [senha, setSenha] = useState('');
-    const [errorLogin, setErrorLogin] = useState('');
 
     const inputMatriculaRef = useRef(null);
     useEffect(() => {

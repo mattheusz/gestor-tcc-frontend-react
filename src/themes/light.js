@@ -8,5 +8,9 @@ export default {
 
     config: {
         size: '1rem'
+    },
+
+    layout: {
+        showSidebar: true
     }
 }

@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import HeaderDefault from '../components/HeaderDefault';
-import { Button, Form, Input, InputGroup, SubmitButton, SubTitle, Wrapper } from '../styled';
+import { Form, Input, InputGroup, SubmitButton, SubTitle, Wrapper } from '../styled';
 import { RiLockPasswordFill } from 'react-icons/ri'
 import { ThemeProvider } from 'styled-components';
-import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import lightTheme from '../themes/light'
 import useInput from '../hooks/useInput';
 
@@ -29,11 +28,11 @@ function ResetPassowrd(props) {
                     <SubTitle>Agora é a hora de voltar!</SubTitle>
                     <InputGroup>
                         <RiLockPasswordFill />
-                        <Input type='password' placeholder='Nova Senha' ref={inputPasswordRef} {...bindPassword} />
+                        <Input type='password' placeholder='Nova Senha' ref={inputPasswordRef} value={password} {...bindPassword} />
                     </InputGroup>
                     <InputGroup>
                         <RiLockPasswordFill />
-                        <Input type='password' placeholder='Confirmar Nova Senha' {...bindConfirmPassword} />
+                        <Input type='password' placeholder='Confirmar Nova Senha' value={confirmPassword} {...bindConfirmPassword} />
                     </InputGroup>
                     <SubmitButton>Resetar a senha</SubmitButton>
                 </Form>

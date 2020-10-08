@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Logo } from '../styled';
 import { FiMenu } from 'react-icons/fi'
 import Avatar from 'react-avatar';
 import lightTheme from '../themes/light'
+import { SidebarContext } from "./DashboardLayout";
 
 
 
 function HeaderDashboard(props) {
+
+    const sidebarContext = useContext(SidebarContext);
+    const { setShowSidebar } = sidebarContext;
+
     return (
         <Header>
             <LinkToHome to='/home'>
@@ -16,13 +21,14 @@ function HeaderDashboard(props) {
                     Gestor de <span>TCC</span>
                 </LogoDashboard>
             </LinkToHome>
-            <Hamburguer />
+            <Hamburguer onClick={() => console.log(setShowSidebar())} />
             <CustomAvatar
                 round
                 color={lightTheme.color.primary}
                 size='2.5rem'
-                textSizeRatio='1.5'
-                name='Matheus Justino' />
+                textSizeRatio={1.5}
+                name='Matheus Justino'
+            />
         </Header>
     );
 }
