@@ -4,8 +4,6 @@ import styled from 'styled-components';
 import { SidebarContext } from './DashboardLayout';
 import { coordenador } from "../userType";
 
-import { AiOutlineHome } from "react-icons/ai";
-
 function Sidebar(props) {
 
     const sidebarContext = useContext(SidebarContext);
@@ -30,14 +28,16 @@ export default Sidebar;
 const Wrapper = styled.nav`
     position: fixed;
     top: 0;
-    left: ${props => props.showSidebar ? 0 : '-230px'};
+    left: ${props => props.showSidebar ? 0 : '-257px'};
     width: 256px;
     height: 100vh;
     overflow-y: auto;
     margin-top: 60px;
     background-color: #FEFEFE;
     transition: left .3s;
-    border-right: 1px solid rgba(0, 0, 0, 0.05);
+    border-right: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: .5px 0 3px rgba(0, 0, 0, 0.1);
+    z-index: 1;
 `
 
 const Menu = styled.ul`
@@ -55,6 +55,7 @@ const LinkMenuItem = styled(Link)`
     color: rgba(0, 0, 0, .75);
     color: #444444;
     position: relative;
+    transition: background-color .1s;
 
     svg{
         width: 20px;

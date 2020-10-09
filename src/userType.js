@@ -26,7 +26,7 @@ export const coordenador = [
     {
         icon: <VscProject />,
         description: 'Projetos',
-        to: '/home'
+        to: '/projetos'
     },
     {
         icon: <IoMdSchool />,

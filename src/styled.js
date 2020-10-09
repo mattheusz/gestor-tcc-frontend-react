@@ -102,6 +102,12 @@ export const SubmitButton = styled(Button)`
 
 `
 
+export const Title = styled.h1`
+    font-size: 2rem;
+    font-weight: 400;
+    color: #1C1E21;
+`
+
 export const SubTitle = styled.h2`
     text-align: center;
     margin: 0 auto 1rem;

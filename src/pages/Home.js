@@ -3,7 +3,7 @@ import DashboardLayout from '../components/DashboardLayout';
 
 function Home(props) {
     return (
-        <DashboardLayout>
+        <DashboardLayout screenName='Home'>
 
         </DashboardLayout>
     );

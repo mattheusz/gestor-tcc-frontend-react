@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
+import { Title } from '../styled';
 import lightTheme from '../themes/light'
 import HeaderDashboard from './HeaderDashboard';
 import Sidebar from './Sidebar';
@@ -15,7 +16,7 @@ const value = {
 }
 
 
-function DashboardLayout(props) {
+function DashboardLayout({ screenName, children }) {
 
     const [showSidebar, setShowSidebar] = useState(true);
 
@@ -36,8 +37,11 @@ function DashboardLayout(props) {
                     <Wrapper>
                         <HeaderDashboard />
                         <Sidebar />
-                        <Content>
-                            <Main />
+                        <Content showSidebar={showSidebar}>
+                            <Main >
+                                <Title>{screenName}</Title>
+                                {children}
+                            </Main>
                             <Footer />
                         </Content>
                     </Wrapper>
@@ -60,17 +64,21 @@ const Wrapper = styled.div`
 const Content = styled.div`
     position: fixed;
     width: 100%;
+    width: ${props => props.showSidebar ? 'calc(100% - 256px)' : '100%'};
     height: calc(100vh - 60px);
     overflow: auto;
-    margin-left: 270px;
+    margin-left: ${props => props.showSidebar ? '256px' : 0};
     margin-top: 60px;
     display: flex;
     flex-direction: column;
+    transition: margin-left .3s;
 `
 
 const Main = styled.main`
     flex-grow: 1;
     background-color: white;
+    padding: 0 1rem;
+    max-width: 100%
 `
 
 const Footer = styled.footer`
