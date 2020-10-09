@@ -6,6 +6,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassowrd from './pages/ResetPassowrd';
 import Home from './pages/Home';
 import Projetos from './pages/Projetos';
+import Alunos from './pages/Alunos';
 
 function App() {
   return (
@@ -27,6 +28,9 @@ function App() {
         </Route>
         <Route path='/projetos'>
           <Projetos />
+        </Route>
+        <Route path='/alunos'>
+          <Alunos />
         </Route>
         <Route exact path='/'>
           <Link to='/login'>Login</Link><hr />

@@ -1,19 +1,19 @@
 import React from 'react';
+import { Table, Input, Menu, Icon } from 'semantic-ui-react';
 import DashboardLayout from '../components/DashboardLayout';
-import { Icon, Label, Menu, Table, Input } from 'semantic-ui-react'
-import 'semantic-ui-css/semantic.min.css';
 
-function Projetos(props) {
+function Alunos(props) {
     return (
-        <DashboardLayout screenName='Projetos'>
+        <DashboardLayout screenName='Alunos'>
             <Input action={{ icon: 'search' }} style={{ width: '50%' }} placeholder='Pesquisar...' />
             <Table basic='very' selectable>
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell>Projeto</Table.HeaderCell>
-                        <Table.HeaderCell>Date Joined</Table.HeaderCell>
-                        <Table.HeaderCell>E-mail</Table.HeaderCell>
-                        <Table.HeaderCell>Called</Table.HeaderCell>
+                        <Table.HeaderCell>Nome</Table.HeaderCell>
+                        <Table.HeaderCell width={1}>Matrícula</Table.HeaderCell>
+                        <Table.HeaderCell width={1}>E-mail</Table.HeaderCell>
+                        <Table.HeaderCell collapsing>Editar</Table.HeaderCell>
+                        <Table.HeaderCell collapsing>Desativar</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
 
@@ -90,4 +90,4 @@ function Projetos(props) {
     );
 }
 
-export default Projetos;
+export default Alunos;

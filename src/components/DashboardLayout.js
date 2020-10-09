@@ -77,7 +77,7 @@ const Content = styled.div`
 const Main = styled.main`
     flex-grow: 1;
     background-color: white;
-    padding: 0 1rem;
+    padding: 1rem 1.5rem;
     max-width: 100%
 `
 

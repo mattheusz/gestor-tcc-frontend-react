@@ -31,7 +31,7 @@ export const coordenador = [
     {
         icon: <IoMdSchool />,
         description: 'Alunos',
-        to: '/home'
+        to: '/alunos'
     },
     {
         icon: <GiTeacher />,
