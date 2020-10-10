@@ -1,11 +1,11 @@
 import React from 'react';
-import DashboardLayout from '../components/DashboardLayout';
+import DashboardUI from '../components/DashboardUI';
 import { Icon, Label, Menu, Table, Input } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 function Projetos(props) {
     return (
-        <DashboardLayout screenName='Projetos'>
+        <DashboardUI screenName='Projetos'>
             <Input action={{ icon: 'search' }} style={{ width: '50%' }} placeholder='Pesquisar...' />
             <Table basic='very' selectable>
                 <Table.Header>
@@ -86,7 +86,7 @@ function Projetos(props) {
                     </Table.Row>
                 </Table.Footer>
             </Table>
-        </DashboardLayout>
+        </DashboardUI>
     );
 }
 

@@ -108,7 +108,7 @@ export const Title = styled.h1`
     color: #1C1E21;
 `
 
-export const SubTitle = styled.h2`
+export const Heading2 = styled.h2`
     text-align: center;
     margin: 0 auto 1rem;
     font-size: 1.2rem;

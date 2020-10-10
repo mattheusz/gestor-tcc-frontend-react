@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Logo } from '../styled';
 import { FiMenu } from 'react-icons/fi'
 import Avatar from 'react-avatar';
 import lightTheme from '../themes/light'
-import { SidebarContext } from "./DashboardLayout";
+import { SidebarContext } from "../DashboardUI";
+import Brand from '../Brand'
 
 
 
@@ -17,9 +17,9 @@ function HeaderDashboard(props) {
     return (
         <Header>
             <LinkToHome to='/home'>
-                <LogoDashboard>
+                <Brand>
                     Gestor de <span>TCC</span>
-                </LogoDashboard>
+                </Brand>
             </LinkToHome>
             <Hamburguer onClick={() => console.log(setShowSidebar())} />
             <CustomAvatar

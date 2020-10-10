@@ -1,11 +1,16 @@
 import React, { useEffect, useRef } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
-import HeaderDefault from '../components/HeaderDefault';
-import { Form, Input, InputGroup, Paragraph, SimpleLink, SubmitButton, SubTitle, Wrapper } from '../styled';
+import { Paragraph, Heading2 } from '../styled';
 import lightTheme from '../themes/light'
 import { FaEnvelope } from "react-icons/fa";
 import { BsFillShieldLockFill } from "react-icons/bs";
 import useInput from '../hooks/useInput';
+import BannerIFF from '../components/BannerIFF';
+import CenterForm from '../components/CenterForm';
+import IconTextField, { Input } from '../components/IconTextField';
+import Button from '../components/Button';
+import SimpleLink from '../components/SimpleLink';
+import Container from '../components/Container';
 
 function ForgotPassword(props) {
 
@@ -23,22 +28,22 @@ function ForgotPassword(props) {
 
     return (
         <ThemeProvider theme={lightTheme}>
-            <Wrapper>
-                <HeaderDefault />
-                <Form onSubmit={onFormSubmit}>
+            <Container>
+                <BannerIFF />
+                <CenterForm onSubmit={onFormSubmit}>
                     <ForgotIcon />
-                    <SubTitle>Problemas para entrar?</SubTitle>
+                    <Heading2>Problemas para entrar?</Heading2>
                     <Paragraph>
                         Insira o seu e-mail e enviaremos um link para você voltar a acessar a sua conta.
                     </Paragraph>
-                    <InputGroup>
+                    <IconTextField>
                         <FaEnvelope />
                         <Input type='email' placeholder='E-mail' value={email} {...bindEmail} ref={inputEmailRef} />
-                    </InputGroup>
-                    <SubmitButton>Enviar link para login</SubmitButton>
+                    </IconTextField>
+                    <Button>Enviar link para login</Button>
                     <SimpleLink to='/login'>Voltar para o Login</SimpleLink>
-                </Form>
-            </Wrapper>
+                </CenterForm>
+            </Container>
         </ThemeProvider>
     );
 }

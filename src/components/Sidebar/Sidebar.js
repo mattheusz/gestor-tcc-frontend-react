@@ -1,15 +1,13 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { SidebarContext } from './DashboardLayout';
-import { coordenador } from "../userType";
+import { SidebarContext } from '../DashboardUI';
+import { coordenador } from "../../userType";
 
 function Sidebar(props) {
 
     const sidebarContext = useContext(SidebarContext);
     const { showSidebar } = sidebarContext;
-
-
 
     return (
         <Wrapper showSidebar={showSidebar}>
@@ -45,7 +43,7 @@ const Menu = styled.ul`
 `
 
 const MenuItem = styled.li`
-    font-size: .95rem;
+    font-size: ${props => props.theme.font.normal};
     font-weight: 300;
     display: block;
 `

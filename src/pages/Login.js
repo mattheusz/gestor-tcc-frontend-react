@@ -2,8 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ThemeProvider } from 'styled-components'
 import lightTheme from '../themes/light'
 import { FaAddressCard, FaLock } from "react-icons/fa";
-import HeaderDefault from '../components/HeaderDefault';
-import { Wrapper, Form, InputGroup, Input, SimpleLink, SubmitButton, Logo } from '../styled';
+import BannerIFF from '../components/BannerIFF';
+import CenterForm from '../components/CenterForm';
+import Container from '../components/Container'
+import IconTextField, { Input } from '../components/IconTextField';
+import SimpleLink from '../components/SimpleLink'
+import Button from '../components/Button'
+import Logo from '../components/Logo'
+import Brand from '../components/Brand/Brand';
 
 
 function Login(props) {
@@ -21,14 +27,13 @@ function Login(props) {
 
     return (
         <ThemeProvider theme={lightTheme}>
-            <Wrapper>
-                <HeaderDefault />
-                <Form onSubmit={onFormSubmit}>
-
-                    <Logo>
+            <Container>
+                <BannerIFF />
+                <CenterForm onSubmit={onFormSubmit} >
+                    <Brand extraLarge>
                         Gestor de <span>TCC</span>
-                    </Logo>
-                    <InputGroup>
+                    </Brand>
+                    <IconTextField>
                         <FaAddressCard />
                         <Input
                             value={registration}
@@ -37,10 +42,10 @@ function Login(props) {
                             ref={inputMatriculaRef}
                             type='text'
                         />
-                    </InputGroup>
+                    </IconTextField>
 
 
-                    <InputGroup>
+                    <IconTextField>
                         <FaLock />
                         <Input
                             value={senha}
@@ -48,13 +53,13 @@ function Login(props) {
                             onChange={(e) => setSenha(e.target.value)}
                             type='password'
                         />
-                    </InputGroup>
+                    </IconTextField>
 
-                    <SubmitButton type='submit' >Entrar
-                    </SubmitButton>
+                    <Button type='submit' >Entrar
+                    </Button>
                     <SimpleLink to='/forgot_password'>Esqueceu a senha?</SimpleLink>
-                </Form>
-            </Wrapper>
+                </CenterForm>
+            </Container>
         </ThemeProvider>
     );
 }

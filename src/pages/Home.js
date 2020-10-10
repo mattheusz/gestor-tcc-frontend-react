@@ -1,11 +1,11 @@
 import React from 'react';
-import DashboardLayout from '../components/DashboardLayout';
+import DashboardUI from '../components/DashboardUI';
 
 function Home(props) {
     return (
-        <DashboardLayout screenName='Home'>
+        <DashboardUI screenName='Home'>
 
-        </DashboardLayout>
+        </DashboardUI>
     );
 }
 

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Table, Input, Menu, Icon } from 'semantic-ui-react';
-import DashboardLayout from '../components/DashboardLayout';
+import DashboardUI from '../components/DashboardUI';
 
 function Alunos(props) {
     return (
-        <DashboardLayout screenName='Alunos'>
+        <DashboardUI screenName='Alunos'>
             <Input action={{ icon: 'search' }} style={{ width: '50%' }} placeholder='Pesquisar...' />
             <Table basic='very' selectable>
                 <Table.Header>
@@ -86,7 +86,7 @@ function Alunos(props) {
                     </Table.Row>
                 </Table.Footer>
             </Table>
-        </DashboardLayout>
+        </DashboardUI>
     );
 }
 

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
-import { Title } from '../styled';
-import lightTheme from '../themes/light'
-import HeaderDashboard from './HeaderDashboard';
-import Sidebar from './Sidebar';
+import { Title } from '../../styled';
+import lightTheme from '../../themes/light'
+import Header from '../Header';
+import Sidebar from '../Sidebar';
 
 const UserContext = React.createContext();
 export const SidebarContext = React.createContext({
@@ -16,7 +16,7 @@ const value = {
 }
 
 
-function DashboardLayout({ screenName, children }) {
+function DashboardUI({ screenName, children }) {
 
     const [showSidebar, setShowSidebar] = useState(true);
 
@@ -35,7 +35,7 @@ function DashboardLayout({ screenName, children }) {
             <UserContext.Provider value={value}>
                 <ThemeProvider theme={lightTheme}>
                     <Wrapper>
-                        <HeaderDashboard />
+                        <Header />
                         <Sidebar />
                         <Content showSidebar={showSidebar}>
                             <Main >
@@ -51,7 +51,7 @@ function DashboardLayout({ screenName, children }) {
     );
 }
 
-export default DashboardLayout;
+export default DashboardUI;
 
 const Wrapper = styled.div`
     display: fixed;

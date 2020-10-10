@@ -1,10 +1,15 @@
 import React, { useEffect, useRef } from 'react';
-import HeaderDefault from '../components/HeaderDefault';
-import { Form, Input, InputGroup, SubmitButton, SubTitle, Wrapper } from '../styled';
+import { Form, InputGroup, SubmitButton, Heading2, Wrapper } from '../styled';
 import { RiLockPasswordFill } from 'react-icons/ri'
-import { ThemeProvider } from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 import lightTheme from '../themes/light'
 import useInput from '../hooks/useInput';
+import BannerIFF from '../components/BannerIFF';
+import Container from '../components/Container';
+import IconTextField, { Input } from '../components/IconTextField';
+import Button from '../components/Button';
+import CenterForm from '../components/CenterForm';
+import { FiKey } from 'react-icons/fi'
 
 function ResetPassowrd(props) {
     const [password, bindPassword] = useInput('')
@@ -22,24 +27,37 @@ function ResetPassowrd(props) {
 
     return (
         <ThemeProvider theme={lightTheme}>
-            <Wrapper>
-                <HeaderDefault />
-                <Form onSubmit={onFormSubmit}>
-                    <SubTitle>Agora é a hora de voltar!</SubTitle>
-                    <InputGroup>
+            <Container>
+                <BannerIFF />
+                <CenterForm onSubmit={onFormSubmit}>
+                    <ResetIcon />
+                    <Heading2>Agora é a hora de voltar!</Heading2>
+                    <IconTextField>
                         <RiLockPasswordFill />
                         <Input type='password' placeholder='Nova Senha' ref={inputPasswordRef} value={password} {...bindPassword} />
-                    </InputGroup>
+                    </IconTextField>
                     <InputGroup>
                         <RiLockPasswordFill />
                         <Input type='password' placeholder='Confirmar Nova Senha' value={confirmPassword} {...bindConfirmPassword} />
                     </InputGroup>
-                    <SubmitButton>Resetar a senha</SubmitButton>
-                </Form>
-            </Wrapper>
+                    <Button>Resetar a senha</Button>
+                </CenterForm>
+            </Container>
         </ThemeProvider>
 
     );
 }
 
 export default ResetPassowrd;
+
+const ResetIcon = styled(FiKey)`
+    margin-top: .7rem;
+    margin-bottom: .7rem;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    display: inline-block;
+    width: 50px;
+    max-width: 70px;
+    height: auto;
+    color: ${props => props.theme.color.secondary};
+`

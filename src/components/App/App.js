@@ -1,12 +1,11 @@
 import React from 'react';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
-import './App.css';
-import Login from './pages/Login';
-import ForgotPassword from './pages/ForgotPassword';
-import ResetPassowrd from './pages/ResetPassowrd';
-import Home from './pages/Home';
-import Projetos from './pages/Projetos';
-import Alunos from './pages/Alunos';
+import Login from '../../pages/Login';
+import ForgotPassword from '../../pages/ForgotPassword';
+import ResetPassowrd from '../../pages/ResetPassowrd';
+import Home from '../../pages/Home';
+import Projetos from '../../pages/Projetos';
+import Alunos from '../../pages/Alunos';
 
 function App() {
   return (
