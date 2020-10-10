@@ -15,6 +15,8 @@ export default {
         tertiaryShadown: '#8BBD39',
         tertiaryDark: '#435B1B',
 
+        dark: '#444444;',
+
     },
 
     config: {

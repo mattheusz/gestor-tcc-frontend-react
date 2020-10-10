@@ -102,11 +102,7 @@ export const SubmitButton = styled(Button)`
 
 `
 
-export const Title = styled.h1`
-    font-size: 1.7rem;
-    font-weight: 400;
-    color: #1C1E21;
-`
+
 
 export const Heading2 = styled.h2`
     text-align: center;

@@ -1,1 +1,1 @@
-export { default, SidebarContext } from './DashboardUI'
+export { default } from './DashboardUI'

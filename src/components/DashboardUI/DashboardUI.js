@@ -1,53 +1,34 @@
 import React, { useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
-import { Title } from '../../styled';
 import lightTheme from '../../themes/light'
 import Header from '../Header';
 import Sidebar from '../Sidebar';
-
-const UserContext = React.createContext();
-export const SidebarContext = React.createContext({
-    showSidebar: () => { },
-});
-
-const value = {
-    userName: 'LocalStorageName',
-    userType: 'LocalStorageType'
-}
+import ViewTitle from '../ViewTitle';
 
 
 function DashboardUI({ screenName, children }) {
 
     const [showSidebar, setShowSidebar] = useState(true);
 
-    const valueSidebarContext = {
-        showSidebar,
-        setShowSidebar: () => {
-            setShowSidebar(!showSidebar)
-            console.log(showSidebar);
-        }
-    }
-
-    console.log('showSideBar', showSidebar);
 
     return (
-        <SidebarContext.Provider value={valueSidebarContext}>
-            <UserContext.Provider value={value}>
-                <ThemeProvider theme={lightTheme}>
-                    <Wrapper>
-                        <Header />
-                        <Sidebar />
-                        <Content showSidebar={showSidebar}>
-                            <Main >
-                                <Title>{screenName}</Title>
-                                {children}
-                            </Main>
-                            <Footer />
-                        </Content>
-                    </Wrapper>
-                </ThemeProvider>
-            </UserContext.Provider>
-        </SidebarContext.Provider>
+        <ThemeProvider theme={lightTheme}>
+            <Wrapper>
+                <Header setShowSidebar={
+                    () => setShowSidebar(!showSidebar)
+                }
+
+                />
+                <Sidebar showSidebar={showSidebar} />
+                <Content showSidebar={showSidebar}>
+                    <Main >
+                        <ViewTitle>{screenName}</ViewTitle>
+                        {children}
+                    </Main>
+                    <Footer />
+                </Content>
+            </Wrapper>
+        </ThemeProvider>
     );
 }
 

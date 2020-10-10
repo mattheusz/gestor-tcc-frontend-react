@@ -7,7 +7,7 @@ function Projetos(props) {
     return (
         <DashboardUI screenName='Projetos'>
             <Input action={{ icon: 'search' }} style={{ width: '50%' }} placeholder='Pesquisar...' />
-            <Table basic='very' selectable>
+            <Table color='green' basic='very' selectable>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell>Projeto</Table.HeaderCell>

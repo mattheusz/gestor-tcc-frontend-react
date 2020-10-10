@@ -1,16 +1,32 @@
+import React from 'react'
 import styled from 'styled-components';
+import lightTheme from '../../themes/light'
+import Brand from '../Brand';
+import Hamburguer from '../Hamburguer';
+import Avatar from 'react-avatar';
+import { Link } from 'react-router-dom';
+import { headerStyle } from './styles'
 
-const Header = styled.header`
-    position: fixed;
-    width: 100%;
-    height: 60px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: white;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    z-index: 5;
-`
+function Header({ setShowSidebar }) {
+
+    return (
+        <header style={headerStyle}>
+            <Link to='/home' style={{ marginLeft: '15px' }}>
+                <Brand >
+                    Gestor de <span>TCC</span>
+                </Brand>
+            </Link>
+            <Hamburguer onClick={() => console.log(setShowSidebar())} />
+            <Avatar
+                style={{ marginRight: '15px' }}
+                round
+                color={lightTheme.color.primary}
+                size='2.5rem'
+                textSizeRatio={1.5}
+                name='Matheus Justino'
+            />
+        </header>
+    );
+}
 
 export default Header;
