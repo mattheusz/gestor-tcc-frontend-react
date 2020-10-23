@@ -11,7 +11,7 @@ import Button from '../components/Button';
 import CenterForm from '../components/CenterForm';
 import { FiKey } from 'react-icons/fi'
 
-function ResetPassowrd(props) {
+function ResetPassword(props) {
     const [password, bindPassword] = useInput('')
     const [confirmPassword, bindConfirmPassword] = useInput('')
 
@@ -48,7 +48,7 @@ function ResetPassowrd(props) {
     );
 }
 
-export default ResetPassowrd;
+export default ResetPassword;
 
 const ResetIcon = styled(FiKey)`
     margin-top: .7rem;

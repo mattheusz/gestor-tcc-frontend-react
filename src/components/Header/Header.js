@@ -6,6 +6,7 @@ import Hamburguer from '../Hamburguer';
 import Avatar from 'react-avatar';
 import { Link } from 'react-router-dom';
 import { headerStyle } from './styles'
+import { device } from '../../device';
 
 function Header({ setShowSidebar }) {
 
@@ -17,8 +18,7 @@ function Header({ setShowSidebar }) {
                 </Brand>
             </Link>
             <Hamburguer onClick={() => console.log(setShowSidebar())} />
-            <Avatar
-                style={{ marginRight: '15px' }}
+            <StyledAvatar
                 round
                 color={lightTheme.color.primary}
                 size='2.5rem'
@@ -30,3 +30,12 @@ function Header({ setShowSidebar }) {
 }
 
 export default Header;
+
+const StyledAvatar = styled(Avatar)`
+    display: none;
+
+    @media ${device.tablet}{
+        display: block;
+        margin-right: 15px;
+    }
+`

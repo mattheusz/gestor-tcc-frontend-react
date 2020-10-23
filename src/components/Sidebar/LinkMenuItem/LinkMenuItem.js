@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { device } from '../../../device';
 
 const LinkMenuItem = styled(Link)`
     display: block;

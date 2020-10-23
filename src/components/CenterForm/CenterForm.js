@@ -11,11 +11,12 @@ const CenterForm = styled.form`
     background-color: #fff;
 
     @media ${device.mobileS} {
-        max-width: 100;
+        max-width: 93%;
     }
 
     @media ${device.mobileL} {
-        max-width: 95%;
+        width: 380px;
+        
     }
 
     @media ${device.tablet}{
