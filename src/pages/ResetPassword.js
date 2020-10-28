@@ -2,6 +2,9 @@ import React, { useContext, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
+
 import { Form, InputGroup, SubmitButton, Heading2, Wrapper } from '../styled';
 import { RiLockPasswordFill } from 'react-icons/ri'
 import styled, { ThemeProvider } from 'styled-components';
@@ -18,7 +21,7 @@ import { AuthContext } from '../context/AuthContext';
 
 function ResetPassword(props) {
 
-    const { register, handleSubmit, erros, watch } = useForm();
+    const { register, handleSubmit, errors, watch } = useForm();
 
     const watchPassword = watch('password')
 
@@ -42,37 +45,42 @@ function ResetPassword(props) {
                         <RiLockPasswordFill />
                         <Input
                             name='password'
+                            id='password'
                             type='password'
                             placeholder='Nova Senha'
                             ref={register({
                                 required: true,
                                 minLength: 8,
                             })}
+                            autoFocus
+                            style={errors.registration && { borderColor: lightTheme.color.secondary }}
                         />
                     </IconTextField>
-                    {erros.password && erros.password.type === 'required' && <ErrorMessage left>A senha deve preenchida</ErrorMessage>}
-                    {erros.password && erros.password.type === 'minLength' && <ErrorMessage left>A senha deve ter no mínimo 8 caracteres </ErrorMessage>}
+                    {errors.password && errors.password.type === 'required' && <ErrorMessage left>A senha deve preenchida</ErrorMessage>}
+                    {errors.password && errors.password.type === 'minLength' && <ErrorMessage left>A senha deve ter no mínimo 8 caracteres </ErrorMessage>}
                     <InputGroup>
                         <RiLockPasswordFill />
                         <Input
                             name='confirmPassword'
+                            id='password'
                             type='password'
                             placeholder='Confirmar Nova Senha'
                             ref={register({
                                 required: true,
                                 minLength: 8,
-                                validate: (value) => value === watch('password')
+                                validate: (value) => value === watchPassword
                             })}
 
                         />
                     </InputGroup>
-                    {erros.password && erros.password.type === 'required' && <ErrorMessage left>A confirmação senha deve preenchida</ErrorMessage>}
-                    {erros.password && erros.password.type === 'minLength' && <ErrorMessage left>A confirmação senha deve ter no mínimo 8 caracteres </ErrorMessage>}
-                    {erros.password && erros.password.type === 'minLength' && <ErrorMessage left>As senhas digitadas não conferem </ErrorMessage>}
+                    {errors.confirmPassword && errors.confirmPassword.type === 'required' && <ErrorMessage left>A confirmação senha deve preenchida</ErrorMessage>}
+                    {/*errors.confirmPassword && errors.confirmPassword.type === 'minLength' && <ErrorMessage left>A confirmação senha deve ter no mínimo 8 caracteres </ErrorMessage>*/}
+                    {errors.confirmPassword && errors.confirmPassword.type === 'minLength' && <ErrorMessage left>As senhas digitadas não conferem </ErrorMessage>}
 
                     {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
                     <Button>Resetar a senha</Button>
                 </CenterForm>
+                <ToastContainer />
             </Container>
         </ThemeProvider>
 

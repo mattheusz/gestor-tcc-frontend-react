@@ -96,12 +96,12 @@ export function AuthProvider({ children }) {
         })
             .then(response => {
                 console.log(response)
-                const notify = () => toast.success("Senha recuperada com sucesso. Você será redirecionado para fazer Login", {
+                const notify = () => toast.success("Senha recuperada com sucesso. Você será redirecionado para fazer login.", {
                 });
                 notify()
                 setTimeout(() => {
                     return <Redirect to='/login' />
-                }, 5000)
+                }, 3000)
             })
             .catch(error => {
                 if (error.response) {
@@ -121,7 +121,7 @@ export function AuthProvider({ children }) {
     }
 
     return (
-        <AuthContext.Provider value={{ authenticated, loading, handleLogin, handleForgotPassword, errorMessage, setErrorMessage }}>
+        <AuthContext.Provider value={{ authenticated, loading, handleLogin, handleForgotPassword, handleResetPassword, errorMessage, setErrorMessage }}>
             {children}
         </AuthContext.Provider>
     )

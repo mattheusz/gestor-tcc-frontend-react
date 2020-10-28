@@ -47,7 +47,7 @@ export default function Routes() {
                     <CustomRoute exact path='/'>
                         <Link to='/login'>Login</Link><hr />
                         <Link to='/forgot_password'>Esqueci a senha</Link><hr />
-                        <Link to='/reset_password'>Resetar a senha</Link><hr />
+                        <Link to='/reset_password/123'>Resetar a senha</Link><hr />
                         <Link to='/home'>Home (em construção)</Link>
                     </CustomRoute>
                 </Switch>
