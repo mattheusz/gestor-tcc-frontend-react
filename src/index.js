@@ -8,6 +8,6 @@ ReactDOM.render(
   document.getElementById('root')
 );
 // caso queira o mode strict
-{/* <React.StrictMode>
+/* <React.StrictMode>
     <App />
-  </React.StrictMode>, */}
+  </React.StrictMode>, */

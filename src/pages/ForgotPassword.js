@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -8,7 +8,6 @@ import { Paragraph, Heading2 } from '../styled';
 import lightTheme from '../themes/light'
 import { FaEnvelope } from "react-icons/fa";
 import { BsFillShieldLockFill } from "react-icons/bs";
-import useInput from '../hooks/useInput';
 import BannerIFF from '../components/BannerIFF';
 import CenterForm from '../components/CenterForm';
 import IconTextField, { Input } from '../components/IconTextField';
@@ -28,7 +27,7 @@ function ForgotPassword(props) {
 
     useEffect(() => {
         setErrorMessage('')
-    }, [])
+    }, [setErrorMessage])
 
     const onSubmit = ({ email }) => {
         handleForgotPassword(email)

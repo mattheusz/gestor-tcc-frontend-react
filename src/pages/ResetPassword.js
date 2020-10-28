@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
-import { Form, InputGroup, SubmitButton, Heading2, Wrapper } from '../styled';
+import { InputGroup, Heading2, Wrapper } from '../styled';
 import { RiLockPasswordFill } from 'react-icons/ri'
 import styled, { ThemeProvider } from 'styled-components';
 import lightTheme from '../themes/light'
@@ -75,7 +75,7 @@ function ResetPassword(props) {
                     </InputGroup>
                     {errors.confirmPassword && errors.confirmPassword.type === 'required' && <ErrorMessage left>A confirmação senha deve preenchida</ErrorMessage>}
                     {/*errors.confirmPassword && errors.confirmPassword.type === 'minLength' && <ErrorMessage left>A confirmação senha deve ter no mínimo 8 caracteres </ErrorMessage>*/}
-                    {errors.confirmPassword && errors.confirmPassword.type === 'minLength' && <ErrorMessage left>As senhas digitadas não conferem </ErrorMessage>}
+                    {errors.confirmPassword && errors.confirmPassword.type === 'validate' && <ErrorMessage left>As senhas digitadas não conferem </ErrorMessage>}
 
                     {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
                     <Button>Resetar a senha</Button>

@@ -1,7 +1,8 @@
 import React, { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form'
+import ReactLoading from 'react-loading';
 
-import { ThemeProvider } from 'styled-components'
+import styled, { ThemeProvider } from 'styled-components'
 import lightTheme from '../themes/light'
 import { FaAddressCard, FaLock } from "react-icons/fa";
 import BannerIFF from '../components/BannerIFF';
@@ -10,14 +11,14 @@ import Container from '../components/Container'
 import IconTextField, { Input } from '../components/IconTextField';
 import SimpleLink from '../components/SimpleLink'
 import Button from '../components/Button'
-import Logo from '../components/Logo'
 import Brand from '../components/Brand/Brand';
 import { AuthContext } from '../context/AuthContext';
 import ErrorMessage from '../components/Error/ErrorMessage';
 
 
 function Login(props) {
-    const { register, handleSubmit, errors } = useForm({
+
+    const { register, handleSubmit, errors, formState } = useForm({
         mode: "onSubmit"
     });
 
@@ -27,12 +28,11 @@ function Login(props) {
         setErrorMessage('')
     }, [])
 
-    const onSubmit = ({ registration, password }) => {
-        console.log(registration, password)
-        handleLogin(registration, password);
+    const onSubmit = async ({ registration, password }) => {
+        await handleLogin(registration, password);
     }
 
-    console.debug(Login, 'fui chamado ñ sei pq')
+    console.debug(Login, 'Login sendo chamado')
 
 
     return (
@@ -77,7 +77,8 @@ function Login(props) {
 
                     <Button type='submit' >Entrar
                     </Button>
-                    {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+                    {formState.isSubmitting && <Spinner type='spin' color={lightTheme.color.primaryShadow} height={20} width={20} />}
+                    {errorMessage && !formState.isSubmitting && <ErrorMessage>{errorMessage}</ErrorMessage>}
                     <SimpleLink to='/forgot_password'>Esqueceu a senha?</SimpleLink>
 
                 </CenterForm>
@@ -85,6 +86,10 @@ function Login(props) {
         </ThemeProvider>
     );
 }
+
+const Spinner = styled(ReactLoading)`
+    margin: .7rem auto 0;
+`
 
 export default Login;
 

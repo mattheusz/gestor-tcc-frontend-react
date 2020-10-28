@@ -44,6 +44,7 @@ export function AuthProvider({ children }) {
                 if (error.response) {
                     const msg = error.response.data;
                     setErrorMessage(msg);
+                    console.log('Mensagem de erro sendo seta, o que re-renderiza o Login');
                     console.log(errorMessage);
                 }
                 if (error.request) {
@@ -97,11 +98,13 @@ export function AuthProvider({ children }) {
             .then(response => {
                 console.log(response)
                 const notify = () => toast.success("Senha recuperada com sucesso. Você será redirecionado para fazer login.", {
+                    autoClose: 4000,
                 });
                 notify()
                 setTimeout(() => {
-                    return <Redirect to='/login' />
-                }, 3000)
+                    history.replace('/login')
+                }, 4000)
+
             })
             .catch(error => {
                 if (error.response) {
