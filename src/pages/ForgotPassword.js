@@ -60,7 +60,7 @@ function ForgotPassword(props) {
                     </IconTextField>
                     {errors.email && errors.email.type === 'required' && <ErrorMessage left>O e-mail é obrigatório</ErrorMessage>}
                     {errors.email && errors.email.type === 'pattern' && <ErrorMessage left>Digite um e-mail válido</ErrorMessage>}
-                    <Button type='submit' disabled={formState.isSubmitted}>Enviar link para login</Button>
+                    <Button type='submit' disabled={formState.isSubmitting}>Enviar link para login</Button>
                     {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
                     <SimpleLink to='/login'>Voltar para o Login</SimpleLink>
                 </CenterForm>

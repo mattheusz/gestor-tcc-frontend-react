@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import api from '../api/api'
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -68,6 +68,39 @@ export function AuthProvider({ children }) {
                 });
                 notify()
 
+            })
+            .catch(error => {
+                if (error.response) {
+                    const msg = error.response.data;
+                    setErrorMessage(msg);
+                    console.log(errorMessage);
+                }
+                if (error.request) {
+                    const msg = error.response.data;
+                    setErrorMessage(msg);
+                    console.log(error.response.data);
+                }
+                else {
+                    console.log('Error', error.message);
+                }
+            });
+    }
+
+    async function handleResetPassword(password, confirmPassword, id) {
+        console.debug('HandleLogin', `Fetching...`, password, confirmPassword, id);
+
+        await api.post('/resetar_senha', {
+            password,
+            confirmPassword,
+        })
+            .then(response => {
+                console.log(response)
+                const notify = () => toast.success("Senha recuperada com sucesso. Você será redirecionado para fazer Login", {
+                });
+                notify()
+                setTimeout(() => {
+                    return <Redirect to='/login' />
+                }, 5000)
             })
             .catch(error => {
                 if (error.response) {

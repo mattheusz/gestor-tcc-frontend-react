@@ -1,4 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
+import { useParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+
 import { Form, InputGroup, SubmitButton, Heading2, Wrapper } from '../styled';
 import { RiLockPasswordFill } from 'react-icons/ri'
 import styled, { ThemeProvider } from 'styled-components';
@@ -10,36 +13,64 @@ import IconTextField, { Input } from '../components/IconTextField';
 import Button from '../components/Button';
 import CenterForm from '../components/CenterForm';
 import { FiKey } from 'react-icons/fi'
+import ErrorMessage from '../components/Error/ErrorMessage';
+import { AuthContext } from '../context/AuthContext';
 
 function ResetPassword(props) {
-    const [password, bindPassword] = useInput('')
-    const [confirmPassword, bindConfirmPassword] = useInput('')
 
-    const inputPasswordRef = useRef(null)
+    const { register, handleSubmit, erros, watch } = useForm();
 
-    useEffect(() => {
-        inputPasswordRef.current.focus()
-    }, [])
+    const watchPassword = watch('password')
 
-    const onFormSubmit = e => {
-        e.preventDefault();
+    const { handleResetPassword, errorMessage, setErrorMessage } = useContext(AuthContext);
+
+    const { id } = useParams();
+
+    const onSubmit = ({ password, confirmPassword }) => {
+        handleResetPassword(password, confirmPassword, id);
+        console.log(password, confirmPassword, id);
     }
 
     return (
         <ThemeProvider theme={lightTheme}>
             <Container>
                 <BannerIFF />
-                <CenterForm onSubmit={onFormSubmit}>
+                <CenterForm onSubmit={handleSubmit(onSubmit)}>
                     <ResetIcon />
                     <Heading2>Agora é a hora de voltar!</Heading2>
                     <IconTextField>
                         <RiLockPasswordFill />
-                        <Input type='password' placeholder='Nova Senha' ref={inputPasswordRef} value={password} {...bindPassword} />
+                        <Input
+                            name='password'
+                            type='password'
+                            placeholder='Nova Senha'
+                            ref={register({
+                                required: true,
+                                minLength: 8,
+                            })}
+                        />
                     </IconTextField>
+                    {erros.password && erros.password.type === 'required' && <ErrorMessage left>A senha deve preenchida</ErrorMessage>}
+                    {erros.password && erros.password.type === 'minLength' && <ErrorMessage left>A senha deve ter no mínimo 8 caracteres </ErrorMessage>}
                     <InputGroup>
                         <RiLockPasswordFill />
-                        <Input type='password' placeholder='Confirmar Nova Senha' value={confirmPassword} {...bindConfirmPassword} />
+                        <Input
+                            name='confirmPassword'
+                            type='password'
+                            placeholder='Confirmar Nova Senha'
+                            ref={register({
+                                required: true,
+                                minLength: 8,
+                                validate: (value) => value === watch('password')
+                            })}
+
+                        />
                     </InputGroup>
+                    {erros.password && erros.password.type === 'required' && <ErrorMessage left>A confirmação senha deve preenchida</ErrorMessage>}
+                    {erros.password && erros.password.type === 'minLength' && <ErrorMessage left>A confirmação senha deve ter no mínimo 8 caracteres </ErrorMessage>}
+                    {erros.password && erros.password.type === 'minLength' && <ErrorMessage left>As senhas digitadas não conferem </ErrorMessage>}
+
+                    {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
                     <Button>Resetar a senha</Button>
                 </CenterForm>
             </Container>
