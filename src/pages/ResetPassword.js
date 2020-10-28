@@ -27,8 +27,8 @@ function ResetPassword(props) {
     const { token } = useParams();
 
     const onSubmit = ({ password, confirmPassword }) => {
-        handleResetPassword(password, confirmPassword, id);
-        console.log(password, confirmPassword, id);
+        handleResetPassword(password, confirmPassword, token);
+        console.log(password, confirmPassword, token);
     }
 
     return (
