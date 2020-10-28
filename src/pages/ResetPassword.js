@@ -24,7 +24,7 @@ function ResetPassword(props) {
 
     const { handleResetPassword, errorMessage, setErrorMessage } = useContext(AuthContext);
 
-    const { id } = useParams();
+    const { token } = useParams();
 
     const onSubmit = ({ password, confirmPassword }) => {
         handleResetPassword(password, confirmPassword, id);

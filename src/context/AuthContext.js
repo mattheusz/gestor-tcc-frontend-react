@@ -86,10 +86,11 @@ export function AuthProvider({ children }) {
             });
     }
 
-    async function handleResetPassword(password, confirmPassword, id) {
+    async function handleResetPassword(token, confirmPassword, id) {
         console.debug('HandleLogin', `Fetching...`, password, confirmPassword, id);
 
         await api.post('/resetar_senha', {
+            token,
             password,
             confirmPassword,
         })

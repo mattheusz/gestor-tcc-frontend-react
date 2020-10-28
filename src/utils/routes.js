@@ -40,14 +40,14 @@ export default function Routes() {
                 <Switch>
                     <CustomRoute exact path='/login' component={Login} />
                     <CustomRoute exact path='/forgot_password' component={ForgotPassword} />
-                    <CustomRoute exact path='/reset_password' component={ResetPassword} />
+                    <CustomRoute exact path='/reset_password/:token' component={ResetPassword} />
                     <CustomRoute exact isPrivate path='/home' component={Home} />
                     <CustomRoute exact isPrivate path='/projetos' component={Projetos} />
                     <CustomRoute exact isPrivate path='/alunos' component={Alunos} />
                     <CustomRoute exact path='/'>
                         <Link to='/login'>Login</Link><hr />
                         <Link to='/forgot_password'>Esqueci a senha</Link><hr />
-                        <Link to='/reset_password/:id'>Resetar a senha</Link><hr />
+                        <Link to='/reset_password'>Resetar a senha</Link><hr />
                         <Link to='/home'>Home (em construção)</Link>
                     </CustomRoute>
                 </Switch>
