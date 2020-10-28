@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
+import { useForm } from 'react-hook-form'
+
 import { ThemeProvider } from 'styled-components'
 import lightTheme from '../themes/light'
 import { FaAddressCard, FaLock } from "react-icons/fa";
@@ -11,26 +13,23 @@ import Button from '../components/Button'
 import Logo from '../components/Logo'
 import Brand from '../components/Brand/Brand';
 import { AuthContext } from '../context/AuthContext';
-import ErrorMessage from '../components/Button/components/ErrorMessage';
+import ErrorMessage from '../components/Error/ErrorMessage';
 
 
 function Login(props) {
-    const [registration, setRegistration] = useState('');
-    const [senha, setSenha] = useState('');
+    const { register, handleSubmit, errors } = useForm({
+        mode: "onSubmit"
+    });
 
     const { handleLogin, errorMessage, setErrorMessage } = useContext(AuthContext)
-    useEffect(() => {
-        setErrorMessage('');
-    }, [registration])
 
-    const inputMatriculaRef = useRef(null);
     useEffect(() => {
-        inputMatriculaRef.current.focus();
-    }, [errorMessage])
+        setErrorMessage('')
+    }, [])
 
-    const onFormSubmit = e => {
-        e.preventDefault();
-        handleLogin(registration, senha);
+    const onSubmit = ({ registration, password }) => {
+        console.log(registration, password)
+        handleLogin(registration, password);
     }
 
     console.debug(Login, 'fui chamado ñ sei pq')
@@ -40,31 +39,41 @@ function Login(props) {
         <ThemeProvider theme={lightTheme}>
             <Container>
                 <BannerIFF />
-                <CenterForm onSubmit={onFormSubmit} >
+                <CenterForm onSubmit={handleSubmit(onSubmit)} >
                     <Brand extraLarge>
                         Gestor de <span>TCC</span>
                     </Brand>
                     <IconTextField>
                         <FaAddressCard />
                         <Input
-                            value={registration}
-                            placeholder='Matrícula'
-                            onChange={(e) => setRegistration(e.target.value)}
-                            ref={inputMatriculaRef}
                             type='text'
+                            name='registration'
+                            id='registration'
+                            ref={register({
+                                required: true,
+                            })}
+                            placeholder='Matrícula'
+                            autoFocus
+                            style={errors.registration && { borderColor: lightTheme.color.secondary }}
                         />
                     </IconTextField>
-
+                    {errors.registration && errors.registration.type === 'required' && <ErrorMessage left>A matrícula é obrigatória</ErrorMessage>}
 
                     <IconTextField>
                         <FaLock />
                         <Input
-                            value={senha}
-                            placeholder='Senha'
-                            onChange={(e) => setSenha(e.target.value)}
                             type='password'
+                            name='password'
+                            ref={register({
+                                required: true,
+                                minLength: 8
+                            })}
+                            placeholder='Senha'
+                            style={errors.password && { borderColor: lightTheme.color.secondary }}
                         />
                     </IconTextField>
+                    {errors.password && errors.password.type === 'required' && <ErrorMessage left>A senha é obrigatória</ErrorMessage>}
+                    {errors.password && errors.password.type === 'minLength' && <ErrorMessage left>A senha deve conter no mínimo 8 caracteres</ErrorMessage>}
 
                     <Button type='submit' >Entrar
                     </Button>

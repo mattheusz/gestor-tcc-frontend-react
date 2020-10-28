@@ -16,6 +16,10 @@ const Button = styled.button`
     &:hover{
         background-color: ${props => props.theme.color.secondaryShadow}
     }
+
+    &:disabled{
+        background-color: ${props => props.theme.color.secondaryLight}
+    }
 `
 
 export default Button;

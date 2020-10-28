@@ -2,6 +2,8 @@ import React, { createContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import api from '../api/api'
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 export const AuthContext = createContext();
 
@@ -53,8 +55,39 @@ export function AuthProvider({ children }) {
             });
     }
 
+    async function handleForgotPassword(email) {
+        console.debug('HandleLogin', `Fetching...`, email);
+
+        await api.post('/esqueci_minha_senha', {
+            email,
+        })
+            .then(response => {
+                console.log(response)
+                const notify = () => toast.success("Link de validação enviado com sucesso. Acesse o seu e-mail", {
+
+                });
+                notify()
+
+            })
+            .catch(error => {
+                if (error.response) {
+                    const msg = error.response.data;
+                    setErrorMessage(msg);
+                    console.log(errorMessage);
+                }
+                if (error.request) {
+                    const msg = error.response.data;
+                    setErrorMessage(msg);
+                    console.log(error.response.data);
+                }
+                else {
+                    console.log('Error', error.message);
+                }
+            });
+    }
+
     return (
-        <AuthContext.Provider value={{ authenticated, loading, handleLogin, errorMessage, setErrorMessage }}>
+        <AuthContext.Provider value={{ authenticated, loading, handleLogin, handleForgotPassword, errorMessage, setErrorMessage }}>
             {children}
         </AuthContext.Provider>
     )
