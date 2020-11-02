@@ -1,6 +1,4 @@
 import React, { useRef } from 'react';
-import { useHistory } from 'react-router-dom'
-
 import api from '../../api/api'
 
 import { Icon, Menu, Table } from 'semantic-ui-react'
@@ -19,7 +17,7 @@ import SearchBar from '../../components/SearchBar';
 import { LeftSearchBar, RightSearchBar } from '../../components/SearchBar/SearchBar';
 import { AiOutlineUserAdd } from 'react-icons/ai';
 
-function Professores(props) {
+function ProfessoresCadastrar(props) {
     const [searchText, setSearchText] = useState('');
     const [professores, setProfessores] = useState([]);
     const [selectedValue, setSelectedValue] = useState('ativo');
@@ -27,8 +25,6 @@ function Professores(props) {
     const [currentPage, setCurrentPage] = useState(1);
 
     const isInitialMount = useRef(true);
-
-    const history = useHistory();
 
     useEffect(() => {
 
@@ -120,84 +116,16 @@ function Professores(props) {
 
     const onChangeSelect = e => {
         setSelectedValue(e.target.value)
-    }
 
-    const addProfessor = () => {
-        history.push('/coordenador/professores/add');
+
     }
 
     return (
-        <DashboardUI screenName='Professores'>
-            <form onSubmit={(e) => onSubmit(e)}>
-                <SearchBar>
-                    <LeftSearchBar>
-                        <BoxSearchButton>
-                            <SearchInput value={searchText} onChange={(e) => setSearchText(e.target.value)} placeholder='Pesquisar...' />
-                            <SearchButton>
-                                <BiSearch style={{ color: 'white' }} />
-                            </SearchButton>
-                        </BoxSearchButton>
-                        <Select value={selectedValue} onChange={e => onChangeSelect(e)}>
-                            <option value="ativo">Ativos</option>
-                            <option value="inativo">Inativos</option>
-                            <option value="todos">Todos</option>
-                        </Select>
-                    </LeftSearchBar>
-                    <RightSearchBar>
-                        <Button type='button' onClick={() => addProfessor()} new={true} width='90px' >
-                            Novo &nbsp;
-                            <AiOutlineUserAdd />
-                        </Button>
-                    </RightSearchBar>
-                </SearchBar>
-            </form>
-            {noUserFound ? <p>Nenhum usuário encontrado</p> :
-                <Table striped selectable>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell>Matrícula</Table.HeaderCell>
-                            <Table.HeaderCell>Nome</Table.HeaderCell>
-                            <Table.HeaderCell>E-mail</Table.HeaderCell>
-                            <Table.HeaderCell>Ações</Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Header>
+        <DashboardUI screenName='Cadastrar Professor'>
 
 
-                    <Table.Body>
-                        {
-                            professores.map(({ _id, registration, name, email }) => (
-                                <Table.Row key={_id}>
-                                    <Table.Cell>{registration}</Table.Cell>
-                                    <Table.Cell>{name}</Table.Cell>
-                                    <Table.Cell>{email}</Table.Cell>
-                                    <Table.Cell>Editar | Desativar</Table.Cell>
-                                </Table.Row>
-                            ))
-                        }
-                    </Table.Body>
-
-                    <Table.Footer>
-                        <Table.Row>
-                            <Table.HeaderCell colSpan='4'>
-                                <Menu floated='right' pagination>
-                                    <Menu.Item as='a' icon>
-                                        <Icon name='chevron left' />
-                                    </Menu.Item>
-                                    <Menu.Item as='a'>1</Menu.Item>
-                                    <Menu.Item as='a'>2</Menu.Item>
-                                    <Menu.Item as='a'>3</Menu.Item>
-                                    <Menu.Item as='a'>4</Menu.Item>
-                                    <Menu.Item as='a' icon>
-                                        <Icon name='chevron right' />
-                                    </Menu.Item>
-                                </Menu>
-                            </Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Footer>
-                </Table>
-            }
         </DashboardUI>
     );
 }
 
-export default Professores;
+export default ProfessoresCadastrar;

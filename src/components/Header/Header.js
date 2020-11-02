@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import styled from 'styled-components';
 import lightTheme from '../../themes/light'
 import Brand from '../Brand';
@@ -31,11 +31,12 @@ function Header({ setShowSidebar }) {
 
 export default Header;
 
-const StyledAvatar = styled(Avatar)`
+const StyledAvatar = memo(styled(Avatar)`
     display: none;
 
     @media ${device.tablet}{
         display: block;
         margin-right: 15px;
     }
-`
+`)
+

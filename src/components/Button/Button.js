@@ -31,8 +31,8 @@ const Button = styled.button`
     }
 
     @media ${device.laptop}{
-        width: 130px;
-        margin-left: .5rem;
+        width: 100%;
+        margin-left: 0;
     }
 
 `

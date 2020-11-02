@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import lightTheme from '../../themes/light'
 import Header from '../Header';
@@ -11,13 +11,14 @@ function DashboardUI({ screenName, children }) {
 
     const [showSidebar, setShowSidebar] = useState(true);
 
+    const toggle = useCallback(() => {
+        setShowSidebar(!showSidebar)
+    })
 
     return (
         <ThemeProvider theme={lightTheme}>
             <Wrapper>
-                <Header setShowSidebar={
-                    () => setShowSidebar(!showSidebar)
-                }
+                <Header setShowSidebar={toggle}
 
                 />
                 <Sidebar showSidebar={showSidebar} />

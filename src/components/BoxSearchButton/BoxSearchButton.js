@@ -58,6 +58,10 @@ export const SearchButton = styled.button`
         border-color: ${props => props.theme.color.primary};
     }
 
+    &:hover {
+        background-color: ${props => props.theme.color.primaryShadow};
+    }
+
     ::placeholder {
         color: #a9a9a9;
         opacity: 1;
