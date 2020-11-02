@@ -6,12 +6,12 @@ const Button = styled.button`
     background-color: ${props => props.theme.color.secondary};
     border: none;
     border-radius: ${props => props.new ? '1px' : '3px'};
-    width: ${props => props.width ? props.width : '100%'};
+    width: 100%;
     padding: .5rem 1rem;
     height: 2.5rem;
     font-size: 1rem;
     cursor: pointer;
-    margin-top: ${props => props.new ? 0 : '.7rem'};
+    margin-top: .5rem;
     outline: none;
     display: flex;
     justify-content: center;
@@ -30,8 +30,15 @@ const Button = styled.button`
         height: auto;
     }
 
+    @media ${device.mobileL}{
+        width: ${props => props.width ? props.width : '100%'};
+        margin-top: 0;
+        margin-left: 0;
+    }
+
     @media ${device.laptop}{
-        width: 100%;
+        width: ${props => props.width ? props.width : '100%'};
+        margin-top: 0;
         margin-left: 0;
     }
 

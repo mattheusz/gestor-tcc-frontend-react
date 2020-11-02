@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useHistory } from 'react-router-dom'
 
-import api from '../../api/api'
+import api, { getAllProfessors } from '../../api/api'
 
 import { Icon, Menu, Table } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
@@ -16,8 +16,11 @@ import DashboardUI from '../../components/DashboardUI';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import SearchBar from '../../components/SearchBar';
-import { LeftSearchBar, RightSearchBar } from '../../components/SearchBar/SearchBar';
-import { AiOutlineUserAdd } from 'react-icons/ai';
+
+import { IconContext } from 'react-icons/';
+import { AiOutlineEdit, AiOutlineUserAdd } from 'react-icons/ai';
+import { BsToggleOff, BsToggleOn } from 'react-icons/bs';
+import light from '../../themes/light';
 
 function Professores(props) {
     const [searchText, setSearchText] = useState('');
@@ -30,15 +33,13 @@ function Professores(props) {
 
     const history = useHistory();
 
+    // carregando todos os professores ao montar componente
     useEffect(() => {
-
         api.get('usuarios/todos_usuarios/professor/1')
             .then(({ data }) => {
-                console.log('Current page:', data.page)
                 setCurrentPage(data.page)
                 setNoUserFound(false);
                 setProfessores(data.docs);
-
             })
             .catch(error => {
                 if (error.response) {
@@ -55,6 +56,31 @@ function Professores(props) {
             });
     }, []);
 
+    // filtrando professor por todos, ativo e inativo
+    useEffect(() => {
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+        } else {
+            api.get(`usuarios/todos_usuarios/professor/${selectedValue}/1`)
+                .then(response => {
+                    console.log(response.data)
+                    setNoUserFound(false)
+                    setProfessores(response.data.docs)
+                })
+                .catch(error => {
+                    if (error.response) {
+                        setNoUserFound(true)
+                    }
+                    if (error.request) {
+                        console.log(error.request);
+                    }
+                    else {
+                        console.log('Error', error.message);
+                    }
+                });
+        }
+    }, [selectedValue])
+
     const onSubmit = e => {
         e.preventDefault();
         let path;
@@ -62,7 +88,7 @@ function Professores(props) {
             path = 'usuarios/todos_usuarios/professor/1'
         }
         else {
-            path = `usuarios/listar_usuarios/${searchText}/1`;
+            path = `usuarios/listar_usuarios/professor/${searchText}/1`;
         }
 
         api.get(path)
@@ -87,37 +113,6 @@ function Professores(props) {
             });
     }
 
-    // filter useEffect
-    useEffect(() => {
-        console.debug(selectedValue)
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
-        } else {
-            api.get(`usuarios/todos_usuarios/professor/${selectedValue}/1`)
-                .then(response => {
-                    console.log(response.data)
-                    setNoUserFound(false)
-                    setProfessores(response.data.docs)
-
-                })
-                .catch(error => {
-                    if (error.response) {
-                        const msg = error.response.data;
-                        console.log(msg);
-                        setNoUserFound(true)
-                    }
-                    if (error.request) {
-                        console.log(error.request);
-                    }
-                    else {
-                        console.log('Error', error.message);
-                    }
-                });
-        }
-
-
-    }, [selectedValue])
-
     const onChangeSelect = e => {
         setSelectedValue(e.target.value)
     }
@@ -126,33 +121,23 @@ function Professores(props) {
         history.push('/coordenador/professores/add');
     }
 
+    const editProfessor = () => {
+        history.push('/coordenador/professores/add');
+    }
+
     return (
         <DashboardUI screenName='Professores'>
             <form onSubmit={(e) => onSubmit(e)}>
-                <SearchBar>
-                    <LeftSearchBar>
-                        <BoxSearchButton>
-                            <SearchInput value={searchText} onChange={(e) => setSearchText(e.target.value)} placeholder='Pesquisar...' />
-                            <SearchButton>
-                                <BiSearch style={{ color: 'white' }} />
-                            </SearchButton>
-                        </BoxSearchButton>
-                        <Select value={selectedValue} onChange={e => onChangeSelect(e)}>
-                            <option value="ativo">Ativos</option>
-                            <option value="inativo">Inativos</option>
-                            <option value="todos">Todos</option>
-                        </Select>
-                    </LeftSearchBar>
-                    <RightSearchBar>
-                        <Button type='button' onClick={() => addProfessor()} new={true} width='90px' >
-                            Novo &nbsp;
-                            <AiOutlineUserAdd />
-                        </Button>
-                    </RightSearchBar>
-                </SearchBar>
+                <SearchBar
+                    searchText={searchText}
+                    setSearchText={setSearchText}
+                    selectedValue={selectedValue}
+                    onChangeSelect={onChangeSelect}
+                    addUser={addProfessor}
+                />
             </form>
             {noUserFound ? <p>Nenhum usuário encontrado</p> :
-                <Table striped selectable>
+                <Table basic='very' striped selectable>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>Matrícula</Table.HeaderCell>
@@ -165,12 +150,16 @@ function Professores(props) {
 
                     <Table.Body>
                         {
-                            professores.map(({ _id, registration, name, email }) => (
+                            professores.map(({ _id, registration, name, email, status }) => (
                                 <Table.Row key={_id}>
                                     <Table.Cell>{registration}</Table.Cell>
                                     <Table.Cell>{name}</Table.Cell>
                                     <Table.Cell>{email}</Table.Cell>
-                                    <Table.Cell>Editar | Desativar</Table.Cell>
+                                    <Table.Cell >
+                                        <AiOutlineEdit cursor='pointer' onClick={() => { editProfessor(_id) }} color='blue' size='2rem' /> &nbsp;&nbsp;
+                                        {console.log('status: ', status)}
+                                        {status === 'ativo' ? <BsToggleOn color={light.color.primary} size='2rem' /> : <BsToggleOff color={light.color.grey} size='2rem' />}
+                                    </Table.Cell>
                                 </Table.Row>
                             ))
                         }
