@@ -1,9 +1,13 @@
 import React, { createContext, useEffect, useState } from "react";
-import { Redirect, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import api from '../api/api'
 
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
+
+import { detectUserType } from '../utils/detectUserType'
+
+import jwt_decode from "jwt-decode";
 
 export const AuthContext = createContext();
 
@@ -12,18 +16,19 @@ export function AuthProvider({ children }) {
     const [errorMessage, setErrorMessage] = useState('');
     const [authenticated, setAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [userType, setUserType] = useState('');
     let history = useHistory();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
+        const type = localStorage.getItem('userType');
         if (token) {
-            console.debug('Token:', token)
-            api.defaults.headers.Authorization = `Bearer ${token}`;
+            api.defaults.headers.Authorization = `${token}`;
             setAuthenticated(() => true);
-            console.debug('isAuthenticated', authenticated)
+            setUserType(type);
         }
         setLoading(false);
-    }, [authenticated])
+    }, [])
 
     async function handleLogin(registration, password) {
         console.debug('HandleLogin', `Fetching...`, registration, password);
@@ -33,12 +38,21 @@ export function AuthProvider({ children }) {
             password,
         })
             .then(response => {
-                const token = JSON.stringify(response.data.token);
+                const token = response.data.token;
+                console.log('Token recebido da API: ', token);
 
                 localStorage.setItem('token', `Bearer ${token}`);
                 api.defaults.headers.Authorization = `Bearer ${token}`;
+
+                const decoded = jwt_decode(token);
+                console.log(decoded)
+                const { userType, isCoordinator, available } = decoded;
+                const userTypeDetected = detectUserType(userType, isCoordinator, available);
+                console.log('Tipo de usuário detectado: ', userTypeDetected);
+                localStorage.setItem('userType', userTypeDetected);
+
                 setAuthenticated(true);
-                history.push('/home');
+                history.push(`/${userTypeDetected}`);
             })
             .catch(error => {
                 if (error.response) {

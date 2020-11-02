@@ -1,20 +1,43 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import lightTheme from '../../themes/light'
-import { coordenador } from "../../userType";
+import { coordenador, professor, alunoPreProjeto, alunoOrientando, administrativo } from "../../userType";
 import Menu from './Menu/Menu';
 import MenuItem from './MenuItem/MenuItem';
 import LinkMenuItem from './LinkMenuItem';
 import { Nav } from './styles';
 import Avatar from 'react-avatar';
 
+function menuToBeDisplayed() {
+    const userType = localStorage.getItem('userType');
+    if (userType === 'professor') {
+        // corrigir aqui depois que for alterado na API
+        return coordenador;
+    }
+    if (userType === 'coordenador') {
+        return coordenador;
+    }
+    if (userType === 'aluno-pre-projeto') {
+        return alunoPreProjeto;
+    }
+    if (userType === 'aluno-orientando') {
+        return alunoOrientando;
+    }
+
+    if (userType === 'administrativo') {
+        return administrativo;
+    }
+}
+
 function Sidebar({ showSidebar }) {
+
+    const menu = menuToBeDisplayed();
+
 
     return (
         <Nav showSidebar={showSidebar}>
             <Menu>
-                {coordenador.map(({ icon, description, to }, index) =>
+                {menu.map(({ icon, description, to }, index) =>
                     <MenuItem key={index}>
                         <LinkMenuItem to={to}>{icon} <span>{description}</span> </LinkMenuItem>
                     </MenuItem>

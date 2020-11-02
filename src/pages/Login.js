@@ -26,7 +26,7 @@ function Login(props) {
 
     useEffect(() => {
         setErrorMessage('')
-    }, [])
+    }, [setErrorMessage])
 
     const onSubmit = async ({ registration, password }) => {
         await handleLogin(registration, password);

@@ -1,12 +1,20 @@
 import React from 'react';
-import DashboardUI from '../components/DashboardUI';
+import DashboardUI from '../../components/DashboardUI';
 import { Icon, Label, Menu, Table, Input } from 'semantic-ui-react'
+import { BiSearch } from 'react-icons/bi';
 import 'semantic-ui-css/semantic.min.css';
+import BoxSearchButton from '../../components/BoxSearchButton';
+import { SearchInput, SearchButton } from '../../components/BoxSearchButton/BoxSearchButton';
 
 function Projetos(props) {
     return (
         <DashboardUI screenName='Projetos'>
-            <Input action={{ icon: 'search' }} style={{ width: '50%' }} placeholder='Pesquisar...' />
+            <BoxSearchButton>
+                <SearchInput placeholder='Pesquisar...' />
+                <SearchButton>
+                    <BiSearch style={{ color: 'white' }} />
+                </SearchButton>
+            </BoxSearchButton>
             <Table color='green' basic='very' selectable>
                 <Table.Header>
                     <Table.Row>

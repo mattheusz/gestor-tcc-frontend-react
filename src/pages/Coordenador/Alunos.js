@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, Input, Menu, Icon, Form, Button, Select } from 'semantic-ui-react';
-import DashboardUI from '../components/DashboardUI';
+import DashboardUI from '../../components/DashboardUI';
 
 const genderOptions = [
     { key: 'm', text: 'Male', value: 'male' },

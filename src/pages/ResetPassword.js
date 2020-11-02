@@ -5,11 +5,10 @@ import { useForm } from 'react-hook-form';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
-import { InputGroup, Heading2, Wrapper } from '../styled';
+import { InputGroup, Heading2 } from '../styled';
 import { RiLockPasswordFill } from 'react-icons/ri'
 import styled, { ThemeProvider } from 'styled-components';
 import lightTheme from '../themes/light'
-import useInput from '../hooks/useInput';
 import BannerIFF from '../components/BannerIFF';
 import Container from '../components/Container';
 import IconTextField, { Input } from '../components/IconTextField';
@@ -25,7 +24,7 @@ function ResetPassword(props) {
 
     const watchPassword = watch('password')
 
-    const { handleResetPassword, errorMessage, setErrorMessage } = useContext(AuthContext);
+    const { handleResetPassword, errorMessage } = useContext(AuthContext);
 
     const { token } = useParams();
 

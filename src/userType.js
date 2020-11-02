@@ -26,38 +26,43 @@ export const coordenador = [
     {
         icon: <VscProject />,
         description: 'Projetos',
-        to: '/projetos'
+        to: '/coordenador/projetos'
     },
     {
         icon: <IoMdSchool />,
         description: 'Alunos',
-        to: '/alunos'
+        to: '/coordenador/alunos'
     },
     {
         icon: <GiTeacher />,
         description: 'Professores',
-        to: '/home'
+        to: '/coordenador/professores'
+    },
+    {
+        icon: <GiTeacher />,
+        description: 'Técnicos Administrativos',
+        to: '/coordenador/tecnicos_administrativos'
     },
     {
         icon: <BsCalendar />,
         description: 'Calendário',
-        to: '/home'
+        to: '/coordenador/datas_importantes'
     },
     {
         icon: <CgFileDocument />,
         description: 'Documentos',
-        to: '/home'
+        to: '/coordenador/documentos'
     },
     {
         icon: <RiGitRepositoryLine />,
         description: 'Repositório',
-        to: '/home'
+        to: '/coordenador/trabalhos_anteriores'
     },
 
 ]
 
 
-const tecnicoAdministrativo = {
+export const administrativo = {
     projetos: 'Projetos',
     alunos: 'Alunos',
     professores: 'Professores',
@@ -67,14 +72,14 @@ const tecnicoAdministrativo = {
 }
 
 
-const aluno = {
+export const alunoPreProjeto = {
     professores: 'Professores',
     calendario: 'Calendário',
     documentos: 'Documentos',
     repositorio: 'Repositório',
 }
 
-const alunoOrientando = {
+export const alunoOrientando = {
     atividades: 'Atividades',
     orientacoes: 'Orientações',
     calendario: 'Calendário',
@@ -82,7 +87,7 @@ const alunoOrientando = {
     repositorio: 'Repositório',
 }
 
-const professorOrientador = {
+export const professor = {
     projetos: 'Projetos',
     orientacoes: 'Orientações',
     propostas: 'Propostas',

@@ -17,6 +17,8 @@ export default {
 
         dark: '#444444;',
 
+        grey: '#a9a9a9',
+
     },
 
     config: {

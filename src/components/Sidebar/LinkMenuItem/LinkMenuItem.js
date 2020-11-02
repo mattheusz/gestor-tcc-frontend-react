@@ -4,7 +4,7 @@ import { device } from '../../../device';
 
 const LinkMenuItem = styled(Link)`
     display: block;
-    padding: .6rem 2.5rem .6rem 1.7rem;
+    padding: .6rem .3rem .6rem 1.7rem;
     color: ${props => props.theme.color.dark};
     position: relative;
     transition: background-color .1s;

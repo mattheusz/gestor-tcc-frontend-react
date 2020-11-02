@@ -46,7 +46,7 @@ const Wrapper = styled.div`
 const Content = styled.div`
     position: fixed;
     width: 100%;
-    width: ${props => props.showSidebar ? '100%' : 'calc(100% - 256px)'};
+    /*width: ${props => props.showSidebar ? '100%' : 'calc(100% - 256px)'};*/
     margin-left: 0;
     height: calc(100vh - 60px);
     overflow: auto;
@@ -57,7 +57,7 @@ const Content = styled.div`
     transition: margin-left .3s;
 
     @media ${device.mobileM}{
-        width: ${props => props.showSidebar ? '100%' : 'calc(100% - 256px)'};
+        /*width: ${props => props.showSidebar ? '100%' : 'calc(100% - 256px)'};*/
         margin-left: 0;
     }
 
@@ -73,7 +73,7 @@ const Content = styled.div`
 const Main = styled.main`
     flex-grow: 1;
     background-color: white;
-    padding: 1rem 1.5rem;
+    padding: 1rem 1rem 1rem 1.5rem;
     max-width: 100%
 `
 
