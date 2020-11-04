@@ -7,9 +7,10 @@ const Select = styled.select`
     border: 1px solid ${props => props.theme.color.grey};
     cursor: pointer;
     margin-top: .5rem;
+    width: 100%;
 
     @media ${device.mobileS} {
-        max-width: 93%;
+        max-width: 100%;
     }
 
     @media ${device.mobileL} {

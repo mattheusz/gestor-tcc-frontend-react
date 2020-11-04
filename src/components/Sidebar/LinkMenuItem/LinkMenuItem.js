@@ -29,6 +29,7 @@ const LinkMenuItem = styled(Link)`
             left: 0;
             width: 100%;
             height: 100%;
+            background-color: ${props => props.active ? props.theme.color.secondaryShadow : 'white'}
         }
 
     &:hover{

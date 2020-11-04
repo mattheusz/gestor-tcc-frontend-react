@@ -32,13 +32,13 @@ const Button = styled.button`
 
     @media ${device.mobileL}{
         width: ${props => props.width ? props.width : '100%'};
-        margin-top: 0;
+        margin-top: ${props => props.new ? '0' : '.7rem'};;
         margin-left: 0;
     }
 
     @media ${device.laptop}{
         width: ${props => props.width ? props.width : '100%'};
-        margin-top: 0;
+        margin-top: ${props => props.new ? '0' : '.7rem'};;
         margin-left: 0;
     }
 

@@ -20,6 +20,7 @@ import SearchBar from '../../components/SearchBar';
 import { IconContext } from 'react-icons/';
 import { AiOutlineEdit, AiOutlineUserAdd } from 'react-icons/ai';
 import { BsToggleOff, BsToggleOn } from 'react-icons/bs';
+import Switch from 'react-input-switch';
 import light from '../../themes/light';
 
 function Professores(props) {
@@ -28,6 +29,7 @@ function Professores(props) {
     const [selectedValue, setSelectedValue] = useState('ativo');
     const [noUserFound, setNoUserFound] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [isActive, setIsActive] = useState(true);
 
     const isInitialMount = useRef(true);
 
@@ -125,8 +127,17 @@ function Professores(props) {
         history.push('/coordenador/professores/add');
     }
 
+    const activeAndInactive = (id, status) => {
+        if (status === 'ativo') {
+            // exibir modal
+            // pedir pra usuário confirmar desativação
+        } else {
+
+        }
+    }
+
     return (
-        <DashboardUI screenName='Professores'>
+        <DashboardUI screenName='Professores' itemActive="Professor">
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}
@@ -155,8 +166,9 @@ function Professores(props) {
                                     <Table.Cell>{registration}</Table.Cell>
                                     <Table.Cell>{name}</Table.Cell>
                                     <Table.Cell>{email}</Table.Cell>
-                                    <Table.Cell >
-                                        <AiOutlineEdit cursor='pointer' onClick={() => { editProfessor(_id) }} color='blue' size='2rem' /> &nbsp;&nbsp;
+                                    <Table.Cell style={{ display: 'flex', alignItems: 'center' }}>
+                                        <Switch on='ativo' off='inativo' value={status} onChange={() => { activeAndInactive(_id) }} />
+                                        <AiOutlineEdit cursor='pointer' onClick={() => { editProfessor(_id, status) }} color={light.color.primaryShadow} size='2rem' /> &nbsp;&nbsp;
                                         {console.log('status: ', status)}
                                         {status === 'ativo' ? <BsToggleOn color={light.color.primary} size='2rem' /> : <BsToggleOff color={light.color.grey} size='2rem' />}
                                     </Table.Cell>

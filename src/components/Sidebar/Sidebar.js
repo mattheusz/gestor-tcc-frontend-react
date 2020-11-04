@@ -29,7 +29,7 @@ function menuToBeDisplayed() {
     }
 }
 
-function Sidebar({ showSidebar }) {
+function Sidebar({ showSidebar, itemActive }) {
 
     const menu = menuToBeDisplayed();
 

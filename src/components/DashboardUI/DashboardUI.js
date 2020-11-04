@@ -7,7 +7,7 @@ import ViewTitle from '../ViewTitle';
 import { device } from '../../device';
 
 
-function DashboardUI({ screenName, children }) {
+function DashboardUI({ screenName, itemActive, children }) {
 
     const [showSidebar, setShowSidebar] = useState(true);
 
@@ -21,7 +21,7 @@ function DashboardUI({ screenName, children }) {
                 <Header setShowSidebar={toggle}
 
                 />
-                <Sidebar showSidebar={showSidebar} />
+                <Sidebar showSidebar={showSidebar} itemActive={itemActive} />
                 <Content showSidebar={showSidebar}>
                     <Main >
                         <ViewTitle>{screenName}</ViewTitle>
