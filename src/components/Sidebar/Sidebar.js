@@ -37,10 +37,17 @@ function Sidebar({ showSidebar, itemActive }) {
     return (
         <Nav showSidebar={showSidebar}>
             <Menu>
-                {menu.map(({ icon, description, to }, index) =>
-                    <MenuItem key={index}>
-                        <LinkMenuItem to={to}>{icon} <span>{description}</span> </LinkMenuItem>
-                    </MenuItem>
+                {menu.map(({ icon, description, to }, index) => {
+                    if (description === itemActive)
+                        return <MenuItem key={index}>
+                            <LinkMenuItem to={to} active>{icon} <span>{description}</span> </LinkMenuItem>
+                        </MenuItem>
+                    else
+                        return <MenuItem key={index}>
+                            <LinkMenuItem to={to}>{icon} <span>{description}</span> </LinkMenuItem>
+                        </MenuItem>
+                }
+
                 )}
                 <MenuItem key={11}>
                     <LinkMenuItem to='/'>

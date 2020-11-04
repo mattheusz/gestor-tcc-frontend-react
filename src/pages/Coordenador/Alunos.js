@@ -117,7 +117,7 @@ function Alunos(props) {
     }
 
     return (
-        <DashboardUI screenName='Alunos'>
+        <DashboardUI screenName='Alunos' itemActive='Alunos'>
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}

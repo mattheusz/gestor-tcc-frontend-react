@@ -5,7 +5,8 @@ import { device } from '../../../device';
 const LinkMenuItem = styled(Link)`
     display: block;
     padding: .6rem .3rem .6rem 1.7rem;
-    color: ${props => props.theme.color.dark};
+    font-weight: ${props => props.active ? '400' : 'inherit'};
+    color: ${props => props.active ? 'white' : props.theme.color.dark};
     position: relative;
     transition: background-color .1s;
 
@@ -29,7 +30,9 @@ const LinkMenuItem = styled(Link)`
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: ${props => props.active ? props.theme.color.secondaryShadow : 'white'}
+            z-index: -21;
+            border-radius: 0 25px 25px 0;
+            background-color: ${props => props.active ? props.theme.color.secondaryDark : 'white'}
         }
 
     &:hover{

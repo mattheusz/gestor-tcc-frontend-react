@@ -137,7 +137,7 @@ function Professores(props) {
     }
 
     return (
-        <DashboardUI screenName='Professores' itemActive="Professor">
+        <DashboardUI screenName='Professores' itemActive="Professores">
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}
