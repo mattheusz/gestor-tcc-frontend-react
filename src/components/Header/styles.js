@@ -11,7 +11,7 @@ export const headerStyle = {
     backgroundColor: 'white',
     borderBottom: '1px solid rgba(0, 0, 0, 0.05)',
     boxShadow: '0 2px 5px rgba(0, 0, 0, 0.05)',
-    zIndex: '5',
+    zIndex: '0',
 }
 
 

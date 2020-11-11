@@ -131,7 +131,7 @@ function Alunos(props) {
                 <Table basic='very' striped selectable>
                     <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell>Matrícula</Table.HeaderCell>
+                            <Table.HeaderCell width={2}>Matrícula</Table.HeaderCell>
                             <Table.HeaderCell>Nome</Table.HeaderCell>
                             <Table.HeaderCell>E-mail</Table.HeaderCell>
                             <Table.HeaderCell>Ações</Table.HeaderCell>

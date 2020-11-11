@@ -40,7 +40,7 @@ function Sidebar({ showSidebar, itemActive }) {
                 {menu.map(({ icon, description, to }, index) => {
                     if (description === itemActive)
                         return <MenuItem key={index}>
-                            <LinkMenuItem to={to} active>{icon} <span>{description}</span> </LinkMenuItem>
+                            <LinkMenuItem to={to} active='true'>{icon} <span>{description}</span> </LinkMenuItem>
                         </MenuItem>
                     else
                         return <MenuItem key={index}>

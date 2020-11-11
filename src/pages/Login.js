@@ -75,8 +75,7 @@ function Login(props) {
                     {errors.password && errors.password.type === 'required' && <ErrorMessage left>A senha é obrigatória</ErrorMessage>}
                     {errors.password && errors.password.type === 'minLength' && <ErrorMessage left>A senha deve conter no mínimo 8 caracteres</ErrorMessage>}
 
-                    <Button type='submit' >Entrar
-                    </Button>
+
                     {formState.isSubmitting && <Spinner type='spin' color={lightTheme.color.primaryShadow} height={20} width={20} />}
                     {errorMessage && !formState.isSubmitting && <ErrorMessage>{errorMessage}</ErrorMessage>}
                     <SimpleLink to='/forgot_password'>Esqueceu a senha?</SimpleLink>

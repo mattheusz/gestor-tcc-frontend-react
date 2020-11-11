@@ -1,27 +1,17 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom'
+import light from '../../themes/light';
 
-import api, { getAllProfessors } from '../../api/api'
+import api from '../../api/api'
 
+import DashboardUI from '../../components/DashboardUI';
+import SearchBar from '../../components/SearchBar';
 import { Icon, Menu, Table } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
-import Button from '../../components/Button'
-import { BiSearch } from 'react-icons/bi';
-
-import BoxSearchButton, { SearchButton, SearchInput } from '../../components/BoxSearchButton/BoxSearchButton';
-import Select from '../../components/Select'
-
-import DashboardUI from '../../components/DashboardUI';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import SearchBar from '../../components/SearchBar';
-
-import { IconContext } from 'react-icons/';
-import { AiOutlineEdit, AiOutlineUserAdd } from 'react-icons/ai';
-import { BsToggleOff, BsToggleOn } from 'react-icons/bs';
 import Switch from 'react-input-switch';
-import light from '../../themes/light';
+import { AiOutlineEdit } from 'react-icons/ai';
+import { UserRegistrationContext } from '../../context/UserRegistrationContext';
 
 function Professores(props) {
     const [searchText, setSearchText] = useState('');
@@ -33,11 +23,14 @@ function Professores(props) {
 
     const isInitialMount = useRef(true);
 
+    //const { setUserRegistration } = useContext(UserRegistrationContext)
+
+
     const history = useHistory();
 
     // carregando todos os professores ao montar componente
     useEffect(() => {
-        api.get('usuarios/todos_usuarios/professor/1')
+        api.get('usuarios/todos_usuarios/professor/ativo/1')
             .then(({ data }) => {
                 setCurrentPage(data.page)
                 setNoUserFound(false);
@@ -63,7 +56,13 @@ function Professores(props) {
         if (isInitialMount.current) {
             isInitialMount.current = false;
         } else {
-            api.get(`usuarios/todos_usuarios/professor/${selectedValue}/1`)
+            let path;
+            if (selectedValue === 'todos')
+                path = `usuarios/todos_usuarios/professor/1`
+            else
+                path = `usuarios/todos_usuarios/professor/${selectedValue}/1`
+
+            api.get(path)
                 .then(response => {
                     console.log(response.data)
                     setNoUserFound(false)
@@ -120,11 +119,11 @@ function Professores(props) {
     }
 
     const addProfessor = () => {
-        history.push('/coordenador/professores/add');
+        history.push('/coordenador/professores/novo');
     }
 
     const editProfessor = () => {
-        history.push('/coordenador/professores/add');
+        history.push('/coordenador/professores/editar');
     }
 
     const activeAndInactive = (id, status) => {
@@ -151,7 +150,7 @@ function Professores(props) {
                 <Table basic='very' striped selectable>
                     <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell>Matrícula</Table.HeaderCell>
+                            <Table.HeaderCell width={2}>Matrícula</Table.HeaderCell>
                             <Table.HeaderCell>Nome</Table.HeaderCell>
                             <Table.HeaderCell>E-mail</Table.HeaderCell>
                             <Table.HeaderCell>Ações</Table.HeaderCell>
@@ -161,16 +160,36 @@ function Professores(props) {
 
                     <Table.Body>
                         {
-                            professores.map(({ _id, registration, name, email, status }) => (
+                            professores.map(({ _id, registration, name, email, status, isCoordinator }) => (
                                 <Table.Row key={_id}>
                                     <Table.Cell>{registration}</Table.Cell>
                                     <Table.Cell>{name}</Table.Cell>
                                     <Table.Cell>{email}</Table.Cell>
-                                    <Table.Cell style={{ display: 'flex', alignItems: 'center' }}>
-                                        <Switch on='ativo' off='inativo' value={status} onChange={() => { activeAndInactive(_id) }} />
-                                        <AiOutlineEdit cursor='pointer' onClick={() => { editProfessor(_id, status) }} color={light.color.primaryShadow} size='2rem' /> &nbsp;&nbsp;
+                                    <Table.Cell style={{ display: 'flex !important', alignItems: 'center', position: 'relative' }}>
+                                        {/*setUserRegistration({ _id, registration, name, email, status, isCoordinator })*/}
+                                        <AiOutlineEdit cursor='pointer' onClick={() => { editProfessor(_id, status) }} color={light.color.primary} size='2rem' /> &nbsp;&nbsp;
+                                        <Switch
+                                            on='ativo'
+                                            off='inativo'
+                                            style={{
+                                                width: '2rem',
+                                                height: '1.2rem',
+                                                position: 'absolute',
+                                                top: '50%',
+                                                transform: 'translateY(-50%)'
+                                            }}
+                                            styles={{
+                                                trackChecked: {
+                                                    backgroundColor: light.color.primary
+                                                },
+                                                buttonChecked: {
+                                                    backgroundColor: 'white'
+                                                }
+                                            }}
+                                            value={status}
+                                            onChange={() => { activeAndInactive(_id) }} />
                                         {console.log('status: ', status)}
-                                        {status === 'ativo' ? <BsToggleOn color={light.color.primary} size='2rem' /> : <BsToggleOff color={light.color.grey} size='2rem' />}
+
                                     </Table.Cell>
                                 </Table.Row>
                             ))

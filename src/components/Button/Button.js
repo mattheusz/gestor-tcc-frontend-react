@@ -13,7 +13,7 @@ const Button = styled.button`
     cursor: pointer;
     margin-top: .5rem;
     outline: none;
-    display: flex;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
 

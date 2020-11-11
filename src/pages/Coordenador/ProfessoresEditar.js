@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import { useForm } from 'react-hook-form'
 import { useHistory } from 'react-router-dom'
 import api from '../../api/api'
@@ -14,8 +14,9 @@ import Checkbox from '../../components/Checkbox';
 import ErrorMessage from '../../components/Error'
 import light from '../../themes/light';
 import Label from '../../components/Label/Label';
+import { UserRegistrationContext } from '../../context/UserRegistrationContext';
 
-function ProfessoresCadastrar(props) {
+function ProfessoresEditar(props) {
     const [searchText, setSearchText] = useState('');
     const [selectedValue, setSelectedValue] = useState('ativo');
     const [checked, setChecked] = useState(false);
@@ -25,6 +26,8 @@ function ProfessoresCadastrar(props) {
 
     const isInitialMount = useRef(true);
 
+    //const { userRegistration } = useContext(UserRegistrationContext)
+    //const { registration, name } = userRegistration;
 
     const onChangeSelect = e => {
         setSelectedValue(e.target.value)
@@ -76,7 +79,7 @@ function ProfessoresCadastrar(props) {
     }
 
     return (
-        <DashboardUI screenName='Cadastrar Professor' itemActive="Professores">
+        <DashboardUI screenName='Editar Professor' itemActive="Professores">
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='fullName'>Nome completo</Label>
@@ -202,4 +205,4 @@ function ProfessoresCadastrar(props) {
     );
 }
 
-export default ProfessoresCadastrar;
+export default ProfessoresEditar;
