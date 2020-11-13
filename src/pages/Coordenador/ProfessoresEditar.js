@@ -19,15 +19,19 @@ import { UserRegistrationContext } from '../../context/UserRegistrationContext';
 function ProfessoresEditar(props) {
     const [searchText, setSearchText] = useState('');
     const [selectedValue, setSelectedValue] = useState('ativo');
-    const [checked, setChecked] = useState(false);
+
     const { register, handleSubmit, errors, formState } = useForm({ mode: 'onSubmit' });
 
     const history = useHistory()
 
     const isInitialMount = useRef(true);
 
-    //const { userRegistration } = useContext(UserRegistrationContext)
-    //const { registration, name } = userRegistration;
+    const { userRegistration } = useContext(UserRegistrationContext)
+    const { registration, name, email, isCoordinator } = userRegistration;
+    const [checked, setChecked] = useState(isCoordinator);
+
+    const { userRegistration: { _id } } = useContext(UserRegistrationContext)
+    console.log('ID', _id);
 
     const onChangeSelect = e => {
         setSelectedValue(e.target.value)
@@ -35,17 +39,17 @@ function ProfessoresEditar(props) {
     }
 
     const handleCheckboxChange = event => {
-        console.debug('Checkbox', 'foi clicado')
+        console.debug('Checkbox', event.target.checked)
         setChecked(event.target.checked)
     }
 
-    const onSubmit = ({ fullName, email, registration, password, confirmPassword, isCoordinator }) => {
-        api.post('usuarios/cadastrar_professor', {
+    const onSubmit = ({ fullName, email, registration, isCoordinator }) => {
+        console.debug('Coordenador', isCoordinator)
+        api.patch('usuarios/todos_usuarios/atualizar_professor', {
+            id: _id,
             name: fullName,
             email,
             registration,
-            password,
-            confirmPassword,
             isCoordinator,
             userType: 'professor',
             status: 'ativo'
@@ -53,7 +57,7 @@ function ProfessoresEditar(props) {
             .then(response => {
                 console.log(response.data);
                 const notify = () =>
-                    toast.success("Professor cadastrado com sucesso", {
+                    toast.success("Professor atualizado com sucesso", {
                         autoClose: 2000,
                     }
                     );
@@ -88,6 +92,7 @@ function ProfessoresEditar(props) {
                     <Input
                         id='fullName'
                         name='fullName'
+                        defaultValue={name}
                         ref={register({
                             required: 'true'
                         })}
@@ -108,6 +113,7 @@ function ProfessoresEditar(props) {
                         id='email'
                         name='email'
                         type='email'
+                        defaultValue={email}
                         ref={register({
                             required: 'true'
                         })}
@@ -128,6 +134,7 @@ function ProfessoresEditar(props) {
                     <Input
                         id='registration'
                         name='registration'
+                        defaultValue={registration}
                         ref={register({
                             required: 'true'
                         })}
@@ -141,40 +148,7 @@ function ProfessoresEditar(props) {
                     </ErrorMessage>
                 }
 
-                <Label htmlFor='password'>Senha</Label>
-                <IconTextField>
-                    <FaLock />
-                    <Input
-                        id='password'
-                        name='password'
-                        ref={register({
-                            required: 'true',
-                            minLength: 8
-                        })}
-                        placeholder='Senha'
-                        style={{ borderColor: errors.password && light.color.secondary }}
-                    />
-                </IconTextField>
-                {errors.password &&
-                    <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>
-                        A senha completo é obrigatória.
-                    </ErrorMessage>
-                }
 
-                <Label htmlFor='confirmPassword'>Confirmar Senha</Label>
-                <IconTextField>
-                    <FaLock />
-                    <Input
-                        id='confirmPassword'
-                        name='confirmPassword'
-                        ref={register({
-                            required: 'true',
-                            minLength: 8
-                        })}
-                        placeholder='Senha'
-                        style={{ borderColor: errors.confirmPassword && light.color.secondary }}
-                    />
-                </IconTextField>
                 {errors.password &&
                     <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>
                         A senha completo é obrigatória.
@@ -184,12 +158,15 @@ function ProfessoresEditar(props) {
                 <Label style={{ fontSize: '1.1rem' }}>
                     <Checkbox
                         name='isCoordinator'
+                        defaultValue={isCoordinator}
                         checked={checked}
                         onChange={e => handleCheckboxChange(e)}
-                        ref={register}
+                        register={register}
                     />
                     <span style={{ marginLeft: 8, cursor: 'pointer' }}>Coordenador</span>
                 </Label>
+
+
                 <br />
                 <Button new={true} type='submit' width='100px'>
                     Salvar

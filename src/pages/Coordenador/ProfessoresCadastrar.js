@@ -183,7 +183,7 @@ function ProfessoresCadastrar(props) {
                         name='isCoordinator'
                         checked={checked}
                         onChange={e => handleCheckboxChange(e)}
-                        ref={register}
+                        register={register}
                     />
                     <span style={{ marginLeft: 8, cursor: 'pointer' }}>Coordenador</span>
                 </Label>
