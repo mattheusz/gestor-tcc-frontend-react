@@ -9,6 +9,7 @@ import SearchBar from '../../components/SearchBar';
 import { Icon, Menu, Table } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
+import { ToastContainer, toast } from 'react-toastify';
 import Switch from 'react-input-switch';
 import Modal from 'react-modal';
 import { AiOutlineEdit } from 'react-icons/ai';
@@ -18,26 +19,46 @@ import Button from '../../components/Button';
 function Professores(props) {
     const [searchText, setSearchText] = useState('');
     const [professores, setProfessores] = useState([]);
-    const [selectedValue, setSelectedValue] = useState('ativo');
+
     const [noUserFound, setNoUserFound] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState();
     const [isActive, setIsActive] = useState(true);
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [statusProfessorChanged, setStatusProfessorChanged] = useState(false);
+
+    const [mountedPagination, setMountedPagination] = useState(false);
 
     const isInitialMount = useRef(true);
 
-    const { setUserRegistration } = useContext(UserRegistrationContext)
+    let professorName = useRef('');
+    let professorId = useRef('');
+    let professorStatus = useRef('')
 
+    let modalMessage = useRef('')
+
+    let paginationNumbers = useRef([]);
+    let endPaginationNumbers = useRef([]);
+
+
+    const { setUserRegistration } = useContext(UserRegistrationContext);
+
+    Modal.setAppElement('#root');
 
     const history = useHistory();
 
     // carregando todos os professores ao montar componente
     useEffect(() => {
+        if (mountedPagination)
+            return;
         api.get('usuarios/todos_usuarios/professor/ativo/1')
             .then(({ data }) => {
-                setCurrentPage(data.page)
+                console.log('Data', data);
+                setCurrentPage(data.page);
+                setTotalPages(data.totalPages);
                 setNoUserFound(false);
                 setProfessores(data.docs);
+                pagination();
             })
             .catch(error => {
                 if (error.response) {
@@ -52,18 +73,37 @@ function Professores(props) {
                     console.log('Error', error.message);
                 }
             });
-    }, []);
+    }, [statusProfessorChanged, mountedPagination]);
 
     // filtrando professor por todos, ativo e inativo
+    const [selectedValue, setSelectedValue] = useState('ativo');
     useEffect(() => {
         if (isInitialMount.current) {
             isInitialMount.current = false;
         } else {
             let path;
+
+            if (searchText === '') {
+                path = `usuarios/todos_usuarios/professor/${selectedValue}/1`
+                if (selectedValue === 'todos')
+                    path = `usuarios/todos_usuarios/professor/1`
+            }
+            else {
+                path = `usuarios/listar_usuarios/professor/${selectedValue}/${searchText}/1`
+                //if (selectedValue === 'todos')
+                /* 
+                    rota precisa ser similar ao if (selectedValue) anterior.
+                    a diferença é que será passado o valor do campo de texto
+                */
+            }
+
+            /*
             if (selectedValue === 'todos')
                 path = `usuarios/todos_usuarios/professor/1`
             else
-                path = `usuarios/todos_usuarios/professor/${selectedValue}/1`
+                //path = `usuarios/todos_usuarios/professor/${selectedValue}/1`
+                path = `usuarios/listar_usuarios/professor/${selectedValue}/${searchText}/1`
+            */
 
             api.get(path)
                 .then(response => {
@@ -88,13 +128,18 @@ function Professores(props) {
     const onSubmit = e => {
         e.preventDefault();
         let path;
+
+        // tratando buscar por texto + status
         if (searchText === '') {
-            path = 'usuarios/todos_usuarios/professor/1'
+            path = `usuarios/todos_usuarios/professor/${selectedValue}/1`
+            if (selectedValue === 'todos')
+                path = `usuarios/todos_usuarios/professor/1`
         }
         else {
-            path = `usuarios/listar_usuarios/professor/${searchText}/1`;
+            path = `usuarios/listar_usuarios/professor/${selectedValue}/${searchText}/1`
         }
 
+        console.log('path: ', path)
         api.get(path)
             .then(response => {
                 console.log(response.data);
@@ -130,15 +175,70 @@ function Professores(props) {
         history.push('/coordenador/professores/editar');
     }
 
-    const activeAndInactive = (id, status) => {
-        console.log('Status:', status)
-        if (status === 'ativo') {
-            setModalIsOpen(true)
-            // exibir modal
-            // pedir pra usuário confirmar desativação
-        } else {
-            alert('Oi')
+    const activeAndInactive = (id, name, status) => {
+        professorId.current = id;
+        professorName.current = name;
+        professorStatus.current = status;
+
+        if (status === 'ativo')
+            modalMessage.current = `Deseja desativar o professor ${professorName.current}?`
+        else
+            modalMessage.current = `Deseja ativar o professor ${professorName.current}?`
+
+        setModalIsOpen(true)
+    }
+
+    const changeStatusProfessor = () => {
+        api.put('usuarios/atualizar_status', {
+            id: professorId.current,
+        })
+            .then(response => {
+                setStatusProfessorChanged(!statusProfessorChanged)
+                setModalIsOpen(false);
+
+                if (professorStatus.current === 'ativo') {
+                    toast.success('Professor desativado com sucesso', {
+                        autoClose: 3000,
+                    });
+                } else {
+                    toast.success('Professor ativado com sucesso', {
+                        autoClose: 3000,
+                    });
+                }
+            })
+            .catch(error => {
+                if (error.response) {
+                    setModalIsOpen(false)
+                    toast.error("A ação não foi executada. Tente novamente", {
+                        autoClose: 4000,
+                    });
+                }
+                if (error.request) {
+                    console.log(error.request);
+                }
+                else {
+                    console.log('Error', error.message);
+                }
+            });
+    }
+
+    const pagination = () => {
+        paginationNumbers.current = [1, 2];
+        if (totalPages > 5) {
+            let penultimateNumber = totalPages - 1;
+            endPaginationNumbers = ['...', penultimateNumber, totalPages];
+            paginationNumbers.current = [...paginationNumbers.current, ...endPaginationNumbers.current]
+
+        } else if (totalPages === 5) {
+            endPaginationNumbers.current = [3, 4, 5]
+            paginationNumbers.current = [...paginationNumbers.current, ...endPaginationNumbers.current]
         }
+        else {
+            for (let i = 0; i < totalPages; i++) {
+                paginationNumbers.current[i] = i + 1;
+            }
+        }
+        setMountedPagination(true);
     }
 
     return (
@@ -192,7 +292,7 @@ function Professores(props) {
                                                 }
                                             }}
                                             value={status}
-                                            onChange={() => { activeAndInactive(_id, status) }} />
+                                            onChange={() => { activeAndInactive(_id, name, status) }} />
 
                                     </Table.Cell>
                                 </Table.Row>
@@ -206,12 +306,19 @@ function Professores(props) {
                                 <Menu floated='right' pagination>
                                     <Menu.Item as='a' icon>
                                         <Icon name='chevron left' />
+                                        <Icon name='chevron left' />
                                     </Menu.Item>
-                                    <Menu.Item as='a'>1</Menu.Item>
-                                    <Menu.Item as='a'>2</Menu.Item>
-                                    <Menu.Item as='a'>3</Menu.Item>
-                                    <Menu.Item as='a'>4</Menu.Item>
                                     <Menu.Item as='a' icon>
+                                        <Icon name='chevron left' />
+                                    </Menu.Item>
+                                    {paginationNumbers.current.map((value, index) =>
+                                        <Menu.Item key={index} as='a' > {value}</Menu.Item>
+                                    )}
+                                    <Menu.Item as='a' icon>
+                                        <Icon name='chevron right' />
+                                    </Menu.Item>
+                                    <Menu.Item as='a' icon>
+                                        <Icon name='chevron right' />
                                         <Icon name='chevron right' />
                                     </Menu.Item>
                                 </Menu>
@@ -228,7 +335,10 @@ function Professores(props) {
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -70%)',
-                        height: '180px', width: '500px', maxWidth: '90%'
+                        height: '180px', width: '500px', maxWidth: '90%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-around'
                     },
                     overlay: {
                         zIndex: '15',
@@ -236,13 +346,13 @@ function Professores(props) {
                     }
                 }}
             >
-                <h1>Deseja excluir?</h1>
-                <p>Esta ação é irreversível</p>
+                <h1>{modalMessage.current}</h1>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
-                    <Button>Sim</Button>
-                    <Button>Cancelar</Button>
+                    <Button onClick={() => changeStatusProfessor()}>Sim</Button>
+                    <Button onClick={() => setModalIsOpen(false)}>Cancelar</Button>
                 </div>
             </Modal>
+            <ToastContainer />
         </DashboardUI>
 
     );
