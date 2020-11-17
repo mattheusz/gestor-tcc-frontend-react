@@ -18,11 +18,11 @@ import Button from '../../components/Button';
 
 function Professores(props) {
     const [searchText, setSearchText] = useState('');
+    const [olderSearchText, setOlderSearchText] = useState('');
     const [professores, setProfessores] = useState([]);
 
     const [noUserFound, setNoUserFound] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState();
     const [isActive, setIsActive] = useState(true);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [statusProfessorChanged, setStatusProfessorChanged] = useState(false);
@@ -36,10 +36,12 @@ function Professores(props) {
     let professorStatus = useRef('')
 
     let modalMessage = useRef('')
+    let totalPages = useRef();
 
     let paginationNumbers = useRef([]);
     let endPaginationNumbers = useRef([]);
 
+    console.debug('componente renderizado')
 
     const { setUserRegistration } = useContext(UserRegistrationContext);
 
@@ -55,10 +57,10 @@ function Professores(props) {
             .then(({ data }) => {
                 console.log('Data', data);
                 setCurrentPage(data.page);
-                setTotalPages(data.totalPages);
+                totalPages.current = data.totalPages;
                 setNoUserFound(false);
                 setProfessores(data.docs);
-                pagination();
+                buildPaginatorDesign();
             })
             .catch(error => {
                 if (error.response) {
@@ -73,7 +75,7 @@ function Professores(props) {
                     console.log('Error', error.message);
                 }
             });
-    }, [statusProfessorChanged, mountedPagination]);
+    }, [statusProfessorChanged]);
 
     // filtrando professor por todos, ativo e inativo
     const [selectedValue, setSelectedValue] = useState('ativo');
@@ -82,6 +84,7 @@ function Professores(props) {
             isInitialMount.current = false;
         } else {
             let path;
+
 
             if (searchText === '') {
                 path = `usuarios/todos_usuarios/professor/${selectedValue}/1`
@@ -97,19 +100,13 @@ function Professores(props) {
                 */
             }
 
-            /*
-            if (selectedValue === 'todos')
-                path = `usuarios/todos_usuarios/professor/1`
-            else
-                //path = `usuarios/todos_usuarios/professor/${selectedValue}/1`
-                path = `usuarios/listar_usuarios/professor/${selectedValue}/${searchText}/1`
-            */
-
             api.get(path)
-                .then(response => {
-                    console.log(response.data)
+                .then(({ data }) => {
                     setNoUserFound(false)
-                    setProfessores(response.data.docs)
+                    setProfessores(data.docs)
+                    setCurrentPage(data.page);
+                    totalPages.current = data.totalPages;
+                    buildPaginatorDesign();
                 })
                 .catch(error => {
                     if (error.response) {
@@ -141,11 +138,12 @@ function Professores(props) {
 
         console.log('path: ', path)
         api.get(path)
-            .then(response => {
-                console.log(response.data);
-                setNoUserFound(false);
-                setProfessores(response.data.docs);
-
+            .then(({ data }) => {
+                setNoUserFound(false)
+                setProfessores(data.docs)
+                setCurrentPage(data.page);
+                totalPages.current = data.totalPages;
+                buildPaginatorDesign();
             })
             .catch(error => {
                 if (error.response) {
@@ -163,6 +161,8 @@ function Professores(props) {
     }
 
     const onChangeSelect = e => {
+        setMountedPagination(false)
+        console.debug('mounted pagination: ', mountedPagination)
         setSelectedValue(e.target.value)
     }
 
@@ -222,23 +222,70 @@ function Professores(props) {
             });
     }
 
-    const pagination = () => {
-        paginationNumbers.current = [1, 2];
-        if (totalPages > 5) {
-            let penultimateNumber = totalPages - 1;
-            endPaginationNumbers = ['...', penultimateNumber, totalPages];
-            paginationNumbers.current = [...paginationNumbers.current, ...endPaginationNumbers.current]
+    const buildPaginatorDesign = () => {
+        //paginationNumbers.current = [1, 2];
+        paginationNumbers.current = [];
+        //totalPages.current = 5
+        if (parseInt(totalPages.current) > 5) {
+            // alterar aqui
+            paginationNumbers.current = [
+                currentPage - 2,
+                currentPage - 1,
+                currentPage,
+                currentPage + 1,
+                currentPage + 2
+            ]
 
-        } else if (totalPages === 5) {
+        } if (parseInt(totalPages.current) == parseInt(5)) {
+            paginationNumbers.current = [];
             endPaginationNumbers.current = [3, 4, 5]
-            paginationNumbers.current = [...paginationNumbers.current, ...endPaginationNumbers.current]
+            paginationNumbers.current = [1, 2, ...endPaginationNumbers.current]
         }
-        else {
-            for (let i = 0; i < totalPages; i++) {
+        if (totalPages.current < 5) {
+            paginationNumbers.current = [];
+            for (let i = 0; i < totalPages.current; i++) {
                 paginationNumbers.current[i] = i + 1;
             }
         }
+        paginationNumbers.current.forEach(value => console.log('itens', value))
         setMountedPagination(true);
+    }
+
+    const choosePage = (e, page) => {
+
+        e.preventDefault();
+        let path;
+        // tratando buscar por texto + status
+        if (searchText === '') {
+            path = `usuarios/todos_usuarios/professor/${selectedValue}/${page}`
+            if (selectedValue === 'todos')
+                path = `usuarios/todos_usuarios/professor/1`
+        }
+        else {
+            path = `usuarios/listar_usuarios/professor/${selectedValue}/${searchText}/${page}`
+        }
+
+        console.log('path: ', path)
+        api.get(path)
+            .then(response => {
+                console.log(response.data);
+                setNoUserFound(false);
+                setProfessores(response.data.docs);
+
+            })
+            .catch(error => {
+                if (error.response) {
+                    const msg = error.response.data;
+                    console.log(msg);
+                    setNoUserFound(true)
+                }
+                if (error.request) {
+                    console.log(error.request);
+                }
+                else {
+                    console.log('Error', error.message);
+                }
+            });
     }
 
     return (
@@ -309,10 +356,16 @@ function Professores(props) {
                                         <Icon name='chevron left' />
                                     </Menu.Item>
                                     <Menu.Item as='a' icon>
-                                        <Icon name='chevron left' />
+                                        <Icon name='chevron left' onClick={e => {
+                                            if (currentPage === 1)
+                                                return;
+                                            choosePage(e, currentPage - 1)
+                                        }} />
                                     </Menu.Item>
                                     {paginationNumbers.current.map((value, index) =>
-                                        <Menu.Item key={index} as='a' > {value}</Menu.Item>
+                                        <Menu.Item key={index} as='a' onClick={e => choosePage(e, value)}>
+                                            {value}
+                                        </Menu.Item>
                                     )}
                                     <Menu.Item as='a' icon>
                                         <Icon name='chevron right' />

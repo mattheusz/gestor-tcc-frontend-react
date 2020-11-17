@@ -19,6 +19,7 @@ function ProfessoresCadastrar(props) {
     const [searchText, setSearchText] = useState('');
     const [selectedValue, setSelectedValue] = useState('ativo');
     const [checked, setChecked] = useState(false);
+    const [errorMessage, setErrorMessage] = useState();
     const { register, handleSubmit, errors, formState } = useForm({ mode: 'onSubmit' });
 
     const history = useHistory()
@@ -64,6 +65,7 @@ function ProfessoresCadastrar(props) {
                 if (error.response) {
                     const msg = error.response.data;
                     console.log(msg);
+                    setErrorMessage(msg)
                 }
                 if (error.request) {
                     console.log(error.request);
@@ -89,6 +91,7 @@ function ProfessoresCadastrar(props) {
                             required: 'true'
                         })}
                         placeholder='Nome Completo'
+                        autoFocus
                         style={{ borderColor: errors.fullName && light.color.secondary }}
                     />
                 </IconTextField>
@@ -152,11 +155,15 @@ function ProfessoresCadastrar(props) {
                         style={{ borderColor: errors.password && light.color.secondary }}
                     />
                 </IconTextField>
-                {errors.password &&
+                {errors.password && errors.password.type === 'required' &&
                     <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>
-                        A senha completo é obrigatória.
+                        A senha é obrigatória.
                     </ErrorMessage>
                 }
+                {errors.password && errors.password.type === 'minLength' &&
+                    <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>A senha deve ter no mínimo 8 caracteres </ErrorMessage>
+                }
+
 
                 <Label htmlFor='confirmPassword'>Confirmar Senha</Label>
                 <IconTextField>
@@ -172,10 +179,12 @@ function ProfessoresCadastrar(props) {
                         style={{ borderColor: errors.confirmPassword && light.color.secondary }}
                     />
                 </IconTextField>
-                {errors.password &&
-                    <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>
-                        A senha completo é obrigatória.
-                    </ErrorMessage>
+                {errors.confirmPassword && errors.confirmPassword.type === 'required' &&
+                    <ErrorMessage left> style={{ marginTop: '-10px', marginBottom: '3px' }}A confirmação senha deve preenchida</ErrorMessage>
+                }
+                {/*errors.confirmPassword && errors.confirmPassword.type === 'minLength' && <ErrorMessage left>A confirmação senha deve ter no mínimo 8 caracteres </ErrorMessage>*/}
+                {errors.confirmPassword && errors.confirmPassword.type === 'minLength' &&
+                    <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>As senhas digitadas não conferem </ErrorMessage>
                 }
 
                 <Label style={{ fontSize: '1.1rem' }}>
@@ -188,6 +197,11 @@ function ProfessoresCadastrar(props) {
                     <span style={{ marginLeft: 8, cursor: 'pointer' }}>Coordenador</span>
                 </Label>
                 <br />
+                {errorMessage &&
+                    <ErrorMessage left style={{ marginTop: '4px', marginBottom: '7px' }}>
+                        {errorMessage}
+                    </ErrorMessage>
+                }
                 <Button new={true} type='submit' width='100px'>
                     Salvar
                 </Button>
