@@ -17,26 +17,18 @@ import Label from '../../components/Label/Label';
 import { UserRegistrationContext } from '../../context/UserRegistrationContext';
 
 function ProfessoresEditar(props) {
-    const [searchText, setSearchText] = useState('');
-    const [selectedValue, setSelectedValue] = useState('ativo');
 
     const { register, handleSubmit, errors, formState } = useForm({ mode: 'onSubmit' });
 
     const history = useHistory()
 
-    const isInitialMount = useRef(true);
-
     const { userRegistration } = useContext(UserRegistrationContext)
-    const { registration, name, email, isCoordinator } = userRegistration;
+    const { registration, name, email, isCoordinator, status } = userRegistration;
     const [checked, setChecked] = useState(isCoordinator);
+    console.log('checked? ', checked)
 
     const { userRegistration: { _id } } = useContext(UserRegistrationContext)
     console.log('ID', _id);
-
-    const onChangeSelect = e => {
-        setSelectedValue(e.target.value)
-
-    }
 
     const handleCheckboxChange = event => {
         console.debug('Checkbox', event.target.checked)
@@ -44,15 +36,17 @@ function ProfessoresEditar(props) {
     }
 
     const onSubmit = ({ fullName, email, registration, isCoordinator }) => {
-        console.debug('Coordenador', isCoordinator)
+        console.log('full name:', fullName)
+        console.log('email', email)
+        console.log('is coordinator', isCoordinator)
         api.patch('usuarios/todos_usuarios/atualizar_professor', {
             id: _id,
             name: fullName,
             email,
             registration,
-            isCoordinator,
+            isCoordinator: isCoordinator,
             userType: 'professor',
-            status: 'ativo'
+            status
         })
             .then(response => {
                 console.log(response.data);
@@ -158,7 +152,6 @@ function ProfessoresEditar(props) {
                 <Label style={{ fontSize: '1.1rem' }}>
                     <Checkbox
                         name='isCoordinator'
-                        defaultValue={isCoordinator}
                         checked={checked}
                         onChange={e => handleCheckboxChange(e)}
                         register={register}

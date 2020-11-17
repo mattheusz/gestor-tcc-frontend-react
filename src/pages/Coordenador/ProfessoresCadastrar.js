@@ -27,17 +27,15 @@ function ProfessoresCadastrar(props) {
     const isInitialMount = useRef(true);
 
 
-    const onChangeSelect = e => {
-        setSelectedValue(e.target.value)
-
-    }
-
     const handleCheckboxChange = event => {
         console.debug('Checkbox', 'foi clicado')
         setChecked(event.target.checked)
     }
 
     const onSubmit = ({ fullName, email, registration, password, confirmPassword, isCoordinator }) => {
+        console.log('full name:', fullName)
+        console.log('email', email)
+        console.log('is coordinator', isCoordinator)
         api.post('usuarios/cadastrar_professor', {
             name: fullName,
             email,

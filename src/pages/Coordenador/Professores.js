@@ -25,7 +25,7 @@ function Professores(props) {
     const [currentPage, setCurrentPage] = useState(1);
     const [isActive, setIsActive] = useState(true);
     const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [statusProfessorChanged, setStatusProfessorChanged] = useState(false);
+
 
     const [mountedPagination, setMountedPagination] = useState(false);
 
@@ -75,10 +75,11 @@ function Professores(props) {
                     console.log('Error', error.message);
                 }
             });
-    }, [statusProfessorChanged]);
+    }, []);
 
     // filtrando professor por todos, ativo e inativo
     const [selectedValue, setSelectedValue] = useState('ativo');
+    const [statusProfessorChanged, setStatusProfessorChanged] = useState(false);
     useEffect(() => {
         if (isInitialMount.current) {
             isInitialMount.current = false;
