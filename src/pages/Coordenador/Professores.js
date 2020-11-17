@@ -116,7 +116,7 @@ function Professores(props) {
                     }
                 });
         }
-    }, [selectedValue])
+    }, [selectedValue, statusProfessorChanged])
 
     const onSubmit = e => {
         setMountedPagination(false)
@@ -206,6 +206,7 @@ function Professores(props) {
                         autoClose: 3000,
                     });
                 }
+                setStatusProfessorChanged(!statusProfessorChanged)
             })
             .catch(error => {
                 if (error.response) {
