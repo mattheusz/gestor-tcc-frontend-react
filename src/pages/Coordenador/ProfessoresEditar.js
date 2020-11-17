@@ -94,7 +94,7 @@ function ProfessoresEditar(props) {
                         name='fullName'
                         defaultValue={name}
                         ref={register({
-                            required: 'true'
+                            required: true
                         })}
                         placeholder='Nome Completo'
                         style={{ borderColor: errors.fullName && light.color.secondary }}
@@ -115,7 +115,7 @@ function ProfessoresEditar(props) {
                         type='email'
                         defaultValue={email}
                         ref={register({
-                            required: 'true'
+                            required: true
                         })}
                         placeholder='E-mail'
                         style={{ borderColor: errors.email && light.color.secondary }}
@@ -136,7 +136,7 @@ function ProfessoresEditar(props) {
                         name='registration'
                         defaultValue={registration}
                         ref={register({
-                            required: 'true'
+                            required: true
                         })}
                         placeholder='Matrícula'
                         style={{ borderColor: errors.registration && light.color.secondary }}
@@ -144,14 +144,14 @@ function ProfessoresEditar(props) {
                 </IconTextField>
                 {errors.registration &&
                     <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>
-                        A matrícula  é obrigatória
+                        A matrícula é obrigatória
                     </ErrorMessage>
                 }
 
 
                 {errors.password &&
                     <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>
-                        A senha completo é obrigatória.
+                        A senha é obrigatória.
                     </ErrorMessage>
                 }
 

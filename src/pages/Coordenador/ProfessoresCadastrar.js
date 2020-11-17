@@ -88,7 +88,7 @@ function ProfessoresCadastrar(props) {
                         id='fullName'
                         name='fullName'
                         ref={register({
-                            required: 'true'
+                            required: true
                         })}
                         placeholder='Nome Completo'
                         autoFocus
@@ -96,7 +96,7 @@ function ProfessoresCadastrar(props) {
                     />
                 </IconTextField>
                 {errors.fullName &&
-                    <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>
+                    <ErrorMessage left marginTop marginBottom>
                         O nome completo é obrigatório
                     </ErrorMessage>
                 }
@@ -109,14 +109,14 @@ function ProfessoresCadastrar(props) {
                         name='email'
                         type='email'
                         ref={register({
-                            required: 'true'
+                            required: true
                         })}
                         placeholder='E-mail'
                         style={{ borderColor: errors.email && light.color.secondary }}
                     />
                 </IconTextField>
                 {errors.email &&
-                    <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>
+                    <ErrorMessage left marginTop marginBottom>
                         O e-mail é obrigatório
                     </ErrorMessage>
                 }
@@ -129,14 +129,14 @@ function ProfessoresCadastrar(props) {
                         id='registration'
                         name='registration'
                         ref={register({
-                            required: 'true'
+                            required: true
                         })}
                         placeholder='Matrícula'
                         style={{ borderColor: errors.registration && light.color.secondary }}
                     />
                 </IconTextField>
                 {errors.registration &&
-                    <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>
+                    <ErrorMessage left marginTop marginBottom>
                         A matrícula  é obrigatória
                     </ErrorMessage>
                 }
@@ -148,7 +148,7 @@ function ProfessoresCadastrar(props) {
                         id='password'
                         name='password'
                         ref={register({
-                            required: 'true',
+                            required: true,
                             minLength: 8
                         })}
                         placeholder='Senha'
@@ -156,12 +156,12 @@ function ProfessoresCadastrar(props) {
                     />
                 </IconTextField>
                 {errors.password && errors.password.type === 'required' &&
-                    <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>
+                    <ErrorMessage left marginTop marginBottom>
                         A senha é obrigatória.
                     </ErrorMessage>
                 }
                 {errors.password && errors.password.type === 'minLength' &&
-                    <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>A senha deve ter no mínimo 8 caracteres </ErrorMessage>
+                    <ErrorMessage left marginTop marginBottom>A senha deve ter no mínimo 8 caracteres </ErrorMessage>
                 }
 
 
@@ -172,7 +172,7 @@ function ProfessoresCadastrar(props) {
                         id='confirmPassword'
                         name='confirmPassword'
                         ref={register({
-                            required: 'true',
+                            required: true,
                             minLength: 8
                         })}
                         placeholder='Senha'
@@ -180,7 +180,7 @@ function ProfessoresCadastrar(props) {
                     />
                 </IconTextField>
                 {errors.confirmPassword && errors.confirmPassword.type === 'required' &&
-                    <ErrorMessage left> style={{ marginTop: '-10px', marginBottom: '3px' }}A confirmação senha deve preenchida</ErrorMessage>
+                    <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}> A confirmação senha deve preenchida</ErrorMessage>
                 }
                 {/*errors.confirmPassword && errors.confirmPassword.type === 'minLength' && <ErrorMessage left>A confirmação senha deve ter no mínimo 8 caracteres </ErrorMessage>*/}
                 {errors.confirmPassword && errors.confirmPassword.type === 'minLength' &&

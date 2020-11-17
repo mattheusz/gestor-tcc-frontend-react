@@ -85,7 +85,6 @@ function Professores(props) {
         } else {
             let path;
 
-
             if (searchText === '') {
                 path = `usuarios/todos_usuarios/professor/${selectedValue}/1`
                 if (selectedValue === 'todos')
@@ -93,11 +92,8 @@ function Professores(props) {
             }
             else {
                 path = `usuarios/listar_usuarios/professor/${selectedValue}/${searchText}/1`
-                //if (selectedValue === 'todos')
-                /* 
-                    rota precisa ser similar ao if (selectedValue) anterior.
-                    a diferença é que será passado o valor do campo de texto
-                */
+                if (selectedValue === 'todos')
+                    path = `usuarios/listar_usuarios/professor/${searchText}/1`
             }
 
             api.get(path)
@@ -123,6 +119,7 @@ function Professores(props) {
     }, [selectedValue])
 
     const onSubmit = e => {
+        setMountedPagination(false)
         e.preventDefault();
         let path;
 
@@ -134,6 +131,8 @@ function Professores(props) {
         }
         else {
             path = `usuarios/listar_usuarios/professor/${selectedValue}/${searchText}/1`
+            if (selectedValue === 'todos')
+                path = `usuarios/listar_usuarios/professor/${searchText}/1`
         }
 
         console.log('path: ', path)
@@ -143,6 +142,7 @@ function Professores(props) {
                 setProfessores(data.docs)
                 setCurrentPage(data.page);
                 totalPages.current = data.totalPages;
+                console.log('onbsubmit build pagination design');
                 buildPaginatorDesign();
             })
             .catch(error => {
@@ -158,6 +158,7 @@ function Professores(props) {
                     console.log('Error', error.message);
                 }
             });
+
     }
 
     const onChangeSelect = e => {
@@ -259,13 +260,18 @@ function Professores(props) {
         if (searchText === '') {
             path = `usuarios/todos_usuarios/professor/${selectedValue}/${page}`
             if (selectedValue === 'todos')
-                path = `usuarios/todos_usuarios/professor/1`
+                path = `usuarios/todos_usuarios/professor/${page}`
         }
         else {
             path = `usuarios/listar_usuarios/professor/${selectedValue}/${searchText}/${page}`
+            if (selectedValue === 'todos')
+                path = `usuarios/listar_usuarios/professor/${searchText}/${page}`
+
         }
 
-        console.log('path: ', path)
+        setCurrentPage(page);
+
+        console.log('page: ', page)
         api.get(path)
             .then(response => {
                 console.log(response.data);
@@ -299,7 +305,7 @@ function Professores(props) {
                     addUser={addProfessor}
                 />
             </form>
-            {noUserFound ? <p>Nenhum usuário encontrado</p> :
+            {noUserFound ? <h3 style={{ margin: ' 2.5rem', textAlign: 'center' }}>Nenhum usuário encontrado</h3> :
                 <Table basic='very' striped selectable>
                     <Table.Header>
                         <Table.Row>
@@ -351,26 +357,47 @@ function Professores(props) {
                         <Table.Row>
                             <Table.HeaderCell colSpan='4'>
                                 <Menu floated='right' pagination>
-                                    <Menu.Item as='a' icon>
+                                    <Menu.Item as='a' icon onClick={e => {
+                                        if (currentPage === 1)
+                                            return;
+                                        choosePage(e, 1)
+                                    }}>
                                         <Icon name='chevron left' />
                                         <Icon name='chevron left' />
                                     </Menu.Item>
-                                    <Menu.Item as='a' icon>
-                                        <Icon name='chevron left' onClick={e => {
-                                            if (currentPage === 1)
-                                                return;
-                                            choosePage(e, currentPage - 1)
-                                        }} />
+                                    <Menu.Item as='a' icon onClick={e => {
+                                        if (currentPage === 1)
+                                            return;
+                                        choosePage(e, currentPage - 1)
+                                    }}>
+                                        <Icon name='chevron left' />
                                     </Menu.Item>
-                                    {paginationNumbers.current.map((value, index) =>
-                                        <Menu.Item key={index} as='a' onClick={e => choosePage(e, value)}>
+
+                                    {paginationNumbers.current.map((value, index) => {
+                                        let activeStyle = {};
+                                        if (currentPage === value)
+                                            activeStyle = {
+                                                backgroundColor: light.color.primary,
+                                                color: 'white'
+                                            }
+                                        return <Menu.Item key={index} as='a' style={activeStyle} onClick={e => choosePage(e, value)}>
                                             {value}
                                         </Menu.Item>
+                                    }
                                     )}
-                                    <Menu.Item as='a' icon>
+
+                                    <Menu.Item as='a' icon onClick={e => {
+                                        if (currentPage === totalPages.current)
+                                            return;
+                                        choosePage(e, currentPage + 1)
+                                    }}>
                                         <Icon name='chevron right' />
                                     </Menu.Item>
-                                    <Menu.Item as='a' icon>
+                                    <Menu.Item as='a' icon onClick={e => {
+                                        if (currentPage === totalPages.current)
+                                            return;
+                                        choosePage(e, totalPages.current)
+                                    }}>
                                         <Icon name='chevron right' />
                                         <Icon name='chevron right' />
                                     </Menu.Item>
