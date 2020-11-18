@@ -15,11 +15,11 @@ import Modal from 'react-modal';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { UserRegistrationContext } from '../../context/UserRegistrationContext';
 import Button from '../../components/Button';
+import usePaginatorNumbers from '../../hooks/usePaginator';
 
-function Professores(props) {
+function TecnicoAdministrativo(props) {
     const [searchText, setSearchText] = useState('');
-    const [olderSearchText, setOlderSearchText] = useState('');
-    const [professores, setProfessores] = useState([]);
+    const [tecnicoAdministrativo, setTecnicoAdministrativo] = useState([]);
 
     const [noUserFound, setNoUserFound] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
@@ -31,15 +31,16 @@ function Professores(props) {
 
     const isInitialMount = useRef(true);
 
-    let professorName = useRef('');
-    let professorId = useRef('');
-    let professorStatus = useRef('')
+    let tecnicoAdministrativoName = useRef('');
+    let tecnicoAdministrativoId = useRef('');
+    let tecnicoAdministrativoStatus = useRef('')
 
     let modalMessage = useRef('')
     let totalPages = useRef();
 
     let paginationNumbers = useRef([]);
-    let endPaginationNumbers = useRef([]);
+
+    const { getReadyPaginator, populatePaginator } = usePaginatorNumbers()
 
     console.debug('componente renderizado')
 
@@ -53,13 +54,14 @@ function Professores(props) {
     useEffect(() => {
         if (mountedPagination)
             return;
-        api.get('usuarios/todos_usuarios/professor/ativo/1')
+        setMountedPagination(false);
+        api.get('usuarios/todos_usuarios/administrativo/ativo/1')
             .then(({ data }) => {
                 console.log('Data', data);
                 setCurrentPage(data.page);
                 totalPages.current = data.totalPages;
                 setNoUserFound(false);
-                setProfessores(data.docs);
+                setTecnicoAdministrativo(data.docs);
                 buildPaginatorDesign();
             })
             .catch(error => {
@@ -81,26 +83,27 @@ function Professores(props) {
     const [selectedValue, setSelectedValue] = useState('ativo');
     const [statusProfessorChanged, setStatusProfessorChanged] = useState(false);
     useEffect(() => {
+
         if (isInitialMount.current) {
             isInitialMount.current = false;
         } else {
             let path;
 
             if (searchText === '') {
-                path = `usuarios/todos_usuarios/professor/${selectedValue}/1`
+                path = `usuarios/todos_usuarios/administrativo/${selectedValue}/1`
                 if (selectedValue === 'todos')
-                    path = `usuarios/todos_usuarios/professor/1`
+                    path = `usuarios/todos_usuarios/administrativo/1`
             }
             else {
-                path = `usuarios/listar_usuarios/professor/${selectedValue}/${searchText}/1`
+                path = `usuarios/listar_usuarios/administrativo/${selectedValue}/${searchText}/1`
                 if (selectedValue === 'todos')
-                    path = `usuarios/listar_usuarios/professor/${searchText}/1`
+                    path = `usuarios/listar_usuarios/administrativo/${searchText}/1`
             }
 
             api.get(path)
                 .then(({ data }) => {
                     setNoUserFound(false)
-                    setProfessores(data.docs)
+                    setTecnicoAdministrativo(data.docs)
                     setCurrentPage(data.page);
                     totalPages.current = data.totalPages;
                     buildPaginatorDesign();
@@ -126,21 +129,21 @@ function Professores(props) {
 
         // tratando buscar por texto + status
         if (searchText === '') {
-            path = `usuarios/todos_usuarios/professor/${selectedValue}/1`
+            path = `usuarios/todos_usuarios/administrativo/${selectedValue}/1`
             if (selectedValue === 'todos')
-                path = `usuarios/todos_usuarios/professor/1`
+                path = `usuarios/todos_usuarios/administrativo/1`
         }
         else {
-            path = `usuarios/listar_usuarios/professor/${selectedValue}/${searchText}/1`
+            path = `usuarios/listar_usuarios/administrativo/${selectedValue}/${searchText}/1`
             if (selectedValue === 'todos')
-                path = `usuarios/listar_usuarios/professor/${searchText}/1`
+                path = `usuarios/listar_usuarios/administrativo/${searchText}/1`
         }
 
         console.log('path: ', path)
         api.get(path)
             .then(({ data }) => {
                 setNoUserFound(false)
-                setProfessores(data.docs)
+                setTecnicoAdministrativo(data.docs)
                 setCurrentPage(data.page);
                 totalPages.current = data.totalPages;
                 console.log('onbsubmit build pagination design');
@@ -159,51 +162,49 @@ function Professores(props) {
                     console.log('Error', error.message);
                 }
             });
-
     }
 
     const onChangeSelect = e => {
-        setMountedPagination(false)
-        console.debug('mounted pagination: ', mountedPagination)
+        setMountedPagination(false);
         setSelectedValue(e.target.value)
     }
 
     const addProfessor = () => {
-        history.push('/coordenador/professores/novo');
+        history.push('/coordenador/tecnicos_administrativos/novo');
     }
 
-    const editProfessor = (_id, registration, name, email, status, isCoordinator) => {
-        setUserRegistration({ _id, registration, name, email, status, isCoordinator })
-        history.push(`/coordenador/professores/editar/${_id}`);
+    const editProfessor = (_id, registration, name, email, status) => {
+        setUserRegistration({ _id, registration, name, email, status })
+        history.push(`/coordenador/tecnicos_administrativos/editar/${_id}`);
     }
 
     const activeAndInactive = (id, name, status) => {
-        professorId.current = id;
-        professorName.current = name;
-        professorStatus.current = status;
+        tecnicoAdministrativoId.current = id;
+        tecnicoAdministrativoName.current = name;
+        tecnicoAdministrativoName.current = status;
 
         if (status === 'ativo')
-            modalMessage.current = `Deseja desativar o professor ${professorName.current}?`
+            modalMessage.current = `Deseja desativar o técnico administrativo ${tecnicoAdministrativoName.current}?`
         else
-            modalMessage.current = `Deseja ativar o professor ${professorName.current}?`
+            modalMessage.current = `Deseja ativar o técnico administrativo ${tecnicoAdministrativoName.current}?`
 
         setModalIsOpen(true)
     }
 
     const changeStatusProfessor = () => {
         api.put('usuarios/atualizar_status', {
-            id: professorId.current,
+            id: tecnicoAdministrativoId.current,
         })
             .then(response => {
                 setStatusProfessorChanged(!statusProfessorChanged)
                 setModalIsOpen(false);
 
-                if (professorStatus.current === 'ativo') {
-                    toast.success('Professor desativado com sucesso', {
+                if (tecnicoAdministrativoStatus.current === 'ativo') {
+                    toast.success('Administrativo desativado com sucesso', {
                         autoClose: 3000,
                     });
                 } else {
-                    toast.success('Professor ativado com sucesso', {
+                    toast.success('Administrativo ativado com sucesso', {
                         autoClose: 3000,
                     });
                 }
@@ -226,31 +227,9 @@ function Professores(props) {
     }
 
     const buildPaginatorDesign = () => {
-        //paginationNumbers.current = [1, 2];
-        paginationNumbers.current = [];
-        //totalPages.current = 5
-        if (parseInt(totalPages.current) > 5) {
-            // alterar aqui
-            paginationNumbers.current = [
-                currentPage - 2,
-                currentPage - 1,
-                currentPage,
-                currentPage + 1,
-                currentPage + 2
-            ]
+        populatePaginator(currentPage, totalPages.current);
+        paginationNumbers.current = getReadyPaginator();
 
-        } if (parseInt(totalPages.current) == parseInt(5)) {
-            paginationNumbers.current = [];
-            endPaginationNumbers.current = [3, 4, 5]
-            paginationNumbers.current = [1, 2, ...endPaginationNumbers.current]
-        }
-        if (totalPages.current < 5) {
-            paginationNumbers.current = [];
-            for (let i = 0; i < totalPages.current; i++) {
-                paginationNumbers.current[i] = i + 1;
-            }
-        }
-        paginationNumbers.current.forEach(value => console.log('itens', value))
         setMountedPagination(true);
     }
 
@@ -260,14 +239,14 @@ function Professores(props) {
         let path;
         // tratando buscar por texto + status
         if (searchText === '') {
-            path = `usuarios/todos_usuarios/professor/${selectedValue}/${page}`
+            path = `usuarios/todos_usuarios/administrativo/${selectedValue}/${page}`
             if (selectedValue === 'todos')
-                path = `usuarios/todos_usuarios/professor/${page}`
+                path = `usuarios/todos_usuarios/administrativo/${page}`
         }
         else {
-            path = `usuarios/listar_usuarios/professor/${selectedValue}/${searchText}/${page}`
+            path = `usuarios/listar_usuarios/administrativo/${selectedValue}/${searchText}/${page}`
             if (selectedValue === 'todos')
-                path = `usuarios/listar_usuarios/professor/${searchText}/${page}`
+                path = `usuarios/listar_usuarios/administrativo/${searchText}/${page}`
 
         }
 
@@ -278,7 +257,7 @@ function Professores(props) {
             .then(response => {
                 console.log(response.data);
                 setNoUserFound(false);
-                setProfessores(response.data.docs);
+                setTecnicoAdministrativo(response.data.docs);
 
             })
             .catch(error => {
@@ -297,7 +276,7 @@ function Professores(props) {
     }
 
     return (
-        <DashboardUI screenName='Professores' itemActive="Professores">
+        <DashboardUI screenName='Técnicos Adiministrativos' itemActive="Técnicos Administrativos">
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}
@@ -321,7 +300,7 @@ function Professores(props) {
 
                     <Table.Body>
                         {
-                            professores.map(({ _id, registration, name, email, status, isCoordinator }) => (
+                            tecnicoAdministrativo.map(({ _id, registration, name, email, status, isCoordinator }) => (
                                 <Table.Row key={_id}>
                                     <Table.Cell>{registration}</Table.Cell>
                                     <Table.Cell>{name}</Table.Cell>
@@ -440,4 +419,4 @@ function Professores(props) {
     );
 }
 
-export default Professores;
+export default TecnicoAdministrativo;
