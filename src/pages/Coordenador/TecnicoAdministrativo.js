@@ -23,11 +23,11 @@ function TecnicoAdministrativo(props) {
 
     const [noUserFound, setNoUserFound] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [isActive, setIsActive] = useState(true);
     const [modalIsOpen, setModalIsOpen] = useState(false);
-
-
     const [mountedPagination, setMountedPagination] = useState(false);
+    const [formIsSubmitted, setFormIsSubmitted] = useState(true);
+
+    const { setUserRegistration } = useContext(UserRegistrationContext);
 
     const isInitialMount = useRef(true);
 
@@ -36,15 +36,10 @@ function TecnicoAdministrativo(props) {
     let tecnicoAdministrativoStatus = useRef('')
 
     let modalMessage = useRef('')
+
     let totalPages = useRef();
-
     let paginationNumbers = useRef([]);
-
     const { getReadyPaginator, populatePaginator } = usePaginatorNumbers()
-
-    console.debug('componente renderizado')
-
-    const { setUserRegistration } = useContext(UserRegistrationContext);
 
     Modal.setAppElement('#root');
 
@@ -57,7 +52,6 @@ function TecnicoAdministrativo(props) {
         setMountedPagination(false);
         api.get('usuarios/todos_usuarios/administrativo/ativo/1')
             .then(({ data }) => {
-                console.log('Data', data);
                 setCurrentPage(data.page);
                 totalPages.current = data.totalPages;
                 setNoUserFound(false);
@@ -66,8 +60,7 @@ function TecnicoAdministrativo(props) {
             })
             .catch(error => {
                 if (error.response) {
-                    const msg = error.response.data;
-                    console.log(msg);
+                    console.log(error.response.data);
                     setNoUserFound(true)
                 }
                 if (error.request) {
@@ -83,7 +76,6 @@ function TecnicoAdministrativo(props) {
     const [selectedValue, setSelectedValue] = useState('ativo');
     const [statusProfessorChanged, setStatusProfessorChanged] = useState(false);
     useEffect(() => {
-
         if (isInitialMount.current) {
             isInitialMount.current = false;
         } else {
