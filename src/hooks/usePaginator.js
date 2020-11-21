@@ -2,25 +2,27 @@ import { useRef, useState } from "react";
 
 function usePaginatorNumbers() {
 
-    let paginatorNumbers = useRef([])
+    let paginatorNumbers = useRef([]);
+    let totalPages = useRef();
     const [popPaginator, setPopPaginator] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState();
 
-    function populatePaginator(currentPage, totalPages) {
+    function populatePaginator(currentPage, totPages) {
         setPopPaginator(true);
         paginatorNumbers.current = [];
         setCurrentPage(currentPage);
-        setTotalPages(totalPages);
+        totalPages.current = totPages;
     }
-
-    console.log('total pages', totalPages);
 
     function getReadyPaginator() {
         return paginatorNumbers.current;
     }
 
-    if (totalPages > 5) {
+    function getTotalPages() {
+        return totalPages.current;
+    }
+
+    if (totalPages.current > 5) {
         // alterar aqui
         paginatorNumbers.current = [
             currentPage - 2,
@@ -30,18 +32,18 @@ function usePaginatorNumbers() {
             currentPage + 2
         ]
 
-    } if (totalPages === 5) {
+    } if (totalPages.current === 5) {
         paginatorNumbers.current = [1, 2, 3, 4, 5]
     }
-    if (totalPages < 5) {
-        for (let i = 0; i < totalPages; i++) {
+    if (totalPages.current < 5) {
+        for (let i = 0; i < totalPages.current; i++) {
             paginatorNumbers.current[i] = i + 1;
         }
     }
 
     console.log('paginator atual', paginatorNumbers.current);
 
-    return { getReadyPaginator, populatePaginator }
+    return { getReadyPaginator, getTotalPages, populatePaginator }
 }
 
 export default usePaginatorNumbers;

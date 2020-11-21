@@ -16,21 +16,12 @@ import light from '../../themes/light';
 import Label from '../../components/Label/Label';
 
 function TecnicoAdministrativoCadastrar(props) {
-    const [searchText, setSearchText] = useState('');
-    const [selectedValue, setSelectedValue] = useState('ativo');
-    const [checked, setChecked] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
-    const { register, handleSubmit, errors, formState } = useForm({ mode: 'onSubmit' });
+    const { register, handleSubmit, errors, formState, watch } = useForm({ mode: 'onSubmit' });
+
+    const watchPassword = watch('password')
 
     const history = useHistory()
-
-    const isInitialMount = useRef(true);
-
-
-    const handleCheckboxChange = event => {
-        console.debug('Checkbox', 'foi clicado')
-        setChecked(event.target.checked)
-    }
 
     const onSubmit = ({ fullName, email, registration, password, confirmPassword, }) => {
         api.post('usuarios/cadastrar_administrativo', {
@@ -47,8 +38,7 @@ function TecnicoAdministrativoCadastrar(props) {
                 const notify = () =>
                     toast.success("Técnico Administrativo cadastrado com sucesso", {
                         autoClose: 2000,
-                    }
-                    );
+                    });
                 notify()
                 setTimeout(() => {
                     history.push('/coordenador/tecnicos_administrativos')
@@ -57,9 +47,7 @@ function TecnicoAdministrativoCadastrar(props) {
             })
             .catch(error => {
                 if (error.response) {
-                    const msg = error.response.data;
-                    console.log(msg);
-                    setErrorMessage(msg)
+                    setErrorMessage(error.response.data)
                 }
                 if (error.request) {
                     console.log(error.request);
@@ -67,7 +55,6 @@ function TecnicoAdministrativoCadastrar(props) {
                 else {
                     console.log('Error', error.message);
                 }
-
             });
     }
 
@@ -115,7 +102,6 @@ function TecnicoAdministrativoCadastrar(props) {
                     </ErrorMessage>
                 }
 
-
                 <Label htmlFor='registration'>Matrícula</Label>
                 <IconTextField>
                     <FaAddressCard />
@@ -158,7 +144,6 @@ function TecnicoAdministrativoCadastrar(props) {
                     <ErrorMessage left marginTop marginBottom>A senha deve ter no mínimo 8 caracteres </ErrorMessage>
                 }
 
-
                 <Label htmlFor='confirmPassword'>Confirmar Senha</Label>
                 <IconTextField>
                     <FaLock />
@@ -167,7 +152,8 @@ function TecnicoAdministrativoCadastrar(props) {
                         name='confirmPassword'
                         ref={register({
                             required: true,
-                            minLength: 8
+                            minLength: 8,
+                            validate: (value) => value === watchPassword
                         })}
                         placeholder='Senha'
                         style={{ borderColor: errors.confirmPassword && light.color.secondary }}
@@ -177,7 +163,7 @@ function TecnicoAdministrativoCadastrar(props) {
                     <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}> A confirmação senha deve preenchida</ErrorMessage>
                 }
                 {/*errors.confirmPassword && errors.confirmPassword.type === 'minLength' && <ErrorMessage left>A confirmação senha deve ter no mínimo 8 caracteres </ErrorMessage>*/}
-                {errors.confirmPassword && errors.confirmPassword.type === 'minLength' &&
+                {errors.confirmPassword && errors.confirmPassword.type === 'validate' &&
                     <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>As senhas digitadas não conferem </ErrorMessage>
                 }
 

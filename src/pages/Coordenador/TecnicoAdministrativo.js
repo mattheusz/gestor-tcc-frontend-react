@@ -16,10 +16,11 @@ import { AiOutlineEdit } from 'react-icons/ai';
 import { UserRegistrationContext } from '../../context/UserRegistrationContext';
 import Button from '../../components/Button';
 import usePaginatorNumbers from '../../hooks/usePaginator';
+import ActionModal from '../../components/ActionModal';
 
 function TecnicoAdministrativo(props) {
     const [searchText, setSearchText] = useState('');
-    const [tecnicoAdministrativo, setTecnicoAdministrativo] = useState([]);
+    const [user, setUser] = useState([]);
 
     const [noUserFound, setNoUserFound] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
@@ -30,22 +31,21 @@ function TecnicoAdministrativo(props) {
     const { setUserRegistration } = useContext(UserRegistrationContext);
 
     const isInitialMount = useRef(true);
-
-    let tecnicoAdministrativoName = useRef('');
-    let tecnicoAdministrativoId = useRef('');
-    let tecnicoAdministrativoStatus = useRef('')
+    let userName = useRef('');
+    let userId = useRef('');
+    let userStatus = useRef('')
 
     let modalMessage = useRef('')
 
     let totalPages = useRef();
     let paginationNumbers = useRef([]);
-    const { getReadyPaginator, populatePaginator } = usePaginatorNumbers()
+    const { getReadyPaginator, getTotalPages, populatePaginator } = usePaginatorNumbers()
 
     Modal.setAppElement('#root');
 
     const history = useHistory();
 
-    // carregando todos os professores ao montar componente
+    // carregando todos os tec administrativos ao montar componente
     useEffect(() => {
         if (mountedPagination)
             return;
@@ -54,8 +54,8 @@ function TecnicoAdministrativo(props) {
             .then(({ data }) => {
                 setCurrentPage(data.page);
                 totalPages.current = data.totalPages;
-                setNoUserFound(false);
-                setTecnicoAdministrativo(data.docs);
+                noUserFound && setNoUserFound(false);
+                setUser(data.docs);
                 buildPaginatorDesign();
             })
             .catch(error => {
@@ -74,7 +74,7 @@ function TecnicoAdministrativo(props) {
 
     // filtrando professor por todos, ativo e inativo
     const [selectedValue, setSelectedValue] = useState('ativo');
-    const [statusProfessorChanged, setStatusProfessorChanged] = useState(false);
+    const [statusUserChanged, setStatusUserChanged] = useState(false);
     useEffect(() => {
         if (isInitialMount.current) {
             isInitialMount.current = false;
@@ -91,13 +91,12 @@ function TecnicoAdministrativo(props) {
                 if (selectedValue === 'todos')
                     path = `usuarios/listar_usuarios/administrativo/${searchText}/1`
             }
-
             api.get(path)
                 .then(({ data }) => {
-                    setNoUserFound(false)
-                    setTecnicoAdministrativo(data.docs)
-                    setCurrentPage(data.page);
                     totalPages.current = data.totalPages;
+                    setNoUserFound(false)
+                    setUser(data.docs)
+                    setCurrentPage(data.page);
                     buildPaginatorDesign();
                 })
                 .catch(error => {
@@ -112,48 +111,12 @@ function TecnicoAdministrativo(props) {
                     }
                 });
         }
-    }, [selectedValue, statusProfessorChanged])
+    }, [selectedValue, statusUserChanged, formIsSubmitted])
 
     const onSubmit = e => {
-        setMountedPagination(false)
+        setMountedPagination(false);
         e.preventDefault();
-        let path;
-
-        // tratando buscar por texto + status
-        if (searchText === '') {
-            path = `usuarios/todos_usuarios/administrativo/${selectedValue}/1`
-            if (selectedValue === 'todos')
-                path = `usuarios/todos_usuarios/administrativo/1`
-        }
-        else {
-            path = `usuarios/listar_usuarios/administrativo/${selectedValue}/${searchText}/1`
-            if (selectedValue === 'todos')
-                path = `usuarios/listar_usuarios/administrativo/${searchText}/1`
-        }
-
-        console.log('path: ', path)
-        api.get(path)
-            .then(({ data }) => {
-                setNoUserFound(false)
-                setTecnicoAdministrativo(data.docs)
-                setCurrentPage(data.page);
-                totalPages.current = data.totalPages;
-                console.log('onbsubmit build pagination design');
-                buildPaginatorDesign();
-            })
-            .catch(error => {
-                if (error.response) {
-                    const msg = error.response.data;
-                    console.log(msg);
-                    setNoUserFound(true)
-                }
-                if (error.request) {
-                    console.log(error.request);
-                }
-                else {
-                    console.log('Error', error.message);
-                }
-            });
+        setFormIsSubmitted(!formIsSubmitted);
     }
 
     const onChangeSelect = e => {
@@ -161,37 +124,40 @@ function TecnicoAdministrativo(props) {
         setSelectedValue(e.target.value)
     }
 
-    const addProfessor = () => {
+    const addUser = () => {
         history.push('/coordenador/tecnicos_administrativos/novo');
     }
 
-    const editProfessor = (_id, registration, name, email, status) => {
+    const editUser = (_id, registration, name, email, status) => {
         setUserRegistration({ _id, registration, name, email, status })
         history.push(`/coordenador/tecnicos_administrativos/editar/${_id}`);
     }
 
     const activeAndInactive = (id, name, status) => {
-        tecnicoAdministrativoId.current = id;
-        tecnicoAdministrativoName.current = name;
-        tecnicoAdministrativoName.current = status;
+        userId.current = id;
+        userName.current = name;
+        userStatus.current = status;
+        console.log('Mounted paginator: ', mountedPagination)
+        setMountedPagination(false);
 
         if (status === 'ativo')
-            modalMessage.current = `Deseja desativar o técnico administrativo ${tecnicoAdministrativoName.current}?`
+            modalMessage.current = `Deseja desativar o técnico administrativo ${userName.current}?`
         else
-            modalMessage.current = `Deseja ativar o técnico administrativo ${tecnicoAdministrativoName.current}?`
+            modalMessage.current = `Deseja ativar o técnico administrativo ${userName.current}?`
 
         setModalIsOpen(true)
     }
 
-    const changeStatusProfessor = () => {
+    const changeStatusUser = () => {
+
         api.put('usuarios/atualizar_status', {
-            id: tecnicoAdministrativoId.current,
+            id: userId.current,
         })
             .then(response => {
-                setStatusProfessorChanged(!statusProfessorChanged)
+                setStatusUserChanged(!statusUserChanged)
                 setModalIsOpen(false);
-
-                if (tecnicoAdministrativoStatus.current === 'ativo') {
+                console.log('Status do tec admin', userStatus.current);
+                if (userStatus.current === 'ativo') {
                     toast.success('Administrativo desativado com sucesso', {
                         autoClose: 3000,
                     });
@@ -200,7 +166,7 @@ function TecnicoAdministrativo(props) {
                         autoClose: 3000,
                     });
                 }
-                setStatusProfessorChanged(!statusProfessorChanged)
+                setStatusUserChanged(!statusUserChanged)
             })
             .catch(error => {
                 if (error.response) {
@@ -221,7 +187,7 @@ function TecnicoAdministrativo(props) {
     const buildPaginatorDesign = () => {
         populatePaginator(currentPage, totalPages.current);
         paginationNumbers.current = getReadyPaginator();
-
+        totalPages.current = getTotalPages();
         setMountedPagination(true);
     }
 
@@ -249,7 +215,7 @@ function TecnicoAdministrativo(props) {
             .then(response => {
                 console.log(response.data);
                 setNoUserFound(false);
-                setTecnicoAdministrativo(response.data.docs);
+                setUser(response.data.docs);
 
             })
             .catch(error => {
@@ -275,7 +241,7 @@ function TecnicoAdministrativo(props) {
                     setSearchText={setSearchText}
                     selectedValue={selectedValue}
                     onChangeSelect={onChangeSelect}
-                    addUser={addProfessor}
+                    addUser={addUser}
                 />
             </form>
             {noUserFound ? <h3 style={{ margin: ' 2.5rem', textAlign: 'center' }}>Nenhum usuário encontrado</h3> :
@@ -292,13 +258,13 @@ function TecnicoAdministrativo(props) {
 
                     <Table.Body>
                         {
-                            tecnicoAdministrativo.map(({ _id, registration, name, email, status, isCoordinator }) => (
+                            user.map(({ _id, registration, name, email, status }) => (
                                 <Table.Row key={_id}>
                                     <Table.Cell>{registration}</Table.Cell>
                                     <Table.Cell>{name}</Table.Cell>
                                     <Table.Cell>{email}</Table.Cell>
                                     <Table.Cell style={{ display: 'flex !important', alignItems: 'center', position: 'relative' }}>
-                                        <AiOutlineEdit cursor='pointer' onClick={() => { editProfessor(_id, registration, name, email, status, isCoordinator) }} color={light.color.primary} size='2rem' /> &nbsp;&nbsp;
+                                        <AiOutlineEdit cursor='pointer' onClick={() => { editUser(_id, registration, name, email, status) }} color={light.color.primary} size='2rem' /> &nbsp;&nbsp;
                                         <Switch
                                             on='ativo'
                                             off='inativo'
@@ -325,86 +291,75 @@ function TecnicoAdministrativo(props) {
                             ))
                         }
                     </Table.Body>
+                    {totalPages.current > 1 && <>
+                        <Table.Footer>
+                            <Table.Row>
+                                <Table.HeaderCell colSpan='4'>
+                                    <Menu floated='right' pagination>
+                                        {totalPages.current > 2 && currentPage != 1 && <Menu.Item as='a' icon onClick={e => {
+                                            if (currentPage === 1)
+                                                return;
+                                            choosePage(e, 1)
+                                        }}>
+                                            <Icon name='chevron left' />
+                                            <Icon name='chevron left' />
+                                        </Menu.Item>}
+                                        {totalPages.current >= 2 && currentPage == 1 ?
+                                            <></> :
+                                            <Menu.Item as='a' icon onClick={e => {
+                                                if (currentPage === 1)
+                                                    return;
+                                                choosePage(e, currentPage - 1)
+                                            }}>
+                                                <Icon name='chevron left' />
+                                            </Menu.Item>
+                                        }
+                                        {paginationNumbers.current.map((value, index) => {
+                                            let activeStyle = {};
+                                            if (currentPage === value)
+                                                activeStyle = {
+                                                    backgroundColor: light.color.primary,
+                                                    color: 'white'
+                                                }
+                                            return <Menu.Item key={index} as='a' style={activeStyle} onClick={e => choosePage(e, value)}>
+                                                {value}
+                                            </Menu.Item>
+                                        }
+                                        )}
+                                        {totalPages.current == currentPage ?
+                                            <></> :
+                                            <Menu.Item as='a' icon onClick={e => {
+                                                if (currentPage === totalPages.current)
+                                                    return;
+                                                choosePage(e, currentPage + 1)
+                                            }}>
+                                                <Icon name='chevron right' />
+                                            </Menu.Item>
+                                        }
+                                        {totalPages.current > 2 && currentPage != totalPages.current &&
+                                            <Menu.Item as='a' icon onClick={e => {
+                                                if (currentPage === totalPages.current)
+                                                    return;
+                                                choosePage(e, totalPages.current)
+                                            }}>
+                                                <Icon name='chevron right' />
+                                                <Icon name='chevron right' />
+                                            </Menu.Item>
+                                        }
 
-                    <Table.Footer>
-                        <Table.Row>
-                            <Table.HeaderCell colSpan='4'>
-                                <Menu floated='right' pagination>
-                                    <Menu.Item as='a' icon onClick={e => {
-                                        if (currentPage === 1)
-                                            return;
-                                        choosePage(e, 1)
-                                    }}>
-                                        <Icon name='chevron left' />
-                                        <Icon name='chevron left' />
-                                    </Menu.Item>
-                                    <Menu.Item as='a' icon onClick={e => {
-                                        if (currentPage === 1)
-                                            return;
-                                        choosePage(e, currentPage - 1)
-                                    }}>
-                                        <Icon name='chevron left' />
-                                    </Menu.Item>
-
-                                    {paginationNumbers.current.map((value, index) => {
-                                        let activeStyle = {};
-                                        if (currentPage === value)
-                                            activeStyle = {
-                                                backgroundColor: light.color.primary,
-                                                color: 'white'
-                                            }
-                                        return <Menu.Item key={index} as='a' style={activeStyle} onClick={e => choosePage(e, value)}>
-                                            {value}
-                                        </Menu.Item>
-                                    }
-                                    )}
-
-                                    <Menu.Item as='a' icon onClick={e => {
-                                        if (currentPage === totalPages.current)
-                                            return;
-                                        choosePage(e, currentPage + 1)
-                                    }}>
-                                        <Icon name='chevron right' />
-                                    </Menu.Item>
-                                    <Menu.Item as='a' icon onClick={e => {
-                                        if (currentPage === totalPages.current)
-                                            return;
-                                        choosePage(e, totalPages.current)
-                                    }}>
-                                        <Icon name='chevron right' />
-                                        <Icon name='chevron right' />
-                                    </Menu.Item>
-                                </Menu>
-                            </Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Footer>
+                                    </Menu>
+                                </Table.HeaderCell>
+                            </Table.Row>
+                        </Table.Footer>
+                    </>}
                 </Table>
             }
-            <Modal
-                isOpen={modalIsOpen}
-                onRequestClose={() => setModalIsOpen(false)}
-                style={{
-                    content: {
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -70%)',
-                        height: '180px', width: '500px', maxWidth: '90%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-around'
-                    },
-                    overlay: {
-                        zIndex: '15',
-
-                    }
-                }}
-            >
-                <h1>{modalMessage.current}</h1>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
-                    <Button onClick={() => changeStatusProfessor()}>Sim</Button>
-                    <Button onClick={() => setModalIsOpen(false)}>Cancelar</Button>
-                </div>
-            </Modal>
+            <ActionModal
+                modalIsOpen={modalIsOpen}
+                setModalIsOpen={setModalIsOpen}
+                modalMessage={modalMessage.current}
+                handleConfirmAction={changeStatusUser}
+            />
             <ToastContainer />
         </DashboardUI>
 
