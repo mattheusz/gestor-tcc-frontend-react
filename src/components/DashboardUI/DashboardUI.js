@@ -5,6 +5,7 @@ import Header from '../Header';
 import Sidebar from '../Sidebar';
 import ViewTitle from '../ViewTitle';
 import { device } from '../../device';
+import DropdownUserAccount from '../DropdownUserAccount/DropdownUserAccount';
 
 
 function DashboardUI({ screenName, itemActive, children }) {
@@ -29,6 +30,7 @@ function DashboardUI({ screenName, itemActive, children }) {
                     </Main>
                     <Footer />
                 </Content>
+                <DropdownUserAccount></DropdownUserAccount>
             </Wrapper>
         </ThemeProvider>
     );
@@ -41,6 +43,7 @@ const Wrapper = styled.div`
     width: 100%;
     height: 100vh;
     background-color: white;
+    position: relative;
 `
 
 

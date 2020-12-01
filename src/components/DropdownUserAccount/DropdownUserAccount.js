@@ -1,23 +1,25 @@
 import styled from 'styled-components';
 import React from 'react';
+import { BiUserCircle } from 'react-icons/bi';
+import { AiOutlineLogout } from 'react-icons/ai';
+import { IoMdNotificationsOutline } from 'react-icons/io';
 
 const StyledDropdownUserAccount = styled.div`
-    position: relative;
-    margin: 0 auto;
-    padding: 30px 50px;
-    width: 300px;
+    position: absolute;
+    top: 75px;
+    right: 10px;
+    width: 250px;
     background-color: #fff;
     display: flex;
     justify-content: center;
-    margin-top: 50px;
     /*
     visibility: hidden;
     opacity: 0;
     */
     transition: .5s;
     z-index: 2;
-    border: 1px solid black;
-    background-color: blue;
+    background-color: ${props => props.theme.color.primary};
+    color: white;
 `;
 
 const ListDropdown = styled.ul`
@@ -31,6 +33,12 @@ const ListItemDropdown = styled.li`
     align-items: center;
     margin-bottom: 25px;
     z-index: 55;
+
+    svg{
+        width: 20px;
+        height: auto;
+        margin-right: 5px;
+    }
 
     a {
         text-decoration: none;
@@ -48,10 +56,16 @@ function DropdownUserAccount(props) {
         <StyledDropdownUserAccount>
             <ListDropdown>
                 <ListItemDropdown>
+                    <BiUserCircle />
                     Perfil
                 </ListItemDropdown>
                 <ListItemDropdown>
-                    Perfil
+                    <IoMdNotificationsOutline />
+                    Noficações
+                </ListItemDropdown>
+                <ListItemDropdown>
+                    <AiOutlineLogout />
+                    Sair
                 </ListItemDropdown>
             </ListDropdown>
         </StyledDropdownUserAccount>
