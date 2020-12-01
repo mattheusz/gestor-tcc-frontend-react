@@ -21,82 +21,81 @@ export const coordenador = [
     {
         icon: <AiOutlineHome />,
         description: 'Página Inicial',
-        to: '/coordenador/home'
+        to: '/coordenador'
     },
     {
         icon: <VscProject />,
         description: 'Projetos',
-        to: '/coordenador/projetos'
+        to: '/projetos'
     },
     {
         icon: <IoMdSchool />,
         description: 'Alunos',
-        to: '/coordenador/alunos'
+        to: '/alunos'
     },
     {
         icon: <GiTeacher />,
         description: 'Professores',
-        to: '/coordenador/professores'
+        to: '/professores'
     },
     {
         icon: <BiUserCircle />,
         description: 'Técnicos Administrativos',
-        to: '/coordenador/tecnicos_administrativos'
+        to: '/tecnicos_administrativos'
     },
     {
         icon: <BsCalendar />,
         description: 'Datas Importantes*',
-        to: '/coordenador/datas_importantes'
+        to: '/datas_importantes'
     },
     {
         icon: <CgFileDocument />,
         description: 'Documentos',
-        to: '/coordenador/documentos'
+        to: '/documentos'
     },
     {
         icon: <RiGitRepositoryLine />,
         description: 'Repositório*',
-        to: '/coordenador/trabalhos_anteriores'
+        to: '/trabalhos_anteriores'
     },
 ]
 
 
 export const administrativo = [
-
     {
         icon: <VscProject />,
         description: 'Projetos',
-        to: '/coordenador/projetos'
+        to: '/administrativo/projetos'
     },
     {
         icon: <IoMdSchool />,
         description: 'Alunos',
-        to: '/coordenador/alunos'
+        to: '/alunos'
     },
     {
         icon: <GiTeacher />,
         description: 'Professores',
-        to: '/coordenador/professores'
+        to: '/professores'
     },
     {
         icon: <BiUserCircle />,
         description: 'Técnicos Administrativos',
-        to: '/coordenador/tecnicos_administrativos'
+        to: '/tecnicos_administrativos'
     },
     {
         icon: <BsCalendar />,
         description: 'Datas Importantes*',
-        to: '/coordenador/datas_importantes'
+        to: '/datas_importantes'
     },
     {
         icon: <CgFileDocument />,
         description: 'Documentos',
-        to: '/coordenador/documentos'
+        to: '/documentos'
     },
     {
         icon: <RiGitRepositoryLine />,
         description: 'Repositório*',
-        to: '/coordenador/trabalhos_anteriores'
+        to: '/trabalhos_anteriores'
     },
 ]
 

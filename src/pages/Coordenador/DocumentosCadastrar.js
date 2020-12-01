@@ -59,7 +59,7 @@ function DocumentosCadastrar() {
                     );
                 notify()
                 setTimeout(() => {
-                    history.push('/coordenador/documentos')
+                    history.push('/documentos')
                 }, 2000);
 
             })
@@ -126,7 +126,7 @@ function DocumentosCadastrar() {
                     new={true}
                     type='button'
                     width='100px'
-                    onClick={() => history.replace('/coordenador/documentos')}>
+                    onClick={() => history.replace('/documentos')}>
                     Cancelar
                 </Button>
             </form>

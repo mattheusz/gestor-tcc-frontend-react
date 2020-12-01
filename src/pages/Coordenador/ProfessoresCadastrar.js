@@ -52,7 +52,7 @@ function ProfessoresCadastrar(props) {
                     );
                 notify()
                 setTimeout(() => {
-                    history.push('/coordenador/professores')
+                    history.push('/professores')
                 }, 2000);
 
             })
@@ -207,7 +207,7 @@ function ProfessoresCadastrar(props) {
                     Salvar
                 </Button>
                 &nbsp;
-                <Button new={true} type='button' width='100px' onClick={() => history.replace('/coordenador/professores')}>
+                <Button new={true} type='button' width='100px' onClick={() => history.replace('/professores')}>
                     Cancelar
                 </Button>
             </form>

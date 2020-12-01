@@ -149,12 +149,12 @@ function Projetos(props) {
     }
 
     const addUser = () => {
-        history.push('/coordenador/projetos/novo');
+        history.push('/projetos/novo');
     }
 
     const editUser = (_id, registration, name, email, status) => {
         //setProject({ _id, registration, name, email, status })
-        history.push(`/coordenador/projetos/editar/${_id}`);
+        history.push(`/projetos/editar/${_id}`);
     }
 
     const activeAndInactive = (id, name, status) => {

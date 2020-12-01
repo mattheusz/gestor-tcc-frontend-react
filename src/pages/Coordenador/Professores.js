@@ -147,12 +147,12 @@ function Professores(props) {
     }
 
     const addProfessor = () => {
-        history.push('/coordenador/professores/novo');
+        history.push('/professores/novo');
     }
 
     const editProfessor = (_id, registration, name, email, status, isCoordinator) => {
         setUserRegistration({ _id, registration, name, email, status, isCoordinator })
-        history.push(`/coordenador/professores/editar/${_id}`);
+        history.push(`/professores/editar/${_id}`);
     }
 
     const activeAndInactive = (id, name, status) => {

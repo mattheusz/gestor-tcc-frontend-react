@@ -42,7 +42,7 @@ function TecnicoAdministrativoEditar(props) {
                     );
                 notify()
                 setTimeout(() => {
-                    history.push('/coordenador/tecnicos_administrativos')
+                    history.push('/tecnicos_administrativos')
                 }, 2000);
 
             })
@@ -139,7 +139,7 @@ function TecnicoAdministrativoEditar(props) {
                     Salvar
                 </Button>
                 &nbsp;
-                <Button new={true} type='button' width='100px' onClick={() => history.replace('/coordenador/tecnicos_administrativos')}>
+                <Button new={true} type='button' width='100px' onClick={() => history.replace('/tecnicos_administrativos')}>
                     Cancelar
                 </Button>
             </form>

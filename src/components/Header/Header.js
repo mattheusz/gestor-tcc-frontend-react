@@ -7,6 +7,7 @@ import Avatar from 'react-avatar';
 import { Link } from 'react-router-dom';
 import { headerStyle } from './styles'
 import { device } from '../../device';
+import DropdownUserAccount from '../DropdownUserAccount/DropdownUserAccount';
 
 function Header({ setShowSidebar }) {
 

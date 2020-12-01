@@ -139,8 +139,8 @@ function Documentos(props) {
         setSelectedValue(e.target.value)
     }
 
-    const addUser = () => {
-        history.push('/coordenador/documentos/novo');
+    const addDocument = () => {
+        history.push('/documentos/novo');
     }
 
     const editUser = (_id, registration, name, email, status) => {
@@ -254,7 +254,7 @@ function Documentos(props) {
                     setSearchText={setSearchText}
                     selectedValue={selectedValue}
                     onChangeSelect={onChangeSelect}
-                    addUser={addUser}
+                    addUser={addDocument}
                     selectItems={selectItems}
                 />
             </form>

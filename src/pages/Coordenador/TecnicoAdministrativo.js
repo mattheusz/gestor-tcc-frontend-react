@@ -141,12 +141,12 @@ function TecnicoAdministrativo(props) {
     }
 
     const addUser = () => {
-        history.push('/coordenador/tecnicos_administrativos/novo');
+        history.push('/tecnicos_administrativos/novo');
     }
 
     const editUser = (_id, registration, name, email, status) => {
         setUserRegistration({ _id, registration, name, email, status })
-        history.push(`/coordenador/tecnicos_administrativos/editar/${_id}`);
+        history.push(`/tecnicos_administrativos/editar/${_id}`);
     }
 
     const activeAndInactive = (id, name, status) => {

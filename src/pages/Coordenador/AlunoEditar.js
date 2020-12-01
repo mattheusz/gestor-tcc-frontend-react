@@ -42,7 +42,7 @@ function AlunoEditar(props) {
                     );
                 notify()
                 setTimeout(() => {
-                    history.push('/coordenador/alunos')
+                    history.push('/alunos')
                 }, 2000);
 
             })
@@ -139,7 +139,7 @@ function AlunoEditar(props) {
                     Salvar
                 </Button>
                 &nbsp;
-                <Button new={true} type='button' width='100px' onClick={() => history.replace('/coordenador/alunos')}>
+                <Button new={true} type='button' width='100px' onClick={() => history.replace('/alunos')}>
                     Cancelar
                 </Button>
             </form>

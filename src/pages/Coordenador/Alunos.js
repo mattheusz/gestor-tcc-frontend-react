@@ -140,7 +140,7 @@ function Alunos(props) {
     }
 
     const addUser = () => {
-        history.push('/coordenador/alunos/novo');
+        history.push('/alunos/novo');
     }
 
     const editUser = (_id, registration, name, email, status) => {

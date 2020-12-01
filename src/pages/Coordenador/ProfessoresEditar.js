@@ -7,7 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import Button from '../../components/Button'
 import DashboardUI from '../../components/DashboardUI';
-import { FaUserAlt, FaAddressCard, FaEnvelope } from 'react-icons/fa';
+import { FaUserAlt, FaAddressCard, FaEnvelope, FaLock } from 'react-icons/fa';
 
 import IconTextField, { Input } from '../../components/IconTextField/IconTextField';
 import Checkbox from '../../components/Checkbox';
@@ -57,7 +57,7 @@ function ProfessoresEditar(props) {
                     );
                 notify()
                 setTimeout(() => {
-                    history.push('/coordenador/professores')
+                    history.push('/professores')
                 }, 2000);
 
             })
@@ -165,7 +165,7 @@ function ProfessoresEditar(props) {
                     Salvar
                 </Button>
                 &nbsp;
-                <Button new={true} type='button' width='100px' onClick={() => history.replace('/coordenador/professores')}>
+                <Button new={true} type='button' width='100px' onClick={() => history.replace('/professores')}>
                     Cancelar
                 </Button>
             </form>

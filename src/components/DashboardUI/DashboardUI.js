@@ -56,6 +56,7 @@ const Content = styled.div`
     display: flex;
     flex-direction: column;
     transition: margin-left .3s;
+    z-index: 0;
 
     @media ${device.mobileM}{
         /*width: ${props => props.showSidebar ? '100%' : 'calc(100% - 256px)'};*/
@@ -67,7 +68,6 @@ const Content = styled.div`
         margin-left: ${props => props.showSidebar ? '256px' : 0};
     }
 
-
     
 `
 
@@ -75,7 +75,8 @@ const Main = styled.main`
     flex-grow: 1;
     background-color: white;
     padding: 1rem 1rem 1rem 1.5rem;
-    max-width: 100%
+    max-width: 100%;
+    z-index: 1;
 `
 
 const Footer = styled.footer`

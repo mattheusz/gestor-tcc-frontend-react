@@ -24,8 +24,15 @@ export function AuthProvider({ children }) {
         //const type = localStorage.getItem('userType');
         if (token) {
             api.defaults.headers.Authorization = `${token}`;
+
+            const decoded = jwt_decode(token);
+            console.log(decoded)
+            const { userType, isCoordinator, available } = decoded;
+            const userTypeDetected = detectUserType(userType, isCoordinator, available);
+            console.log('Tipo de usuário detectado: ', userTypeDetected);
+            localStorage.setItem('userType', userTypeDetected);
+
             setAuthenticated(() => true);
-            //setUserType(type);
         }
         setLoading(false);
     }, [])
