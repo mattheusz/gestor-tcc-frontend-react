@@ -20,8 +20,8 @@ import { BiUserCircle } from 'react-icons/bi';
 export const coordenador = [
     {
         icon: <AiOutlineHome />,
-        description: 'Home',
-        to: '/home'
+        description: 'Página Inicial',
+        to: '/coordenador/home'
     },
     {
         icon: <VscProject />,
@@ -45,7 +45,7 @@ export const coordenador = [
     },
     {
         icon: <BsCalendar />,
-        description: 'Calendário',
+        description: 'Datas Importantes*',
         to: '/coordenador/datas_importantes'
     },
     {
@@ -55,21 +55,50 @@ export const coordenador = [
     },
     {
         icon: <RiGitRepositoryLine />,
-        description: 'Repositório',
+        description: 'Repositório*',
         to: '/coordenador/trabalhos_anteriores'
     },
-
 ]
 
 
-export const administrativo = {
-    projetos: 'Projetos',
-    alunos: 'Alunos',
-    professores: 'Professores',
-    calendario: 'Calendário',
-    documentos: 'Documentos',
-    repositorio: 'Repositório',
-}
+export const administrativo = [
+
+    {
+        icon: <VscProject />,
+        description: 'Projetos',
+        to: '/coordenador/projetos'
+    },
+    {
+        icon: <IoMdSchool />,
+        description: 'Alunos',
+        to: '/coordenador/alunos'
+    },
+    {
+        icon: <GiTeacher />,
+        description: 'Professores',
+        to: '/coordenador/professores'
+    },
+    {
+        icon: <BiUserCircle />,
+        description: 'Técnicos Administrativos',
+        to: '/coordenador/tecnicos_administrativos'
+    },
+    {
+        icon: <BsCalendar />,
+        description: 'Datas Importantes*',
+        to: '/coordenador/datas_importantes'
+    },
+    {
+        icon: <CgFileDocument />,
+        description: 'Documentos',
+        to: '/coordenador/documentos'
+    },
+    {
+        icon: <RiGitRepositoryLine />,
+        description: 'Repositório*',
+        to: '/coordenador/trabalhos_anteriores'
+    },
+]
 
 
 export const alunoPreProjeto = {

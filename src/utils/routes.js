@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Link, Redirect, Switch } from 'react-router-dom';
 import Login from '../pages/Login';
 import ForgotPassword from '../pages/ForgotPassword';
 import ResetPassword from '../pages/ResetPassword';
-import Home from '../pages/Home';
 import Projetos from '../pages/Coordenador/Projetos';
 import Alunos from '../pages/Coordenador/Alunos';
 import { AuthContext, AuthProvider } from '../context/AuthContext';
@@ -18,6 +17,9 @@ import AlunoCadastrar from '../pages/Coordenador/AlunoCadastrar';
 import AlunoEditar from '../pages/Coordenador/AlunoEditar';
 import Documentos from '../pages/Coordenador/Documetos';
 import DocumentosCadastrar from '../pages/Coordenador/DocumentosCadastrar';
+import DatasImportantes from '../pages/Coordenador/DatasImportantes';
+import PaginaInicial from '../pages/Coordenador/Home';
+
 
 
 function CustomRoute({ isPrivate, roles, ...rest }) {
@@ -87,11 +89,12 @@ export default function Routes() {
                         <CustomRoute exact roles={[]} path='/login' component={Login} />
                         <CustomRoute exact roles={[]} path='/forgot_password' component={ForgotPassword} />
                         <CustomRoute exact roles={[]} path='/reset_password/:token' component={ResetPassword} />
-                        <CustomRoute exact isPrivate roles={[]} path='/home' component={Home} />
+                        <CustomRoute exact isPrivate roles={[]} path='/home' component={PaginaInicial} />
                         {/* Coordenador */}
                         <CustomRoute exact isPrivate path='/coordenador' roles={['coordenador']} component={Projetos} />
 
                         <CustomRoute exact isPrivate path='/coordenador/projetos' roles={['coordenador']} component={Projetos} />
+                        <CustomRoute exact isPrivate path='/coordenador/home' roles={['coordenador']} component={PaginaInicial} />
                         <CustomRoute exact isPrivate path='/coordenador/alunos' roles={['coordenador']} component={Alunos} />
                         <CustomRoute exact isPrivate path='/coordenador/alunos/novo' roles={['coordenador']} component={AlunoCadastrar} />
                         <CustomRoute exact isPrivate path='/coordenador/alunos/editar/:id' roles={['coordenador']} component={AlunoEditar} />
@@ -102,7 +105,7 @@ export default function Routes() {
                         <CustomRoute exact isPrivate path='/coordenador/tecnicos_administrativos' roles={['coordenador']} component={TecnicoAdministrativo} />
                         <CustomRoute exact isPrivate path='/coordenador/tecnicos_administrativos/novo' roles={['coordenador']} component={TecnicoAdministrativoCadastrar} />
                         <CustomRoute exact isPrivate path='/coordenador/tecnicos_administrativos/editar/:id' roles={['coordenador']} component={TecnicoAdministrativoEditar} />
-                        <CustomRoute exact isPrivate path='/coordenador/datas_importantes' roles={['coordenador']} component={Projetos} />
+                        <CustomRoute exact isPrivate path='/coordenador/datas_importantes' roles={['coordenador']} component={DatasImportantes} />
                         <CustomRoute exact isPrivate path='/coordenador/documentos' roles={['coordenador']} component={Documentos} />
                         <CustomRoute exact isPrivate path='/coordenador/documentos/novo' roles={['coordenador']} component={DocumentosCadastrar} />
                         <CustomRoute exact isPrivate path='/coordenador/trabalhos_anteriores' roles={['coordenador']} component={Projetos} />

@@ -12,11 +12,13 @@ function Header({ setShowSidebar }) {
 
     return (
         <header style={headerStyle}>
+
             <Link to='/home' style={{ marginLeft: '15px' }}>
                 <Brand >
                     Gestor de <span>TCC</span>
                 </Brand>
             </Link>
+
             <Hamburguer onClick={() => setShowSidebar()} />
             <StyledAvatar
                 round
@@ -25,7 +27,7 @@ function Header({ setShowSidebar }) {
                 textSizeRatio={1.5}
                 name='Matheus Justino'
             />
-        </header>
+        </header >
     );
 }
 
