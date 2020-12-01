@@ -15,7 +15,7 @@ import { GiTeacher } from 'react-icons/gi';
 import { BsCalendar } from 'react-icons/bs';
 import { CgFileDocument } from 'react-icons/cg';
 import { RiGitRepositoryLine } from 'react-icons/ri';
-
+import { BiUserCircle } from 'react-icons/bi';
 
 export const coordenador = [
     {
@@ -39,7 +39,7 @@ export const coordenador = [
         to: '/coordenador/professores'
     },
     {
-        icon: <GiTeacher />,
+        icon: <BiUserCircle />,
         description: 'Técnicos Administrativos',
         to: '/coordenador/tecnicos_administrativos'
     },

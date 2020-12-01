@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form'
 import { useHistory } from 'react-router-dom'
 import api from '../../api/api'
@@ -10,54 +10,39 @@ import DashboardUI from '../../components/DashboardUI';
 import { FaUserAlt, FaAddressCard, FaEnvelope } from 'react-icons/fa';
 
 import IconTextField, { Input } from '../../components/IconTextField/IconTextField';
-import Checkbox from '../../components/Checkbox';
 import ErrorMessage from '../../components/Error'
 import light from '../../themes/light';
 import Label from '../../components/Label/Label';
 import { UserRegistrationContext } from '../../context/UserRegistrationContext';
 
-function ProfessoresEditar(props) {
+function AlunoEditar(props) {
 
     const { register, handleSubmit, errors } = useForm({ mode: 'onSubmit' });
 
     const history = useHistory()
 
     const { userRegistration } = useContext(UserRegistrationContext)
-    const { registration, name, email, isCoordinator, status } = userRegistration;
-    const [checked, setChecked] = useState(isCoordinator);
-    console.log('checked? ', checked)
+    const { _id, registration, name, email, status } = userRegistration;
 
-    const { userRegistration: { _id } } = useContext(UserRegistrationContext)
-    console.log('ID', _id);
-
-    const handleCheckboxChange = event => {
-        console.debug('Checkbox', event.target.checked)
-        setChecked(event.target.checked)
-    }
-
-    const onSubmit = ({ fullName, email, registration, isCoordinator }) => {
-        console.log('full name:', fullName)
-        console.log('email', email)
-        console.log('is coordinator', isCoordinator)
-        api.patch('usuarios/todos_usuarios/atualizar_professor', {
+    const onSubmit = ({ fullName, email, registration }) => {
+        api.patch('usuarios/todos_usuarios/atualizar_aluno', {
             id: _id,
             name: fullName,
             email,
             registration,
-            isCoordinator: isCoordinator,
-            userType: 'professor',
+            userType: 'aluno',
             status
         })
             .then(response => {
                 console.log(response.data);
                 const notify = () =>
-                    toast.success("Professor atualizado com sucesso", {
+                    toast.success("Aluno atualizado com sucesso", {
                         autoClose: 2000,
                     }
                     );
                 notify()
                 setTimeout(() => {
-                    history.push('/coordenador/professores')
+                    history.push('/coordenador/alunos')
                 }, 2000);
 
             })
@@ -77,7 +62,7 @@ function ProfessoresEditar(props) {
     }
 
     return (
-        <DashboardUI screenName='Editar Professor' itemActive="Professores">
+        <DashboardUI screenName='Editar Aluno' itemActive="Alunos">
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='fullName'>Nome completo</Label>
@@ -149,23 +134,12 @@ function ProfessoresEditar(props) {
                     </ErrorMessage>
                 }
 
-                <Label style={{ fontSize: '1.1rem' }}>
-                    <Checkbox
-                        name='isCoordinator'
-                        checked={checked}
-                        onChange={e => handleCheckboxChange(e)}
-                        register={register}
-                    />
-                    <span style={{ marginLeft: 8, cursor: 'pointer' }}>Coordenador</span>
-                </Label>
-
-
                 <br />
                 <Button new={true} type='submit' width='100px'>
                     Salvar
                 </Button>
                 &nbsp;
-                <Button new={true} type='button' width='100px' onClick={() => history.replace('/coordenador/professores')}>
+                <Button new={true} type='button' width='100px' onClick={() => history.replace('/coordenador/alunos')}>
                     Cancelar
                 </Button>
             </form>
@@ -175,4 +149,4 @@ function ProfessoresEditar(props) {
     );
 }
 
-export default ProfessoresEditar;
+export default AlunoEditar;

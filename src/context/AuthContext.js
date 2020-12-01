@@ -16,16 +16,16 @@ export function AuthProvider({ children }) {
     const [errorMessage, setErrorMessage] = useState('');
     const [authenticated, setAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [userType, setUserType] = useState('');
+    //const [userType, setUserType] = useState('');
     let history = useHistory();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        const type = localStorage.getItem('userType');
+        //const type = localStorage.getItem('userType');
         if (token) {
             api.defaults.headers.Authorization = `${token}`;
             setAuthenticated(() => true);
-            setUserType(type);
+            //setUserType(type);
         }
         setLoading(false);
     }, [])

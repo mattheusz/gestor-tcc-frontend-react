@@ -15,19 +15,18 @@ import Modal from 'react-modal';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { UserRegistrationContext } from '../../context/UserRegistrationContext';
 import Button from '../../components/Button';
+import Paginator from '../../components/Paginator/Paginator';
+import usePaginatorNumbers from '../../hooks/usePaginator';
 
 function Professores(props) {
     const [searchText, setSearchText] = useState('');
-    const [olderSearchText, setOlderSearchText] = useState('');
-    const [professores, setProfessores] = useState([]);
+    const [user, setUser] = useState([]);
 
     const [noUserFound, setNoUserFound] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [isActive, setIsActive] = useState(true);
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
-
     const [mountedPagination, setMountedPagination] = useState(false);
+    const [formIsSubmitted, setFormIsSubmitted] = useState(true);
 
     const isInitialMount = useRef(true);
 
@@ -36,14 +35,30 @@ function Professores(props) {
     let professorStatus = useRef('')
 
     let modalMessage = useRef('')
-    let totalPages = useRef();
 
+    let totalPages = useRef();
+    let currentPage = useRef()
     let paginationNumbers = useRef([]);
-    let endPaginationNumbers = useRef([]);
+    const { getReadyPaginator, getTotalPages, populatePaginator } = usePaginatorNumbers()
 
     console.debug('componente renderizado')
 
     const { setUserRegistration } = useContext(UserRegistrationContext);
+
+    const selectItems = [
+        {
+            value: 'ativo',
+            displayValue: 'Ativo'
+        },
+        {
+            value: 'inativo',
+            displayValue: 'Inativo'
+        },
+        {
+            value: 'todos',
+            displayValue: 'Todos'
+        }
+    ];
 
     Modal.setAppElement('#root');
 
@@ -53,13 +68,13 @@ function Professores(props) {
     useEffect(() => {
         if (mountedPagination)
             return;
+        setMountedPagination(false);
         api.get('usuarios/todos_usuarios/professor/ativo/1')
             .then(({ data }) => {
-                console.log('Data', data);
-                setCurrentPage(data.page);
+                currentPage.current = data.page;
                 totalPages.current = data.totalPages;
-                setNoUserFound(false);
-                setProfessores(data.docs);
+                noUserFound && setNoUserFound(false);
+                setUser(data.docs);
                 buildPaginatorDesign();
             })
             .catch(error => {
@@ -99,10 +114,10 @@ function Professores(props) {
 
             api.get(path)
                 .then(({ data }) => {
-                    setNoUserFound(false)
-                    setProfessores(data.docs)
-                    setCurrentPage(data.page);
                     totalPages.current = data.totalPages;
+                    setNoUserFound(false)
+                    setUser(data.docs)
+                    currentPage.current = data.page;
                     buildPaginatorDesign();
                 })
                 .catch(error => {
@@ -117,49 +132,12 @@ function Professores(props) {
                     }
                 });
         }
-    }, [selectedValue, statusProfessorChanged])
+    }, [selectedValue, statusProfessorChanged, formIsSubmitted])
 
     const onSubmit = e => {
-        setMountedPagination(false)
+        setMountedPagination(false);
         e.preventDefault();
-        let path;
-
-        // tratando buscar por texto + status
-        if (searchText === '') {
-            path = `usuarios/todos_usuarios/professor/${selectedValue}/1`
-            if (selectedValue === 'todos')
-                path = `usuarios/todos_usuarios/professor/1`
-        }
-        else {
-            path = `usuarios/listar_usuarios/professor/${selectedValue}/${searchText}/1`
-            if (selectedValue === 'todos')
-                path = `usuarios/listar_usuarios/professor/${searchText}/1`
-        }
-
-        console.log('path: ', path)
-        api.get(path)
-            .then(({ data }) => {
-                setNoUserFound(false)
-                setProfessores(data.docs)
-                setCurrentPage(data.page);
-                totalPages.current = data.totalPages;
-                console.log('onbsubmit build pagination design');
-                buildPaginatorDesign();
-            })
-            .catch(error => {
-                if (error.response) {
-                    const msg = error.response.data;
-                    console.log(msg);
-                    setNoUserFound(true)
-                }
-                if (error.request) {
-                    console.log(error.request);
-                }
-                else {
-                    console.log('Error', error.message);
-                }
-            });
-
+        setFormIsSubmitted(!formIsSubmitted);
     }
 
     const onChangeSelect = e => {
@@ -178,6 +156,7 @@ function Professores(props) {
     }
 
     const activeAndInactive = (id, name, status) => {
+        setMountedPagination(false);
         professorId.current = id;
         professorName.current = name;
         professorStatus.current = status;
@@ -191,6 +170,7 @@ function Professores(props) {
     }
 
     const changeStatusProfessor = () => {
+
         api.put('usuarios/atualizar_status', {
             id: professorId.current,
         })
@@ -207,7 +187,6 @@ function Professores(props) {
                         autoClose: 3000,
                     });
                 }
-                setStatusProfessorChanged(!statusProfessorChanged)
             })
             .catch(error => {
                 if (error.response) {
@@ -223,34 +202,15 @@ function Professores(props) {
                     console.log('Error', error.message);
                 }
             });
+
     }
 
+    console.debug('currentPage', currentPage.current)
     const buildPaginatorDesign = () => {
-        //paginationNumbers.current = [1, 2];
-        paginationNumbers.current = [];
-        //totalPages.current = 5
-        if (parseInt(totalPages.current) > 5) {
-            // alterar aqui
-            paginationNumbers.current = [
-                currentPage - 2,
-                currentPage - 1,
-                currentPage,
-                currentPage + 1,
-                currentPage + 2
-            ]
-
-        } if (parseInt(totalPages.current) == parseInt(5)) {
-            paginationNumbers.current = [];
-            endPaginationNumbers.current = [3, 4, 5]
-            paginationNumbers.current = [1, 2, ...endPaginationNumbers.current]
-        }
-        if (totalPages.current < 5) {
-            paginationNumbers.current = [];
-            for (let i = 0; i < totalPages.current; i++) {
-                paginationNumbers.current[i] = i + 1;
-            }
-        }
-        paginationNumbers.current.forEach(value => console.log('itens', value))
+        populatePaginator(currentPage.current, totalPages.current);
+        paginationNumbers.current = getReadyPaginator();
+        console.log('pagination numbers', paginationNumbers.current)
+        totalPages.current = getTotalPages();
         setMountedPagination(true);
     }
 
@@ -267,18 +227,16 @@ function Professores(props) {
         else {
             path = `usuarios/listar_usuarios/professor/${selectedValue}/${searchText}/${page}`
             if (selectedValue === 'todos')
-                path = `usuarios/listar_usuarios/professor/${searchText}/${page}`
-
+                path = `usuarios/listar_usuarios/professoruse/${searchText}/${page}`
         }
 
-        setCurrentPage(page);
+        currentPage.current = page
 
-        console.log('page: ', page)
         api.get(path)
             .then(response => {
                 console.log(response.data);
                 setNoUserFound(false);
-                setProfessores(response.data.docs);
+                setUser(response.data.docs);
 
             })
             .catch(error => {
@@ -294,6 +252,7 @@ function Professores(props) {
                     console.log('Error', error.message);
                 }
             });
+        buildPaginatorDesign();
     }
 
     return (
@@ -305,6 +264,7 @@ function Professores(props) {
                     selectedValue={selectedValue}
                     onChangeSelect={onChangeSelect}
                     addUser={addProfessor}
+                    selectItems={selectItems}
                 />
             </form>
             {noUserFound ? <h3 style={{ margin: ' 2.5rem', textAlign: 'center' }}>Nenhum usuário encontrado</h3> :
@@ -321,7 +281,7 @@ function Professores(props) {
 
                     <Table.Body>
                         {
-                            professores.map(({ _id, registration, name, email, status, isCoordinator }) => (
+                            user.map(({ _id, registration, name, email, status, isCoordinator }) => (
                                 <Table.Row key={_id}>
                                     <Table.Cell>{registration}</Table.Cell>
                                     <Table.Cell>{name}</Table.Cell>
@@ -355,58 +315,12 @@ function Professores(props) {
                         }
                     </Table.Body>
 
-                    <Table.Footer>
-                        <Table.Row>
-                            <Table.HeaderCell colSpan='4'>
-                                <Menu floated='right' pagination>
-                                    <Menu.Item as='a' icon onClick={e => {
-                                        if (currentPage === 1)
-                                            return;
-                                        choosePage(e, 1)
-                                    }}>
-                                        <Icon name='chevron left' />
-                                        <Icon name='chevron left' />
-                                    </Menu.Item>
-                                    <Menu.Item as='a' icon onClick={e => {
-                                        if (currentPage === 1)
-                                            return;
-                                        choosePage(e, currentPage - 1)
-                                    }}>
-                                        <Icon name='chevron left' />
-                                    </Menu.Item>
-
-                                    {paginationNumbers.current.map((value, index) => {
-                                        let activeStyle = {};
-                                        if (currentPage === value)
-                                            activeStyle = {
-                                                backgroundColor: light.color.primary,
-                                                color: 'white'
-                                            }
-                                        return <Menu.Item key={index} as='a' style={activeStyle} onClick={e => choosePage(e, value)}>
-                                            {value}
-                                        </Menu.Item>
-                                    }
-                                    )}
-
-                                    <Menu.Item as='a' icon onClick={e => {
-                                        if (currentPage === totalPages.current)
-                                            return;
-                                        choosePage(e, currentPage + 1)
-                                    }}>
-                                        <Icon name='chevron right' />
-                                    </Menu.Item>
-                                    <Menu.Item as='a' icon onClick={e => {
-                                        if (currentPage === totalPages.current)
-                                            return;
-                                        choosePage(e, totalPages.current)
-                                    }}>
-                                        <Icon name='chevron right' />
-                                        <Icon name='chevron right' />
-                                    </Menu.Item>
-                                </Menu>
-                            </Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Footer>
+                    <Paginator
+                        totalPages={totalPages.current}
+                        currentPage={currentPage.current}
+                        paginationNumbers={paginationNumbers.current}
+                        choosePage={choosePage}
+                    />
                 </Table>
             }
             <Modal

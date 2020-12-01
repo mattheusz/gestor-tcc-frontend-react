@@ -17,7 +17,7 @@ function Header({ setShowSidebar }) {
                     Gestor de <span>TCC</span>
                 </Brand>
             </Link>
-            <Hamburguer onClick={() => console.log(setShowSidebar())} />
+            <Hamburguer onClick={() => setShowSidebar()} />
             <StyledAvatar
                 round
                 color={lightTheme.color.primary}

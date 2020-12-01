@@ -6,7 +6,7 @@ import Select from '../../components/Select'
 import BoxSearchButton, { SearchButton, SearchInput } from '../BoxSearchButton/BoxSearchButton';
 import { LeftSearchBar, RightSearchBar, StyledSearchBar } from './styled';
 
-function SearchBar({ searchText, setSearchText, selectedValue, onChangeSelect, addUser }) {
+function SearchBar({ searchText, setSearchText, selectedValue, onChangeSelect, addUser, selectItems }) {
     return (
         <StyledSearchBar >
             <LeftSearchBar>
@@ -17,9 +17,9 @@ function SearchBar({ searchText, setSearchText, selectedValue, onChangeSelect, a
                     </SearchButton>
                 </BoxSearchButton>
                 <Select value={selectedValue} onChange={e => onChangeSelect(e)}>
-                    <option value="ativo">Ativos</option>
-                    <option value="inativo">Inativos</option>
-                    <option value="todos">Todos</option>
+                    {selectItems.map(({ value, displayValue }) =>
+                        <option value={value} > {displayValue} </option>
+                    )}
                 </Select>
             </LeftSearchBar>
             <RightSearchBar>

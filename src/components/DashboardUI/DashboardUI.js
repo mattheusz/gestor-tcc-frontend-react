@@ -13,7 +13,7 @@ function DashboardUI({ screenName, itemActive, children }) {
 
     const toggle = useCallback(() => {
         setShowSidebar(!showSidebar)
-    })
+    }, [showSidebar])
 
     return (
         <ThemeProvider theme={lightTheme}>

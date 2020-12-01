@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form'
 import { useHistory } from 'react-router-dom'
 import api from '../../api/api'
@@ -7,10 +7,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import Button from '../../components/Button'
 import DashboardUI from '../../components/DashboardUI';
-import { FaUserAlt, FaAddressCard, FaEnvelope, FaLock } from 'react-icons/fa';
+import { FaUserAlt, FaAddressCard, FaEnvelope } from 'react-icons/fa';
 
 import IconTextField, { Input } from '../../components/IconTextField/IconTextField';
-import Checkbox from '../../components/Checkbox';
 import ErrorMessage from '../../components/Error'
 import light from '../../themes/light';
 import Label from '../../components/Label/Label';
@@ -18,7 +17,7 @@ import { UserRegistrationContext } from '../../context/UserRegistrationContext';
 
 function TecnicoAdministrativoEditar(props) {
 
-    const { register, handleSubmit, errors, formState } = useForm({ mode: 'onSubmit' });
+    const { register, handleSubmit, errors } = useForm({ mode: 'onSubmit' });
 
     const history = useHistory()
 
@@ -140,7 +139,7 @@ function TecnicoAdministrativoEditar(props) {
                     Salvar
                 </Button>
                 &nbsp;
-                <Button new={true} type='button' width='100px' onClick={() => history.replace('/coordenador/professores')}>
+                <Button new={true} type='button' width='100px' onClick={() => history.replace('/coordenador/tecnicos_administrativos')}>
                     Cancelar
                 </Button>
             </form>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form'
 import { useHistory } from 'react-router-dom'
 import api from '../../api/api'
@@ -10,57 +10,52 @@ import DashboardUI from '../../components/DashboardUI';
 import { FaUserAlt, FaAddressCard, FaEnvelope, FaLock } from 'react-icons/fa';
 
 import IconTextField, { Input } from '../../components/IconTextField/IconTextField';
-import Checkbox from '../../components/Checkbox';
 import ErrorMessage from '../../components/Error'
 import light from '../../themes/light';
 import Label from '../../components/Label/Label';
 
-function ProfessoresCadastrar(props) {
-    const [checked, setChecked] = useState(false);
+function AlunoCadastrar(props) {
     const [errorMessage, setErrorMessage] = useState();
+
+    let loading = useRef();
+
+    useEffect(() => {
+
+    })
 
     const { register, handleSubmit, errors, formState: { isSubmitting }, watch } = useForm({ mode: 'onSubmit' });
     const watchPassword = watch('password');
 
     const history = useHistory()
+    loading.current = isSubmitting;
+    console.log('issubmitting padrão', isSubmitting)
 
-    const handleCheckboxChange = event => {
-        console.debug('Checkbox', 'foi clicado')
-        setChecked(event.target.checked)
-    }
-
-    const onSubmit = ({ fullName, email, registration, password, confirmPassword, isCoordinator }) => {
-        console.log('full name:', fullName)
-        console.log('email', email)
-        console.log('is coordinator', isCoordinator)
-        api.post('usuarios/cadastrar_professor', {
+    const onSubmit = ({ fullName, email, registration, password, confirmPassword, }) => {
+        console.log('isSubmitting:', isSubmitting)
+        api.post('usuarios/cadastrar_aluno', {
             name: fullName,
             email,
             registration,
             password,
             confirmPassword,
-            isCoordinator,
-            userType: 'professor',
+            userType: 'aluno',
             status: 'ativo'
         })
             .then(response => {
                 console.log(response.data);
                 const notify = () =>
-                    toast.success("Professor cadastrado com sucesso", {
+                    toast.success("Aluno cadastrado com sucesso", {
                         autoClose: 2000,
-                    }
-                    );
+                    });
                 notify()
                 setTimeout(() => {
-                    history.push('/coordenador/professores')
+                    history.push('/coordenador/alunos')
                 }, 2000);
 
             })
             .catch(error => {
                 if (error.response) {
-                    const msg = error.response.data;
-                    console.log(msg);
-                    setErrorMessage(msg)
+                    setErrorMessage(error.response.data)
                 }
                 if (error.request) {
                     console.log(error.request);
@@ -68,18 +63,15 @@ function ProfessoresCadastrar(props) {
                 else {
                     console.log('Error', error.message);
                 }
-                return new Promise((resolve) => {
-                    setTimeout(() => resolve(), 2000);
-                });
-
             });
+
         return new Promise((resolve) => {
-            setTimeout(() => resolve(), 1500);
+            setTimeout(() => resolve(), 3000);
         });
     }
 
     return (
-        <DashboardUI screenName='Cadastrar Professor' itemActive="Professores">
+        <DashboardUI screenName='Cadastrar Aluno' itemActive="Alunos">
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='fullName'>Nome completo</Label>
@@ -121,7 +113,6 @@ function ProfessoresCadastrar(props) {
                         O e-mail é obrigatório
                     </ErrorMessage>
                 }
-
 
                 <Label htmlFor='registration'>Matrícula</Label>
                 <IconTextField>
@@ -165,7 +156,6 @@ function ProfessoresCadastrar(props) {
                     <ErrorMessage left marginTop marginBottom>A senha deve ter no mínimo 8 caracteres </ErrorMessage>
                 }
 
-
                 <Label htmlFor='confirmPassword'>Confirmar Senha</Label>
                 <IconTextField>
                     <FaLock />
@@ -188,26 +178,18 @@ function ProfessoresCadastrar(props) {
                     <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>As senhas digitadas não conferem </ErrorMessage>
                 }
 
-                <Label style={{ fontSize: '1.1rem' }}>
-                    <Checkbox
-                        name='isCoordinator'
-                        checked={checked}
-                        onChange={e => handleCheckboxChange(e)}
-                        register={register}
-                    />
-                    <span style={{ marginLeft: 8, cursor: 'pointer' }}>Coordenador</span>
-                </Label>
-                <br />
+
                 {errorMessage &&
                     <ErrorMessage left style={{ marginTop: '4px', marginBottom: '7px' }}>
                         {errorMessage}
                     </ErrorMessage>
                 }
+                {console.log('loading: ', loading.current)}
                 <Button new={true} type='submit' width='100px' disabled={isSubmitting}>
                     Salvar
                 </Button>
                 &nbsp;
-                <Button new={true} type='button' width='100px' onClick={() => history.replace('/coordenador/professores')}>
+                <Button new={true} type='button' width='100px' onClick={() => history.replace('/coordenador/alunos')}>
                     Cancelar
                 </Button>
             </form>
@@ -217,4 +199,4 @@ function ProfessoresCadastrar(props) {
     );
 }
 
-export default ProfessoresCadastrar;
+export default AlunoCadastrar;

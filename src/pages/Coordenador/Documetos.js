@@ -14,12 +14,11 @@ import Switch from 'react-input-switch';
 import Modal from 'react-modal';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { UserRegistrationContext } from '../../context/UserRegistrationContext';
-import Button from '../../components/Button';
 import usePaginatorNumbers from '../../hooks/usePaginator';
 import ActionModal from '../../components/ActionModal';
 import Paginator from '../../components/Paginator/Paginator';
 
-function TecnicoAdministrativo(props) {
+function Documentos(props) {
     const [searchText, setSearchText] = useState('');
     const [user, setUser] = useState([]);
 
@@ -66,7 +65,7 @@ function TecnicoAdministrativo(props) {
         if (mountedPagination)
             return;
         setMountedPagination(false);
-        api.get('usuarios/todos_usuarios/administrativo/ativo/1')
+        api.get(`documentos/listar_todos_documentos/${currentPage}`)
             .then(({ data }) => {
                 setCurrentPage(data.page);
                 totalPages.current = data.totalPages;
@@ -86,7 +85,7 @@ function TecnicoAdministrativo(props) {
                     console.log('Error', error.message);
                 }
             });
-    }, []);
+    }, [currentPage]);
 
     // filtrando professor por todos, ativo e inativo
     const [selectedValue, setSelectedValue] = useState('ativo');
@@ -98,14 +97,14 @@ function TecnicoAdministrativo(props) {
             let path;
 
             if (searchText === '') {
-                path = `usuarios/todos_usuarios/administrativo/${selectedValue}/1`
+                path = `usuarios/todos_usuarios/aluno/${selectedValue}/1`
                 if (selectedValue === 'todos')
-                    path = `usuarios/todos_usuarios/administrativo/1`
+                    path = `usuarios/todos_usuarios/aluno/1`
             }
             else {
-                path = `usuarios/listar_usuarios/administrativo/${selectedValue}/${searchText}/1`
+                path = `usuarios/listar_usuarios/aluno/${selectedValue}/${searchText}/1`
                 if (selectedValue === 'todos')
-                    path = `usuarios/listar_usuarios/administrativo/${searchText}/1`
+                    path = `usuarios/listar_usuarios/aluno/${searchText}/1`
             }
             api.get(path)
                 .then(({ data }) => {
@@ -141,30 +140,30 @@ function TecnicoAdministrativo(props) {
     }
 
     const addUser = () => {
-        history.push('/coordenador/tecnicos_administrativos/novo');
+        history.push('/coordenador/documentos/novo');
     }
 
     const editUser = (_id, registration, name, email, status) => {
         setUserRegistration({ _id, registration, name, email, status })
-        history.push(`/coordenador/tecnicos_administrativos/editar/${_id}`);
+        history.push(`/coordenador/alunos/editar/${_id}`);
     }
 
     const activeAndInactive = (id, name, status) => {
         userId.current = id;
         userName.current = name;
         userStatus.current = status;
-        console.log('Mounted paginator: ', mountedPagination)
         setMountedPagination(false);
 
         if (status === 'ativo')
-            modalMessage.current = `Deseja desativar o técnico administrativo ${userName.current}?`
+            modalMessage.current = `Deseja desativar o aluno ${userName.current}?`
         else
-            modalMessage.current = `Deseja ativar o técnico administrativo ${userName.current}?`
+            modalMessage.current = `Deseja ativar o aluno ${userName.current}?`
 
         setModalIsOpen(true)
     }
 
-    const changeStatusUser = () => {
+    // remover doccumentos (falta o back)
+    const removeDocument = () => {
 
         api.put('usuarios/atualizar_status', {
             id: userId.current,
@@ -172,13 +171,12 @@ function TecnicoAdministrativo(props) {
             .then(response => {
                 setStatusUserChanged(!statusUserChanged)
                 setModalIsOpen(false);
-                console.log('Status do tec admin', userStatus.current);
                 if (userStatus.current === 'ativo') {
-                    toast.success('Administrativo desativado com sucesso', {
+                    toast.success('Aluno desativado com sucesso', {
                         autoClose: 3000,
                     });
                 } else {
-                    toast.success('Administrativo ativado com sucesso', {
+                    toast.success('Aluno ativado com sucesso', {
                         autoClose: 3000,
                     });
                 }
@@ -213,14 +211,14 @@ function TecnicoAdministrativo(props) {
         let path;
         // tratando buscar por texto + status
         if (searchText === '') {
-            path = `usuarios/todos_usuarios/administrativo/${selectedValue}/${page}`
+            path = `documentos/listar_todos_documentos/${page}`
             if (selectedValue === 'todos')
-                path = `usuarios/todos_usuarios/administrativo/${page}`
+                path = `usuarios/todos_usuarios/aluno/${page}`
         }
         else {
-            path = `usuarios/listar_usuarios/administrativo/${selectedValue}/${searchText}/${page}`
+            path = `documentos/listar_todos_documentos/${page}`
             if (selectedValue === 'todos')
-                path = `usuarios/listar_usuarios/administrativo/${searchText}/${page}`
+                path = `documentos/listar_todos_documentos/${page}`
 
         }
 
@@ -249,7 +247,7 @@ function TecnicoAdministrativo(props) {
     }
 
     return (
-        <DashboardUI screenName='Técnicos Adiministrativos' itemActive="Técnicos Administrativos">
+        <DashboardUI screenName='Documentos' itemActive="Documentos">
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}
@@ -264,9 +262,8 @@ function TecnicoAdministrativo(props) {
                 <Table basic='very' striped selectable>
                     <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell width={2}>Matrícula</Table.HeaderCell>
-                            <Table.HeaderCell width={6}>Nome</Table.HeaderCell>
-                            <Table.HeaderCell width={6}>E-mail</Table.HeaderCell>
+                            <Table.HeaderCell width={6}>Título</Table.HeaderCell>
+                            <Table.HeaderCell width={6}>Anexo</Table.HeaderCell>
                             <Table.HeaderCell width={2}>Ações</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
@@ -274,13 +271,16 @@ function TecnicoAdministrativo(props) {
 
                     <Table.Body>
                         {
-                            user.map(({ _id, registration, name, email, status }) => (
+                            user.map(({ _id, title, name, email, status, documentIformation: { nameDocumentation, url } }) => (
                                 <Table.Row key={_id}>
-                                    <Table.Cell>{registration}</Table.Cell>
-                                    <Table.Cell>{name}</Table.Cell>
-                                    <Table.Cell>{email}</Table.Cell>
+                                    <Table.Cell>{title}</Table.Cell>
+                                    <Table.Cell>
+                                        <a href={url} target='_blank'>
+                                            {nameDocumentation}
+                                        </a>
+                                    </Table.Cell>
                                     <Table.Cell style={{ display: 'flex !important', alignItems: 'center', position: 'relative' }}>
-                                        <AiOutlineEdit cursor='pointer' onClick={() => { editUser(_id, registration, name, email, status) }} color={light.color.primary} size='2rem' /> &nbsp;&nbsp;
+                                        <AiOutlineEdit cursor='pointer' onClick={() => { editUser(_id, name, email, status) }} color={light.color.primary} size='2rem' /> &nbsp;&nbsp;
                                         <Switch
                                             on='ativo'
                                             off='inativo'
@@ -319,7 +319,7 @@ function TecnicoAdministrativo(props) {
                 modalIsOpen={modalIsOpen}
                 setModalIsOpen={setModalIsOpen}
                 modalMessage={modalMessage.current}
-                handleConfirmAction={changeStatusUser}
+                handleConfirmAction={removeDocument}
             />
             <ToastContainer />
         </DashboardUI>
@@ -327,4 +327,4 @@ function TecnicoAdministrativo(props) {
     );
 }
 
-export default TecnicoAdministrativo;
+export default Documentos;
