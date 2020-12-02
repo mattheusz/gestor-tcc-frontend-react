@@ -7,9 +7,8 @@ import Avatar from 'react-avatar';
 import { Link } from 'react-router-dom';
 import { headerStyle } from './styles'
 import { device } from '../../device';
-import DropdownUserAccount from '../DropdownUserAccount/DropdownUserAccount';
 
-function Header({ setShowSidebar }) {
+function Header({ setShowSidebar, setShowDropdown }) {
 
     return (
         <header style={headerStyle}>
@@ -27,6 +26,10 @@ function Header({ setShowSidebar }) {
                 size='2.5rem'
                 textSizeRatio={1.5}
                 name='Matheus Justino'
+                style={{
+                    cursor: 'pointer',
+                }}
+                onClick={() => { setShowDropdown() }}
             />
         </header >
     );

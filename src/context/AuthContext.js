@@ -144,8 +144,26 @@ export function AuthProvider({ children }) {
             });
     }
 
+    function logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userType');
+        api.defaults.headers.Authorization = ``;
+        setAuthenticated(false);
+        history.push('/login')
+    }
+
     return (
-        <AuthContext.Provider value={{ authenticated, loading, handleLogin, handleForgotPassword, handleResetPassword, errorMessage, setErrorMessage }}>
+        <AuthContext.Provider value={{
+            authenticated,
+            loading,
+            handleLogin,
+            handleForgotPassword,
+            handleResetPassword,
+            errorMessage,
+            setErrorMessage,
+            logout
+        }
+        }>
             {children}
         </AuthContext.Provider>
     )

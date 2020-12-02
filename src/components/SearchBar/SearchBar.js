@@ -18,7 +18,7 @@ function SearchBar({ searchText, setSearchText, selectedValue, onChangeSelect, a
                 </BoxSearchButton>
                 <Select value={selectedValue} onChange={e => onChangeSelect(e)}>
                     {selectItems.map(({ value, displayValue }) =>
-                        <option value={value} > {displayValue} </option>
+                        <option key={value} value={value} > {displayValue} </option>
                     )}
                 </Select>
             </LeftSearchBar>

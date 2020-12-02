@@ -3,71 +3,109 @@ import React from 'react';
 import { BiUserCircle } from 'react-icons/bi';
 import { AiOutlineLogout } from 'react-icons/ai';
 import { IoMdNotificationsOutline } from 'react-icons/io';
+import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
 
 const StyledDropdownUserAccount = styled.div`
     position: absolute;
-    top: 75px;
-    right: 10px;
+    top: 65px;
+    right: 15px;
     width: 250px;
+    padding: .5rem;
     background-color: #fff;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     /*
     visibility: hidden;
     opacity: 0;
     */
-    transition: .5s;
+    transition: .1s;
     z-index: 2;
     background-color: ${props => props.theme.color.primary};
     color: white;
+    visibility: ${props => props.showDropdown ? 'visible' : 'hidden'}
 `;
 
-const ListDropdown = styled.ul`
-    padding-left: 0;
-    z-index: 55;
-`;
-
-const ListItemDropdown = styled.li`
+const ListItemDropdown = styled(Link)`
+    padding: .6rem .3rem .6rem 1.7rem;
     list-style-type: none;
-    display: flex;
-    align-items: center;
-    margin-bottom: 25px;
-    z-index: 55;
+    display: block;
+    color: white;
+    font-size: 1.1rem;
+    position: relative;
 
     svg{
         width: 20px;
         height: auto;
-        margin-right: 5px;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
     }
 
-    a {
-        text-decoration: none;
-        transition: .5s;
-        color: #000;
-
-        &:hover {
-        color: #ff7171;
+    span{
+        padding-left: 30px;
+        z-index: 5;
     }
-}
+
+    &:hover{
+        color: ${props => props.theme.color.primary};
+        font-weight: 400;
+        color: white;
+
+    }
 `;
 
-function DropdownUserAccount(props) {
+const ListItemDropdownLi = styled.li`
+    padding: .6rem .3rem .6rem 1.7rem;
+    list-style-type: none;
+    display: block;
+    color: white;
+    font-size: 1.1rem;
+    position: relative;
+    cursor: pointer;
+
+    svg{
+        width: 20px;
+        height: auto;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    span{
+        padding-left: 30px;
+        z-index: 5;
+    }
+
+    &:hover{
+        color: ${props => props.theme.color.primary};
+        font-weight: 400;
+        color: white;
+
+    }
+`;
+
+
+function DropdownUserAccount({ showDropdown }) {
+
+    const { logout } = useContext(AuthContext);
+
     return (
-        <StyledDropdownUserAccount>
-            <ListDropdown>
-                <ListItemDropdown>
-                    <BiUserCircle />
-                    Perfil
-                </ListItemDropdown>
-                <ListItemDropdown>
-                    <IoMdNotificationsOutline />
-                    Noficações
-                </ListItemDropdown>
-                <ListItemDropdown>
-                    <AiOutlineLogout />
-                    Sair
-                </ListItemDropdown>
-            </ListDropdown>
+        <StyledDropdownUserAccount showDropdown={showDropdown}>
+            <ListItemDropdown to='/perfil'>
+                <BiUserCircle />
+                <span>Perfil</span>
+            </ListItemDropdown>
+            <ListItemDropdown>
+                <IoMdNotificationsOutline />
+                <span>Notificações</span>
+            </ListItemDropdown>
+            <ListItemDropdownLi onClick={() => logout()}>
+                <AiOutlineLogout />
+                <span>Sair</span>
+            </ListItemDropdownLi>
         </StyledDropdownUserAccount>
     );
 }

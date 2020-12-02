@@ -19,6 +19,8 @@ import Documentos from '../pages/Coordenador/Documetos';
 import DocumentosCadastrar from '../pages/Coordenador/DocumentosCadastrar';
 import DatasImportantes from '../pages/Coordenador/DatasImportantes';
 import PaginaInicial from '../pages/Coordenador/Home';
+import VerPerfil from '../pages/Geral/VerPerfil';
+import MeusProjetos from '../pages/Professor/MeusProjetos';
 
 
 
@@ -87,9 +89,13 @@ export default function Routes() {
                 <UserRegistrationProvider>
                     <Switch>
                         <CustomRoute exact roles={[]} path='/login' component={Login} />
+                        <CustomRoute exact roles={[]} path='/' component={Login} />
                         <CustomRoute exact roles={[]} path='/forgot_password' component={ForgotPassword} />
                         <CustomRoute exact roles={[]} path='/reset_password/:token' component={ResetPassword} />
                         <CustomRoute exact isPrivate roles={[]} path='/home' component={PaginaInicial} />
+
+                        {/* Geral */}
+                        <CustomRoute exact isPrivate roles={['coordenador', 'administrativo', 'professor', 'aluno']} path='/perfil' component={VerPerfil} />
 
                         {/* Coordenador */}
                         <CustomRoute exact isPrivate path='/coordenador/projetos' roles={['coordenador']} component={Projetos} />
@@ -110,9 +116,9 @@ export default function Routes() {
                         <CustomRoute exact isPrivate path='/documentos' roles={['coordenador', 'administrativo']} component={Documentos} />
                         <CustomRoute exact isPrivate path='/documentos/novo' roles={['coordenador', 'administrativo']} component={DocumentosCadastrar} />
                         <CustomRoute exact isPrivate path='/trabalhos_anteriores' roles={['coordenador', 'administrativo']} component={Projetos} />
-                        {/* Professor */}
 
-                        <CustomRoute exact isPrivate path='/professor' roles={['professor']} component={Projetos} />
+                        {/* Professor */}
+                        <CustomRoute exact isPrivate path='/professor' roles={['professor']} component={MeusProjetos} />
 
                         <CustomRoute exact isPrivate path='/professor/projetos' roles={['professor']} component={Projetos} />
                         <CustomRoute exact isPrivate path='/professor/alunos' roles={['coordenador']} component={Alunos} />

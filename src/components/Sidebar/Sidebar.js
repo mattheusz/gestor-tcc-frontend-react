@@ -12,7 +12,7 @@ function menuToBeDisplayed() {
     const userType = localStorage.getItem('userType');
     if (userType === 'professor') {
         // corrigir aqui depois que for alterado na API
-        return coordenador;
+        return professor;
     }
     if (userType === 'coordenador') {
         return coordenador;

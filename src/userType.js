@@ -115,12 +115,28 @@ export const alunoOrientando = {
     repositorio: 'Repositório',
 }
 
-export const professor = {
-    projetos: 'Projetos',
-    orientacoes: 'Orientações',
-    propostas: 'Propostas',
-    calendario: 'Calendário',
-    documentos: 'Documentos',
-    repositorio: 'Repositório',
-}
+export const professor = [
+
+    {
+        icon: <VscProject />,
+        description: 'Meus Projetos',
+        to: '/professor/projetos'
+    },
+
+    {
+        icon: <BsCalendar />,
+        description: 'Datas Importantes*',
+        to: '/datas_importantes'
+    },
+    {
+        icon: <CgFileDocument />,
+        description: 'Documentos',
+        to: '/documentos'
+    },
+    {
+        icon: <RiGitRepositoryLine />,
+        description: 'Repositório*',
+        to: '/trabalhos_anteriores'
+    },
+]
 

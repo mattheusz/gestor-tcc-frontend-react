@@ -11,16 +11,23 @@ import DropdownUserAccount from '../DropdownUserAccount/DropdownUserAccount';
 function DashboardUI({ screenName, itemActive, children }) {
 
     const [showSidebar, setShowSidebar] = useState(true);
+    const [showDropdown, setShowDropdown] = useState(false);
 
     const toggle = useCallback(() => {
         setShowSidebar(!showSidebar)
     }, [showSidebar])
 
+    const toggleDropdown = useCallback(() => {
+        setShowDropdown(!showDropdown);
+        console.log('toggle dropdown', showDropdown)
+    }, [showDropdown])
+
     return (
         <ThemeProvider theme={lightTheme}>
             <Wrapper>
-                <Header setShowSidebar={toggle}
-
+                <Header
+                    setShowSidebar={toggle}
+                    setShowDropdown={toggleDropdown}
                 />
                 <Sidebar showSidebar={showSidebar} itemActive={itemActive} />
                 <Content showSidebar={showSidebar}>
@@ -30,7 +37,9 @@ function DashboardUI({ screenName, itemActive, children }) {
                     </Main>
                     <Footer />
                 </Content>
-                <DropdownUserAccount></DropdownUserAccount>
+                <DropdownUserAccount
+                    showDropdown={showDropdown}
+                />
             </Wrapper>
         </ThemeProvider>
     );
