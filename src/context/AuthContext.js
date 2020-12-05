@@ -27,10 +27,11 @@ export function AuthProvider({ children }) {
 
             const decoded = jwt_decode(token);
             console.log(decoded)
-            const { userType, isCoordinator, available } = decoded;
+            const { userType, isCoordinator, available, id } = decoded;
             const userTypeDetected = detectUserType(userType, isCoordinator, available);
             console.log('Tipo de usuário detectado: ', userTypeDetected);
             localStorage.setItem('userType', userTypeDetected);
+            localStorage.setItem('reg', id);
 
             setAuthenticated(() => true);
         }
@@ -53,10 +54,11 @@ export function AuthProvider({ children }) {
 
                 const decoded = jwt_decode(token);
                 console.log(decoded)
-                const { userType, isCoordinator, available } = decoded;
+                const { userType, isCoordinator, available, id } = decoded;
                 const userTypeDetected = detectUserType(userType, isCoordinator, available);
                 console.log('Tipo de usuário detectado: ', userTypeDetected);
                 localStorage.setItem('userType', userTypeDetected);
+                localStorage.setItem('reg', id);
 
                 setAuthenticated(true);
                 history.push(`/${userTypeDetected}`);
@@ -98,9 +100,9 @@ export function AuthProvider({ children }) {
                     console.log(errorMessage);
                 }
                 if (error.request) {
-                    const msg = error.response.data;
+                    const msg = JSON.stringify(error.request);
                     setErrorMessage(msg);
-                    console.log(error.response.data);
+                    console.log(msg);
                 }
                 else {
                     console.log('Error', error.message);

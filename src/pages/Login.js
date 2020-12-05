@@ -77,7 +77,7 @@ function Login(props) {
 
                     <Button type='submit' disabled={formState.isSubmitting}>Entrar</Button>
                     {formState.isSubmitting && <Spinner type='spin' color={lightTheme.color.primaryShadow} height={20} width={20} />}
-                    {errorMessage && !formState.isSubmitting && <ErrorMessage>{errorMessage}</ErrorMessage>}
+                    {errorMessage && !formState.isSubmitting && <ErrorMessage>{JSON.stringify(errorMessage)}</ErrorMessage>}
                     <SimpleLink to='/forgot_password'>Esqueceu a senha?</SimpleLink>
 
                 </CenterForm>

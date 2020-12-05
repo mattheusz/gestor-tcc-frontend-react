@@ -120,7 +120,7 @@ export const professor = [
     {
         icon: <VscProject />,
         description: 'Meus Projetos',
-        to: '/professor/projetos'
+        to: '/professor'
     },
 
     {

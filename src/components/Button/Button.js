@@ -7,6 +7,7 @@ const Button = styled.button`
     border: none;
     border-radius: ${props => props.new ? '1px' : '3px'};
     width: 100%;
+    font-family: Roboto;
     padding: .5rem 1rem;
     height: 2.5rem;
     font-size: 1rem;
@@ -18,11 +19,11 @@ const Button = styled.button`
     align-items: center;
 
     &:hover{
-    background-color: ${props => props.theme.color.secondaryShadow}
+        background-color: ${props => props.theme.color.secondaryShadow}
     }
 
     &:disabled{
-    background-color: ${props => props.theme.color.secondaryLight}
+        background-color: ${props => props.theme.color.secondaryLight}
     }
 
     svg {

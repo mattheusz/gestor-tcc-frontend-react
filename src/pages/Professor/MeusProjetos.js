@@ -17,12 +17,13 @@ import usePaginatorNumbers from '../../hooks/usePaginator';
 import ActionModal from '../../components/ActionModal';
 import Paginator from '../../components/Paginator/Paginator';
 import { ProjectContext } from '../../context/ProjectContext';
+import ProfessorProjectList from '../../components/ProfessorProjectList/ProfessorProjectList';
 
 function Projetos(props) {
     const [searchText, setSearchText] = useState('');
-    const [user, setUser] = useState([]);
+    const [projects, setProjets] = useState([]);
 
-    const [noProjectFound, setProjectFound] = useState(false);
+    const [noProjectFound, setNoProjectFound] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [mountedPagination, setMountedPagination] = useState(false);
@@ -62,29 +63,40 @@ function Projetos(props) {
 
     let totalPages = useRef();
     let paginationNumbers = useRef([]);
+
+    let id = useRef();
+    id.current = localStorage.getItem('reg')
+    console.log('id', id.current)
     const { getReadyPaginator, getTotalPages, populatePaginator } = usePaginatorNumbers()
 
     Modal.setAppElement('#root');
 
     const history = useHistory();
 
-    // carregando todos os tec administrativos ao montar componente
     useEffect(() => {
         if (mountedPagination)
             return;
         setMountedPagination(false);
-        api.get('projeto/listar_todos/1')
+        api.get(`projeto/professor_projetos/1`, {
+            params: {
+                id: `${id.current}`,
+            }
+        })
             .then(({ data }) => {
+                console.log('certo encontrou')
+                console.log(data)
                 setCurrentPage(data.page);
                 totalPages.current = data.totalPages;
-                noProjectFound && setProjectFound(false);
-                setUser(data.docs);
+                noProjectFound && setNoProjectFound(false);
+                setProjets(data.docs);
                 buildPaginatorDesign();
+                console.log('certo encontrou')
             })
             .catch(error => {
                 if (error.response) {
+                    console.log('aah, que merda')
                     console.log(error.response.data);
-                    setProjectFound(true)
+                    setNoProjectFound(true)
                 }
                 if (error.request) {
                     console.log(error.request);
@@ -118,14 +130,14 @@ function Projetos(props) {
             api.get(path)
                 .then(({ data }) => {
                     totalPages.current = data.totalPages;
-                    setProjectFound(false)
-                    setUser(data.docs)
+                    setNoProjectFound(false)
+                    setProjets(data.docs)
                     setCurrentPage(data.page);
                     buildPaginatorDesign();
                 })
                 .catch(error => {
                     if (error.response) {
-                        setProjectFound(true)
+                        setNoProjectFound(true)
                     }
                     if (error.request) {
                         console.log(error.request);
@@ -233,15 +245,15 @@ function Projetos(props) {
         api.get(path)
             .then(response => {
                 console.log(response.data);
-                setProjectFound(false);
-                setUser(response.data.docs);
+                setNoProjectFound(false);
+                setProjets(response.data.docs);
 
             })
             .catch(error => {
                 if (error.response) {
                     const msg = error.response.data;
                     console.log(msg);
-                    setProjectFound(true)
+                    setNoProjectFound(true)
                 }
                 if (error.request) {
                     console.log(error.request);
@@ -265,63 +277,8 @@ function Projetos(props) {
                     selectItems={selectItems}
                 />
             </form>
-            {noProjectFound ? <h3 style={{ margin: ' 2.5rem', textAlign: 'center' }}>Nenhum usuário encontrado</h3> :
-                <Table basic='very' striped selectable>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell width={6}>Projeto</Table.HeaderCell>
-                            <Table.HeaderCell width={6}>Orientandos</Table.HeaderCell>
-                            <Table.HeaderCell width={2}>Orientador</Table.HeaderCell>
-                            <Table.HeaderCell width={2}>Ações</Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Header>
-
-
-                    <Table.Body>
-                        {
-                            user.map(({ _id, title, students, advisor: { name }, situation, status }) => (
-                                <Table.Row key={_id}>
-                                    <Table.Cell>{title}</Table.Cell>
-                                    <Table.Cell><p>{students[0] && students[0].name} </p>
-                                        {students[1] && students[1].name}
-                                         - {situation}
-                                    </Table.Cell>
-                                    <Table.Cell>{name}</Table.Cell>
-                                    <Table.Cell style={{ display: 'flex !important', alignItems: 'center', position: 'relative' }}>
-                                        <AiOutlineEdit cursor='pointer' onClick={() => { editUser(_id, title, name, situation, status) }} color={light.color.primary} size='2rem' /> &nbsp;&nbsp;
-                                        <Switch
-                                            on='ativo'
-                                            off='inativo'
-                                            style={{
-                                                width: '2rem',
-                                                height: '1.2rem',
-                                                position: 'absolute',
-                                                top: '50%',
-                                                transform: 'translateY(-50%)'
-                                            }}
-                                            styles={{
-                                                trackChecked: {
-                                                    backgroundColor: light.color.primary
-                                                },
-                                                buttonChecked: {
-                                                    backgroundColor: 'white'
-                                                }
-                                            }}
-                                            value={status}
-                                            onChange={() => { activeAndInactive(_id, name, status) }} />
-
-                                    </Table.Cell>
-                                </Table.Row>
-                            ))
-                        }
-                    </Table.Body>
-                    <Paginator
-                        totalPages={totalPages.current}
-                        currentPage={currentPage}
-                        paginationNumbers={paginationNumbers.current}
-                        choosePage={choosePage}
-                    />
-                </Table>
+            {!noProjectFound ? <h3 style={{ margin: ' 2.5rem', textAlign: 'center' }}>Nenhum projeto encontrado</h3> :
+                <ProfessorProjectList projects={projects} />
             }
             <ActionModal
                 modalIsOpen={modalIsOpen}
