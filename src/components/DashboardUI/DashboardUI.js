@@ -32,8 +32,10 @@ function DashboardUI({ screenName, itemActive, children }) {
                 <Sidebar showSidebar={showSidebar} itemActive={itemActive} />
                 <Content showSidebar={showSidebar}>
                     <Main >
-                        <ViewTitle>{screenName}</ViewTitle>
-                        {children}
+                        <MainCard>
+                            <ViewTitle>{screenName}</ViewTitle>
+                            {children}
+                        </MainCard>
                     </Main>
                     <Footer />
                 </Content>
@@ -89,7 +91,16 @@ const Main = styled.main`
     padding: 1rem 1rem 1rem 1.5rem;
     max-width: 100%;
     z-index: 1;
+    
 `
+const MainCard = styled.div`
+    border: 1px solid ${props => props.theme.color.grey}55;
+    box-shadow: 3px 3px 3px ${props => props.theme.color.primary}15;
+    padding: 1rem;
+    border-radius 5px;
+    max-width: 1050px;
+    margin: 0 auto;
+`;
 
 const Footer = styled.footer`
     height: 70px;

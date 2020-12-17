@@ -65,7 +65,6 @@ const ProfileGrid = styled.div`
 `;
 
 const GridItem = styled.div`
-
     
         padding: .7rem;
         font-size: 1.1rem;

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useContext } from 'react';
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import light from '../../themes/light';
 
 import api from '../../api/api'
@@ -18,8 +18,12 @@ import ActionModal from '../../components/ActionModal';
 import Paginator from '../../components/Paginator/Paginator';
 import { ProjectContext } from '../../context/ProjectContext';
 import ProfessorProjectList from '../../components/ProfessorProjectList/ProfessorProjectList';
+import ProjectInfo from '../../components/ProjectInfo/ProjectInfo';
+import styled from 'styled-components';
+import { device } from '../../device';
 
-function Projetos(props) {
+function ListarAtividadesProfessor(props) {
+
     const [searchText, setSearchText] = useState('');
     const [projects, setProjets] = useState([]);
 
@@ -27,10 +31,6 @@ function Projetos(props) {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [mountedPagination, setMountedPagination] = useState(false);
     const [formIsSubmitted, setFormIsSubmitted] = useState(true);
-
-
-
-    //const { project, setProject } = useContext(ProjectContext);
 
     const selectItems = [
         {
@@ -56,6 +56,7 @@ function Projetos(props) {
     ]
 
     const isInitialMount = useRef(true);
+
     let userName = useRef('');
     let userId = useRef('');
     let userStatus = useRef('');
@@ -67,31 +68,26 @@ function Projetos(props) {
     let paginationNumbers = useRef([]);
     const { getReadyPaginator, getTotalPages, populatePaginator } = usePaginatorNumbers();
 
-    let id = useRef();
-    id.current = localStorage.getItem('reg')
-    console.log('id', id.current)
+    let professorId = useRef();
+    professorId.current = localStorage.getItem('reg')
+    console.log('id', professorId.current)
 
     Modal.setAppElement('#root');
 
     const history = useHistory();
+    const { id } = useParams();
 
+    // carregando informações do projeto aberto
     useEffect(() => {
-        if (mountedPagination)
-            return;
-        setMountedPagination(false);
-        api.get(`projeto/professor_projetos/${id.current}/1`)
+
+        // pegar projeto por id
+        api.get(``)
             .then(({ data }) => {
-                currentPage.current = data.page;
-                totalPages.current = data.totalPages;
-                noProjectFound && setNoProjectFound(false);
-                setProjets(data.docs);
-                buildPaginatorDesign();
+
             })
             .catch(error => {
                 if (error.response) {
-                    console.log('aah, que merda')
                     console.log(error.response);
-                    setNoProjectFound(true)
                 }
                 if (error.request) {
                     console.log(error.request);
@@ -102,106 +98,20 @@ function Projetos(props) {
             });
     }, []);
 
-    // filtrando projeto por todos, ativo e inativo
     const [selectedValue, setSelectedValue] = useState('ativo');
-    const [statusUserChanged, setStatusUserChanged] = useState(false);
     useEffect(() => {
         if (isInitialMount.current) {
             isInitialMount.current = false;
         } else {
-            let path;
 
-            if (searchText === '') {
-                path = `projeto/listar_todos/${selectedValue}/1`;
-                if (selectedValue === 'todos')
-                    path = 'projeto/listar_todos/1'
-
-            }
-            else {
-                path = `projeto/listar_todos/${selectedValue}/${searchText}/1`;
-                if (selectedValue === 'todos')
-                    path = `projeto/listar_todos/titulo/${searchText}/1`
-            }
-            api.get(path)
-                .then(({ data }) => {
-                    totalPages.current = data.totalPages;
-                    setNoProjectFound(false)
-                    setProjets(data.docs)
-                    currentPage.current = data.page;
-                    buildPaginatorDesign();
-                })
-                .catch(error => {
-                    if (error.response) {
-                        setNoProjectFound(true)
-                    }
-                    if (error.request) {
-                        console.log(error.request);
-                    }
-                    else {
-                        console.log('Error', error.message);
-                    }
-                });
         }
-    }, [selectedValue, statusUserChanged, formIsSubmitted])
+        api.get(``)
+            .then(({ data }) => {
 
-    const onSubmit = e => {
-        setMountedPagination(false);
-        e.preventDefault();
-        setFormIsSubmitted(!formIsSubmitted);
-    }
-
-    const onChangeSelect = e => {
-        setMountedPagination(false);
-        setSelectedValue(e.target.value)
-    }
-
-    const addUser = () => {
-        history.push('/professor/projetos/novo');
-    }
-
-    const editUser = (_id, registration, name, email, status) => {
-        //setProject({ _id, registration, name, email, status })
-        history.push(`/projetos/editar/${_id}`);
-    }
-
-    const activeAndInactive = (id, name, status) => {
-        userId.current = id;
-        userName.current = name;
-        userStatus.current = status;
-        setMountedPagination(false);
-
-        if (status === 'ativo')
-            modalMessage.current = `Deseja desativar o aluno ${userName.current}?`
-        else
-            modalMessage.current = `Deseja ativar o aluno ${userName.current}?`
-
-        setModalIsOpen(true)
-    }
-
-    const changeStatusUser = () => {
-
-        api.put('usuarios/atualizar_status', {
-            id: userId.current,
-        })
-            .then(response => {
-                setStatusUserChanged(!statusUserChanged)
-                setModalIsOpen(false);
-                if (userStatus.current === 'ativo') {
-                    toast.success('Aluno desativado com sucesso', {
-                        autoClose: 3000,
-                    });
-                } else {
-                    toast.success('Aluno ativado com sucesso', {
-                        autoClose: 3000,
-                    });
-                }
             })
             .catch(error => {
                 if (error.response) {
-                    setModalIsOpen(false)
-                    toast.error("A ação não foi executada. Tente novamente", {
-                        autoClose: 4000,
-                    });
+                    console.log(error.response);
                 }
                 if (error.request) {
                     console.log(error.request);
@@ -210,6 +120,20 @@ function Projetos(props) {
                     console.log('Error', error.message);
                 }
             });
+    }, [])
+
+    const addUser = () => {
+        history.push('/professor/projetos/novo');
+    }
+
+    const editInfoProject = () => {
+
+    }
+
+    const onSubmit = e => {
+        setMountedPagination(false);
+        e.preventDefault();
+        setFormIsSubmitted(!formIsSubmitted);
     }
 
     const buildPaginatorDesign = () => {
@@ -217,6 +141,11 @@ function Projetos(props) {
         paginationNumbers.current = getReadyPaginator();
         totalPages.current = getTotalPages();
         setMountedPagination(true);
+    }
+
+    const onChangeSelect = e => {
+        setMountedPagination(false);
+        setSelectedValue(e.target.value)
     }
 
     const choosePage = (e, page) => {
@@ -259,8 +188,11 @@ function Projetos(props) {
         buildPaginatorDesign();
     }
 
+    const openActivity = (e, idActivity) => {
+        history.push(`/professor/projetos/${id}/atividades/${idActivity}`)
+    }
     return (
-        <DashboardUI screenName='Meus Projetos' itemActive="Meus Projetos">
+        <DashboardUI screenName='Atividades' itemActive="Meus Projetos">
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}
@@ -271,25 +203,107 @@ function Projetos(props) {
                     selectItems={selectItems}
                 />
             </form>
-            {noProjectFound ? <h3 style={{ margin: ' 2.5rem', textAlign: 'center' }}>Nenhum projeto encontrado</h3> :
-                <ProfessorProjectList projects={projects} />
-            }
-            <Paginator
-                totalPages={totalPages.current}
-                currentPage={currentPage.current}
-                paginationNumbers={paginationNumbers.current}
-                choosePage={choosePage}
-            />
-            <ActionModal
-                modalIsOpen={modalIsOpen}
-                setModalIsOpen={setModalIsOpen}
-                modalMessage={modalMessage.current}
-                handleConfirmAction={changeStatusUser}
-            />
+            <ActivityList>
+                <ActivityItem onClick={(e) => openActivity(e, 1)}>
+                    <ActivityTitle>Introdução</ActivityTitle><br />
+                    <Deadline>
+                        Prazo de entrega: 20/01/2020
+                    </Deadline>
+                    <ActivitySituation>em andamento</ActivitySituation>
+                </ActivityItem>
+                <ActivityItem>
+                    <ActivityTitle>Referencial teórico</ActivityTitle><br />
+                    <Deadline>
+                        Prazo de entrega: 20/01/2020
+                    </Deadline>
+                    <ActivitySituation>em andamento</ActivitySituation>
+                </ActivityItem>
+                <ActivityItem>
+                    <ActivityTitle>Desenvolvimento</ActivityTitle><br />
+                    <Deadline>
+                        Prazo de entrega: 20/01/2020
+                    </Deadline>
+                    <ActivitySituation>em andamento</ActivitySituation>
+                </ActivityItem>
+            </ActivityList>
             <ToastContainer />
         </DashboardUI>
 
     );
 }
 
-export default Projetos;
+const ActivityList = styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+`
+
+const ActivityItem = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    flex: 1 0 115px;
+    border: 1px solid ${props => props.theme.color.grey}55;
+    box-shadow: 3px 3px 3px ${props => props.theme.color.primary}15;
+    position: relative;
+    background-color: white;
+    color: ${props => props.theme.color.dark};
+    font-size: 1.2rem;
+    font-weight: 300;
+    padding: 1.3rem 1rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+
+    @media ${device.tablet}{
+        border-radius: 5px;
+        
+    }
+
+    &:hover{
+        box-shadow: 3px 3px 3px ${props => props.theme.color.primary}75;
+    }
+`
+
+const ActivityTitle = styled.span`
+    font-size: 1.5rem;
+    font-weight: 400;
+`
+const Deadline = styled.span`
+    font-size: 1rem;
+    font-weight: 400;
+    padding: 3px;
+    border: 1px solid ${props => props.theme.color.primary};
+    border-radius: 5px;
+    color: ${props => props.theme.color.primary};
+    align-self: flex-start;
+    box-shadow: 3px 3px 3px ${props => props.theme.color.primary}15;
+`
+
+const ActivitySituation = styled.span`
+    display: inline-block;
+    align-self: flex-start;
+    margin-top: 10px;
+    border-radius: 5px;
+    border: 1px solid ${props => props.theme.color.primary};
+    padding: 5px;
+    color: ${props => props.theme.color.primary};
+    font-size: 1rem;
+
+    @media ${device.mobileL}{
+        margin-top: 0;
+        position: absolute;
+        bottom: 21px;
+        right: 11px;
+    }
+
+    @media ${device.tablet}{
+        position: absolute;
+        bottom: 21px;
+        right: 11px;
+        padding: 4px;
+        border-radius: 5px;
+        box-shadow: 1px 1px 1px ${props => props.theme.color.grey}55;
+    }
+`;
+
+export default ListarAtividadesProfessor;

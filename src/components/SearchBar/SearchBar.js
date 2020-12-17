@@ -1,5 +1,5 @@
 import React from 'react';
-import { AiOutlineUserAdd } from 'react-icons/ai';
+import { MdAddCircleOutline } from 'react-icons/md';
 import { BiSearch } from 'react-icons/bi';
 import Button from '../../components/Button'
 import Select from '../../components/Select'
@@ -25,7 +25,7 @@ function SearchBar({ searchText, setSearchText, selectedValue, onChangeSelect, a
             <RightSearchBar>
                 <Button type='button' onClick={() => addUser()} new={true} width='90px' >
                     Novo &nbsp;
-                    <AiOutlineUserAdd />
+                    <MdAddCircleOutline />
                 </Button>
             </RightSearchBar>
         </StyledSearchBar>

@@ -38,7 +38,12 @@ function Header({ setShowSidebar, setShowDropdown }) {
 export default Header;
 
 const StyledAvatar = memo(styled(Avatar)`
-    display: none;
+    display: none !important;
+
+    @media ${device.mobileL}{
+        display: none !important;
+        margin-right: 15px;
+    }
 
     @media ${device.tablet}{
         display: block;

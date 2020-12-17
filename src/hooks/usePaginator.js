@@ -25,6 +25,7 @@ function usePaginatorNumbers() {
     if (totalPages.current > 5) {
         // alterar aqui
         let mod = 1;
+        // mod: indica o valor subtraído do total de páginas que somado ao iterador exibirá o valor a ser exibido no paginador
         for (let i = 0; i < 5; i++) {
             if (actualPage.current > totalPages.current - 4) {
                 if (actualPage.current == totalPages.current - 3) mod = 1;

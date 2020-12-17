@@ -284,7 +284,6 @@ function Projetos(props) {
                                     <Table.Cell>{title}</Table.Cell>
                                     <Table.Cell><p>{students[0] && students[0].name} </p>
                                         {students[1] && students[1].name}
-                                         - {situation}
                                     </Table.Cell>
                                     <Table.Cell>{name}</Table.Cell>
                                     <Table.Cell style={{ display: 'flex !important', alignItems: 'center', position: 'relative' }}>

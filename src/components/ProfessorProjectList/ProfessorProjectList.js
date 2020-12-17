@@ -1,28 +1,33 @@
 import React from 'react';
 import styled from 'styled-components';
 import { device } from '../../device';
+import { useHistory } from 'react-router-dom'
 
 function ProfessorProjectList({ projects }) {
+
+    const history = useHistory();
+    console.debug('projetos: ', projects)
+
+    const openProject = (id) => {
+        // codar abrir tela com informações do projeto
+        history.push(`/professor/projetos/${id}`)
+        console.log('trying to open a project')
+    }
+
+
+
     return (
         <StyledList>
-            <StyledListItem>
-                <h2>Mineração de dados médicos para paciente com glicemia alta e hipertensos</h2>
-                <p>Guilherme Muniz</p>
-                <p>Matheus Justino</p>
-                <Phase>Pré-TCC</Phase>
-            </StyledListItem>
-            <StyledListItem>
-                <h2>Mineração de dados médicos</h2>
-                <p>Guilherme Muniz</p>
-                <p>Matheus Justino</p>
-                <Phase>Pré-TCC</Phase>
-            </StyledListItem>
-            <StyledListItem>
-                <h2>Mineração de dados médicos</h2>
-                <p>Guilherme Muniz</p>
-                <p>Matheus Justino</p>
-                <Phase>Pré-TCC</Phase>
-            </StyledListItem>
+            {projects.map(project => {
+                return (
+                    <StyledListItem key={project._id} onClick={() => openProject(project._id)}>
+                        <h2>{project.title}</h2>
+                        <p>{project.students[0] && project.students[0].name}</p>
+                        <p>{project.students[1] && project.students[1].name}</p>
+                        <Phase>{project.situation}</Phase>
+                    </StyledListItem>
+                )
+            })}
         </StyledList>
     );
 }
