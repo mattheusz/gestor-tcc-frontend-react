@@ -22,7 +22,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  border-width: 2px;
+  border-width: 1px;
   border-radius: 2px;
   border-color: ${props => getColor(props)};
   border-style: dashed;
@@ -32,6 +32,7 @@ const Container = styled.div`
   outline: none;
   margin-bottom: .4rem;
   color: ${props => getColor(props)};
+  cursor: pointer;
 `;
 
 export default function StyledDropzone({ accept, multiple, maxSize, text, setFileUploading }) {

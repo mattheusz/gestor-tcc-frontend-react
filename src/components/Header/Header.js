@@ -46,7 +46,7 @@ const StyledAvatar = memo(styled(Avatar)`
     }
 
     @media ${device.tablet}{
-        display: block;
+        display: block !important;
         margin-right: 15px;
     }
 `)

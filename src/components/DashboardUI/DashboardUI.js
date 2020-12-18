@@ -100,6 +100,7 @@ const MainCard = styled.div`
     border-radius 5px;
     max-width: 1050px;
     margin: 0 auto;
+    position: relative;
 `;
 
 const Footer = styled.footer`

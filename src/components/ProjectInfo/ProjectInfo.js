@@ -7,14 +7,14 @@ function ProjectInfo({ projectId }) {
     return (
         <>
             <HeaderContainer>
-                <p>Guilherme Muniz e Matheus Justino</p>
+                <h3>Guilherme Muniz e Matheus Justino</h3>
 
                 <p>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                     Nunc malesuada, est et malesuada tristique, eros massa
                     luctus mi, eget vestibulum sem massa eu augue. Mauris ligula leo,
                     iaculis no
-            </p>
+                </p>
                 <Situation>pre-tcc</Situation>
             </HeaderContainer>
             <CardContainer>
@@ -53,9 +53,19 @@ function ProjectInfo({ projectId }) {
 }
 
 const HeaderContainer = styled.div`
+    border-top: 1px solid ${props => props.theme.color.grey}55;
     border-bottom: 1px solid ${props => props.theme.color.grey}55;
     width: 100%;
     position: relative;
+    color: ${props => props.theme.color.dark};
+    padding-top: .8rem;
+    
+
+    h3{
+        font-family: 'Roboto', sans-serif !important;
+        font-weight: 400;
+        margin-bottom: .4rem;
+    }
 `
 
 const Situation = styled.span`
@@ -75,8 +85,8 @@ const Situation = styled.span`
 
     @media ${device.tablet}{
         position: absolute;
-        top: 0;
-        right: 20px;
+        top: .6rem;
+        right: 0;
         /*
         color: white;
         background-color: ${props => props.theme.color.primary};
