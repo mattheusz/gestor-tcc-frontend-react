@@ -79,8 +79,8 @@ const Situation = styled.span`
     @media ${device.mobileL}{
         margin-top: 0;
         position: absolute;
-        top: 20px;
-        right: 20px;
+        top: .6rem;
+        right: 0;
     }
 
     @media ${device.tablet}{
@@ -100,13 +100,14 @@ const Situation = styled.span`
 const CardContainer = styled.div`
     display: grid;
     gap: 1rem;
+    padding: 1rem 0 .5rem;
     
     @media ${device.mobileL}{
         grid-template-columns: 1fr;
     }
 
     @media ${device.tablet}{
-        padding: .5rem;
+        
         grid-template-columns: 1fr 1fr;
     }
 `
@@ -192,7 +193,7 @@ const ActivitySituation = styled.span`
 
     @media ${device.tablet}{
         position: absolute;
-        bottom: 10px;
+        bottom: 15px;
         right: 11px;
         padding: 4px;
         border-radius: 5px;

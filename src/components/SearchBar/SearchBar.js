@@ -6,7 +6,7 @@ import Select from '../../components/Select'
 import BoxSearchButton, { SearchButton, SearchInput } from '../BoxSearchButton/BoxSearchButton';
 import { LeftSearchBar, RightSearchBar, StyledSearchBar } from './styled';
 
-function SearchBar({ searchText, setSearchText, selectedValue, onChangeSelect, addUser, selectItems }) {
+function SearchBar({ searchText, setSearchText, selectedValue, onChangeSelect, addUser, selectItems, showAddButton }) {
     return (
         <StyledSearchBar >
             <LeftSearchBar>
@@ -23,10 +23,12 @@ function SearchBar({ searchText, setSearchText, selectedValue, onChangeSelect, a
                 </Select>
             </LeftSearchBar>
             <RightSearchBar>
-                <Button type='button' onClick={() => addUser()} new={true} width='90px' >
-                    Novo &nbsp;
+                {showAddButton ||
+                    <Button type='button' onClick={() => addUser()} new={true} width='90px' >
+                        Novo &nbsp;
                     <MdAddCircleOutline />
-                </Button>
+                    </Button>
+                }
             </RightSearchBar>
         </StyledSearchBar>
     );

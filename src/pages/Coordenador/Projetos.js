@@ -261,8 +261,8 @@ function Projetos(props) {
                     setSearchText={setSearchText}
                     selectedValue={selectedValue}
                     onChangeSelect={onChangeSelect}
-                    addUser={addUser}
                     selectItems={selectItems}
+                    showAddButton={true}
                 />
             </form>
             {noProjectFound ? <h3 style={{ margin: ' 2.5rem', textAlign: 'center' }}>Nenhum usuário encontrado</h3> :
