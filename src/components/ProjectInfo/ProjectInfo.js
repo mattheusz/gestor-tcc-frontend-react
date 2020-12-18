@@ -115,6 +115,7 @@ const ActivityCard = styled.div`
     display: flex;
     flex-direction: column;
     border: 1px solid ${props => props.theme.color.grey}55;
+    border-radius: 5px;
 
     @media ${device.tablet}{
         border-radius: 5px;

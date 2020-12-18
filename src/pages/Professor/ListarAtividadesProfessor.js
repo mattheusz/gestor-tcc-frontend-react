@@ -253,6 +253,7 @@ const ActivityItem = styled.div`
     padding: 1.3rem 1rem;
     margin-bottom: 1rem;
     cursor: pointer;
+    border-radius: 5px;
 
     @media ${device.tablet}{
         border-radius: 5px;
