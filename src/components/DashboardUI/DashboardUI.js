@@ -97,7 +97,7 @@ const MainCard = styled.div`
     border: 1px solid ${props => props.theme.color.grey}55;
     box-shadow: 3px 3px 3px ${props => props.theme.color.primary}15;
     padding: 1rem;
-    border-radius 5px;
+    border-radius: 5px;
     max-width: 1050px;
     margin: 0 auto;
     position: relative;

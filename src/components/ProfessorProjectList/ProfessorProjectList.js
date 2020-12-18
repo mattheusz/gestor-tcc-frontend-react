@@ -48,7 +48,7 @@ const StyledListItem = styled.li`
     position: relative;
     
     &:nth-child(even){
-        background-color: ${props => props.theme.color.lightPrimary}22;
+        background-color: ${props => props.theme.color.lightPrimary}11;
     }
 
     h2 {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Avatar from 'react-avatar';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
@@ -7,12 +7,19 @@ import Button from '../../components/Button';
 import DashboardUI from '../../components/DashboardUI';
 import StyledDropzone from '../../components/StyledDropzone/StyledDropzone';
 import { device } from '../../device';
+import Modal from 'react-modal';
+import { MdModeEdit, MdDelete } from 'react-icons/md';
 
 function AtividadeProfessor(props) {
 
     const [fileUploading, setFileUploading] = useState();
+    const [modalIsOpen, setModalIsOpen] = useState(false);
     const { register, handleSubmit, errors, formState: { isSubmitting } }
         = useForm({ mode: 'onSubmit' });
+
+    Modal.setAppElement('#root');
+
+    let modalMessage = useRef('')
 
     const onSubmit = async ({ title: comment }) => {
         console.log(comment)
@@ -36,7 +43,12 @@ function AtividadeProfessor(props) {
                     de 10 a 14 parágrafos e conter todos os elementos essenciais do projeto
                     de pesquisa, como tema, pergunta problema, justificativa, dentre outros.
                 </ActivityDescription>
+                <Deadline>Prazo de entrega: 14/02/2021</Deadline>
                 <ActivitySituation>em andamento</ActivitySituation>
+                <Button type='button' width='150px' onClick={() => setModalIsOpen(true)}>
+                    Entregar atividade
+                </Button>
+
             </ActivityHeader>
             <ActivityCommentBox>
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -56,7 +68,7 @@ function AtividadeProfessor(props) {
                     />
                     <Button new={true} type='submit' width='100px'>
                         Comentar
-                </Button>
+                    </Button>
                 </form>
 
             </ActivityCommentBox>
@@ -86,9 +98,20 @@ function AtividadeProfessor(props) {
                     </div>
                 </ActivityCommentListItem>
                 <ActivityCommentListItem>
-                    <ActivityCommentDate>
-                        15 de Outubro de 2021 às 15:15
-                    </ActivityCommentDate>
+                    <ActivityCommentHeader>
+                        <ActivityCommentDate>
+                            15 de Outubro de 2021 às 15:15
+                        </ActivityCommentDate>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <ActivityCommentIcon>
+                                <MdModeEdit />
+                            </ActivityCommentIcon>
+                            <ActivityCommentIcon>
+                                <MdDelete />
+                            </ActivityCommentIcon>
+                        </div>
+                    </ActivityCommentHeader>
+
                     <div>
                         <Avatar
                             round
@@ -107,7 +130,51 @@ function AtividadeProfessor(props) {
                     <ActivityCommentText>Este é um comentário referente as boas vindas. Bom trabalho!</ActivityCommentText>
                 </ActivityCommentListItem>
             </ActivityCommentList>
-        </DashboardUI>
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={() => setModalIsOpen(false)}
+                style={{
+                    content: {
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -70%)',
+                        height: '320px', width: '500px', maxWidth: '90%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-around'
+                    },
+                    overlay: {
+                        zIndex: '15',
+
+                    }
+                }}
+            >
+                <ModalTitle>Entregar...</ModalTitle>
+                <ActivityCommentBox>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <textarea
+                            name='comment'
+                            ref={register({
+                                required: true,
+                            })}
+                            rows={2}
+                            placeholder='Digite o seu comentário...' />
+                        <StyledDropzone
+                            accept='.pdf'
+                            multiple={false}
+                            maxSize={2097152}
+                            text="Arraste ou clique para adicionar o arquivo desejado."
+                            setFileUploading={setFileUploading}
+                        />
+                    </form>
+
+                </ActivityCommentBox>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
+                    <Button onClick={() => setModalIsOpen(false)}>Entregar</Button>
+                    <Button onClick={() => setModalIsOpen(false)}>Cancelar</Button>
+                </div>
+            </Modal>
+        </DashboardUI >
 
     );
 }
@@ -116,22 +183,38 @@ export default AtividadeProfessor;
 
 const ActivityHeader = styled.div`
     border-bottom: 1px solid ${props => props.theme.color.grey}55;
+    padding-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
 `;
 
 const ActivityDescription = styled.div`
-    padding: 1rem 0 1rem;
+    padding: 1rem 0 .7rem;
     border-top: 1px solid ${props => props.theme.color.grey}55;
     color: ${props => props.theme.color.dark};
 `;
 
+const Deadline = styled.span`
+    display: inline; 
+    align-self: flex-start;
+    font-size: 1rem;
+    font-weight: 400;
+    padding: 3px;
+    border: 1px solid ${props => props.theme.color.primary};
+    border-radius: 5px;
+    color: ${props => props.theme.color.primary};
+    box-shadow: 3px 3px 3px ${props => props.theme.color.primary}15;
+`
+
 const ActivitySituation = styled.span`
     display: inline-block;
-    margin-bottom: 10px;
     border-radius: 5px;
     border: 1px solid ${props => props.theme.color.primary};
-    padding: 5px;
+    padding: 3px;
     color: ${props => props.theme.color.primary};
     font-size: 1rem;
+    margin-top: 7px;
+    align-self: flex-start;
 
     @media ${device.mobileL}{
         margin-top: 0;
@@ -156,6 +239,8 @@ const ActivityCommentBox = styled.div`
     border-radius: 5px;
     margin-top: 1.2rem;
     padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
 
     textarea { 
         resize: none;
@@ -186,9 +271,31 @@ const ActivityCommentListItem = styled.div`
     border-radius: 5px;
 `;
 
+const ActivityCommentHeader = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+`;
+
 const ActivityCommentDate = styled.p`
     color: ${props => props.theme.color.dark};
     margin-bottom: 7px;
+`;
+
+const ActivityCommentIcon = styled.span`
+    color: ${props => props.theme.color.dark};
+    margin-bottom: 7px;
+    margin-left: 5px;
+    font-size: 20px;
+    cursor: pointer;
+
+    &:hover:nth-child(1){
+        color: ${props => props.theme.color.primary};
+    }
+    &:hover:nth-child(2){
+        color: ${props => props.theme.color.secondary};
+    }
 `;
 
 const ActivityCommentAuthor = styled.span`
@@ -208,4 +315,8 @@ const ActivityCommentAttachment = styled.span`
     margin-top: 3px;
 `;
 
-
+const ModalTitle = styled.h1`
+    margin-bottom: -22px;
+    font-weight: 500;
+    color: ${props => props.theme.color.dark};
+`;

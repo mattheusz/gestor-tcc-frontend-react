@@ -286,14 +286,14 @@ const ActivitySituation = styled.span`
     margin-top: 10px;
     border-radius: 5px;
     border: 1px solid ${props => props.theme.color.primary};
-    padding: 5px;
+    padding: 3px;
     color: ${props => props.theme.color.primary};
     font-size: 1rem;
 
     @media ${device.mobileL}{
         margin-top: 0;
         position: absolute;
-        bottom: 21px;
+        bottom: 1.3rem;
         right: 11px;
     }
 
