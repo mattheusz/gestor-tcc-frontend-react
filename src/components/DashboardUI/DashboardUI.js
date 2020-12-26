@@ -153,7 +153,7 @@ const Wrapper = styled.div`
 
 
 const Content = styled.div`
-    position: fixed;
+    position: absolute;
     width: 100%;
     /*width: ${props => props.showSidebar ? '100%' : 'calc(100% - 256px)'};*/
     margin-left: 0;
