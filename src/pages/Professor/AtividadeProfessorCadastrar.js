@@ -17,13 +17,15 @@ import ErrorMessage from '../../components/Error'
 import light from '../../themes/light';
 import Label from '../../components/Label/Label';
 import Select from '../../components/Select';
+import StyledDropzone from '../../components/StyledDropzone/StyledDropzone';
 
-function ProjetoCadastrar(props) {
+function AtividadeProfessorCadastrar(props) {
     const [checked, setChecked] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
     const [studentsWithoutProject, setStudentsWithoutProject] = useState();
     const [selectedStudentOne, setSelectedStudentOne] = useState('Aluno 1');
     const [selectedStudentTwo, setSelectedStudentTwo] = useState('');
+    const [fileUploading, setFileUploading] = useState();
 
     const { register, handleSubmit, errors, formState: { isSubmitting }, watch } = useForm({ mode: 'onSubmit' });
     const watchAddStudentTwo = watch('addStudendTwo');
@@ -127,7 +129,7 @@ function ProjetoCadastrar(props) {
     }
 
     return (
-        <DashboardUI screenName='Cadastrar Projeto' itemActive="Meus Projetos">
+        <DashboardUI screenName='Cadastrar Atividade' itemActive="Meus Projetos">
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='title'>Título</Label>
@@ -169,6 +171,15 @@ function ProjetoCadastrar(props) {
                         Uma descrição é obrigatória
                     </ErrorMessage>
                 }
+
+                <StyledDropzone
+                    accept='.pdf'
+                    multiple={false}
+                    maxSize={2097152}
+                    text="Arraste ou clique para adicionar o arquivo desejado."
+                    setFileUploading={setFileUploading}
+                />
+
                 <Label htmlFor='studentOne'>Aluno 1</Label>
                 <Select
                     formSelect={true}
@@ -227,9 +238,7 @@ function ProjetoCadastrar(props) {
                             {
                                 studentsWithoutProject ?
                                     studentsWithoutProject.map(({ _id, name }) => {
-                                        console.log('student 1', selectedStudentOne);
-                                        console.log('student 1', name);
-                                        if (name === selectedStudentOne) return;
+                                        console.log('student 2 id', _id);
                                         return (<option
                                             key={_id}
                                             value={_id}
@@ -276,4 +285,4 @@ function ProjetoCadastrar(props) {
     );
 }
 
-export default ProjetoCadastrar;
+export default AtividadeProfessorCadastrar;

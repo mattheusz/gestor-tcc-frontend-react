@@ -59,6 +59,7 @@ const HeaderContainer = styled.div`
     position: relative;
     color: ${props => props.theme.color.dark};
     padding-top: .8rem;
+    padding-bottom: .8rem;
     
 
     h3{
@@ -70,7 +71,6 @@ const HeaderContainer = styled.div`
 
 const Situation = styled.span`
     display: inline-block;
-    margin-top: 3px;
     border-radius: 5px;
     border: 1px solid ${props => props.theme.color.primary};
     padding: 5px;
@@ -107,7 +107,10 @@ const CardContainer = styled.div`
     }
 
     @media ${device.tablet}{
-        
+        grid-template-columns: 1fr;
+    }
+
+    @media ${device.laptop}{
         grid-template-columns: 1fr 1fr;
     }
 `
@@ -117,6 +120,7 @@ const ActivityCard = styled.div`
     flex-direction: column;
     border: 1px solid ${props => props.theme.color.grey}55;
     border-radius: 5px;
+    cursor: pointer;
 
     @media ${device.tablet}{
         border-radius: 5px;
@@ -128,6 +132,33 @@ const ActivityTitle = styled.span`
     font-size: 1.2rem;
     font-weight: 400;
 `
+const ActivitySituation = styled.span`
+    display: inline-block;
+    border-radius: 5px;
+    align-self: flex-start;
+    margin-top: 10px;
+    border: 1px solid ${props => props.theme.color.primary};
+    padding: 3px;
+    color: ${props => props.theme.color.primary};
+    font-size: 1rem;
+
+    @media ${device.mobileL}{
+        margin-top: 0;
+        position: absolute;
+        bottom: 1.2rem;
+        right: 11px;
+    }
+
+    @media ${device.tablet}{
+        position: absolute;
+        bottom: 1.2rem;
+        right: 11px;
+        padding: 3px;
+        border-radius: 5px;
+        box-shadow: 1px 1px 1px ${props => props.theme.color.grey}55;
+    }
+`;
+
 const Deadline = styled.span`
     font-size: 1rem;
     font-weight: 400;
@@ -176,31 +207,6 @@ const CardBody = styled.div`
     padding: .8rem;
     
 `
-const ActivitySituation = styled.span`
-    display: inline-block;
-    border-radius: 5px;
-    border: 1px solid ${props => props.theme.color.primary};
-    padding: 5px;
-    color: ${props => props.theme.color.primary};
-    font-size: 1rem;
-
-    @media ${device.mobileL}{
-        margin-top: 0;
-        position: absolute;
-        bottom: 10px;
-        right: 11px;
-    }
-
-    @media ${device.tablet}{
-        position: absolute;
-        bottom: 15px;
-        right: 11px;
-        padding: 4px;
-        border-radius: 5px;
-        box-shadow: 1px 1px 1px ${props => props.theme.color.grey}55;
-    }
-`;
-
 
 const CardFooter = styled(Link)`
     background-color: ${props => props.theme.color.secondary};

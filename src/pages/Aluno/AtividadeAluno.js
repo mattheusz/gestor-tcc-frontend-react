@@ -10,7 +10,7 @@ import { device } from '../../device';
 import Modal from 'react-modal';
 import { MdModeEdit, MdDelete } from 'react-icons/md';
 
-function AtividadeProfessor(props) {
+function AtividadeAluno(props) {
 
     const [fileUploading, setFileUploading] = useState();
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -51,7 +51,7 @@ function AtividadeProfessor(props) {
 
 
     return (
-        <DashboardUI screenName='Atividade Atividade Atividade Atividade Atividade 1' itemActive="Meus Projetos">
+        <DashboardUI screenName='Atividade 1' itemActive="Meus Projetos">
             <ActivityHeader>
                 <ActivityDescription>
                     Uma boa introdução possui inúmeros fatores importantes, como tamanho
@@ -60,8 +60,8 @@ function AtividadeProfessor(props) {
                 </ActivityDescription>
                 <Deadline>Prazo de entrega: 14/02/2021</Deadline>
                 <ActivitySituation>em andamento</ActivitySituation>
-                <Button type='button' width='150px'>
-                    Finalizar atividade
+                <Button type='button' width='150px' onClick={() => setModalIsOpen(true)}>
+                    Entregar atividade
                 </Button>
 
             </ActivityHeader>
@@ -81,7 +81,7 @@ function AtividadeProfessor(props) {
                         text="Arraste ou clique para adicionar o arquivo desejado."
                         setFileUploading={setFileUploading}
                     />
-                    <Button type='submit' width='100px'>
+                    <Button new={true} type='submit' width='100px'>
                         Comentar
                     </Button>
                 </form>
@@ -92,7 +92,7 @@ function AtividadeProfessor(props) {
                     <ActivityCommentDate>
                         15 de Outubro de 2021 às 15:15
                     </ActivityCommentDate>
-                    <ActivityCommentBody>
+                    <div>
                         <Avatar
                             round
                             color={lightTheme.color.primary}
@@ -106,7 +106,7 @@ function AtividadeProfessor(props) {
                         <ActivityCommentAuthor>
                             Matheus Justino
                         </ActivityCommentAuthor>
-                    </ActivityCommentBody>
+                    </div>
                     <ActivityCommentText>Este é um comentário referente as boas vindas. Bom trabalho!</ActivityCommentText>
                     <div>
                         <ActivityCommentAttachment>Anexo: </ActivityCommentAttachment>
@@ -127,7 +127,7 @@ function AtividadeProfessor(props) {
                         </div>
                     </ActivityCommentHeader>
 
-                    <ActivityCommentBody>
+                    <div>
                         <Avatar
                             round
                             color={lightTheme.color.primary}
@@ -141,7 +141,7 @@ function AtividadeProfessor(props) {
                         <ActivityCommentAuthor>
                             Matheus Justino
                         </ActivityCommentAuthor>
-                    </ActivityCommentBody>
+                    </div>
                     <ActivityCommentText>Este é um comentário referente as boas vindas. Bom trabalho!</ActivityCommentText>
                 </ActivityCommentListItem>
             </ActivityCommentList>
@@ -264,7 +264,7 @@ function AtividadeProfessor(props) {
     );
 }
 
-export default AtividadeProfessor;
+export default AtividadeAluno;
 
 const ActivityHeader = styled.div`
     border-bottom: 1px solid ${props => props.theme.color.grey}55;
@@ -360,9 +360,6 @@ const ActivityCommentHeader = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-`;
-
-const ActivityCommentBody = styled.div`
 
 `;
 

@@ -123,7 +123,7 @@ function ListarAtividadesProfessor(props) {
     }, [])
 
     const addUser = () => {
-        history.push('/professor/projetos/novo');
+        history.push(`/professor/projetos/${id}/atividades/novo`);
     }
 
     const editInfoProject = () => {
