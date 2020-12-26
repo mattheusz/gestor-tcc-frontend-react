@@ -42,7 +42,7 @@ function ProjectInfo({ projectId }) {
                         Revisão textual
                     </CardBody>
 
-                    <CardFooter>
+                    <CardFooter to={`/professor/projetos/${projectId}/orientacoes`} >
                         Ver mais
                     </CardFooter>
                 </OrientationCard>

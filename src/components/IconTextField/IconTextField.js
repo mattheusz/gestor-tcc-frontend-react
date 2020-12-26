@@ -2,13 +2,16 @@ import styled from "styled-components";
 
 const IconTextField = styled.div`
     position: relative;
+    height: 2.5rem;
+    margin-bottom: .7rem;
 
     svg{
         position: absolute;
         left: 10px;
         top: 50%;
-        transform: translateY(-50%);
+        transform: translateY(-45%);
         color: #595959;
+        z-index: 1;
     }
 `
 

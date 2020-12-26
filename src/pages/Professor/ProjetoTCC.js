@@ -70,7 +70,7 @@ function ProjetoProfessor(props) {
     }
 
     return (
-        <DashboardUI screenName='Projeto Aberto' itemActive="Meus Projetos">
+        <DashboardUI screenName='Projeto Aberto' itemActive="Meus Projetos" isProfessorProject={true}>
             <ProjectInfo projectId={id} />
             <ToastContainer />
         </DashboardUI>

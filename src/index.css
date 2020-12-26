@@ -23,3 +23,29 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.customModal {
+  padding: 10rem;
+}
+
+.customModal h1{
+  padding-right: 3rem;
+  color: #444444;
+  font-weight: 400;
+}
+
+.customEditComentModal{
+}
+.customEditComentModal h1{
+  padding-right: 15rem;
+  color: #444444;
+  font-weight: 400;
+}
+
+@media only screen and (max-width: 500px){
+  .customEditComentModal h1{
+    padding-right: 7rem;
+    color: #444444;
+    font-weight: 400;
+  }
+}

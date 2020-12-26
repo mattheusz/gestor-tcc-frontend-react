@@ -9,9 +9,11 @@ const Select = styled.select`
     cursor: pointer;
     margin-top: .5rem;
     margin-bottom: ${props => props.formSelect ? '.7rem' : 0};
+    /*padding-left: 1.6rem;*/
     width: 100%;
     border-radius: ${props => props.formSelect ? '3px' : 0};
     transition: all .3s;
+
 
     @media ${device.mobileS} {
         max-width: 100%;

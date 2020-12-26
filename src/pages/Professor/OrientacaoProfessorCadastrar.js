@@ -17,23 +17,26 @@ import ErrorMessage from '../../components/Error'
 import light from '../../themes/light';
 import Label from '../../components/Label/Label';
 import StyledDatePicker from '../../components/StyledDatePicker';
+import Select from '../../components/Select';
 
 
-function AtividadeProfessorEditar(props) {
+function OrientacaoProfessorCadastrar(props) {
     const [errorMessage, setErrorMessage] = useState();
     const [startDate, setStartDate] = useState(new Date());
+    const [orientationType, setOrientationType] = useState('');
     console.debug('Data selecionada', startDate);
     console.debug('Data atual', new Date());
 
     const { register, handleSubmit, errors, formState: { isSubmitting }, watch } = useForm({ mode: 'onSubmit' });
     const watchAddStudentTwo = watch('addStudendTwo');
+
     /*
     let id = useRef();
     id.current = localStorage.getItem('reg')
     */
 
-    const history = useHistory();
-    const { id, activity } = useParams();
+    const history = useHistory()
+    const { id } = useParams();
 
     useEffect(() => {
         api.get(`usuarios/listar_usuarios/aluno_sem_projeto/1`)
@@ -96,7 +99,7 @@ function AtividadeProfessorEditar(props) {
     }
 
     return (
-        <DashboardUI screenName='Editar Atividade' itemActive="Meus Projetos">
+        <DashboardUI screenName='Registrar Orientação' itemActive="Meus Projetos">
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='title'>Título</Label>
@@ -138,16 +141,48 @@ function AtividadeProfessorEditar(props) {
                         Uma descrição é obrigatória
                     </ErrorMessage>
                 }
+                <Label htmlFor='orientationType'>Tipo de orientação</Label>
 
-                <Label htmlFor='deadline'>Prazo de entrega</Label>
+                <IconTextField>
+                    {/*<BiDetail />*/}
+                    <Select
+                        formSelect={true}
+                        value={orientationType}
+                        onChange={e => setOrientationType(e.target.value)}
+                        name='orientationType'
+                        id='orientationType'
+                    >
+                        <option
+                            key={1}
+                            value={1}
+                            style={{ width: '100%' }}
+                        >
+                            Tipo 1
+                        </option>
+                        <option
+                            key={1}
+                            value={1}
+                            style={{ width: '100%' }}
+                        >
+                            Tipo 1
+                        </option>
+                        <option
+                            key={1}
+                            value={1}
+                            style={{ width: '100%' }}
+                        >
+                            Tipo 1
+                        </option>
+                    </Select>
+                </IconTextField>
+
+                <Label htmlFor='date'>Data</Label>
                 <StyledDatePicker
                     startDate={startDate}
                     setStartDate={date => setStartDate(date)}
                     locale='pt-BR'
                     timeIntervals={15}
                 />
-
-
 
                 {errors.registration &&
                     <ErrorMessage left marginTop marginBottom>
@@ -164,7 +199,7 @@ function AtividadeProfessorEditar(props) {
                     Salvar
                 </Button>
                 &nbsp;
-                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${id}/atividades/${activity}`)}>
+                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${id}/orientacoes`)}>
                     Cancelar
                 </Button>
             </form>
@@ -174,4 +209,4 @@ function AtividadeProfessorEditar(props) {
     );
 }
 
-export default AtividadeProfessorEditar;
+export default OrientacaoProfessorCadastrar;

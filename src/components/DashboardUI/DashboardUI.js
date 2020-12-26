@@ -6,12 +6,23 @@ import Sidebar from '../Sidebar';
 import ViewTitle from '../ViewTitle';
 import { device } from '../../device';
 import DropdownUserAccount from '../DropdownUserAccount/DropdownUserAccount';
+import { Modal } from 'react-responsive-modal';
+import 'react-responsive-modal/styles.css';
+import './index.css'
+import { MdDelete, MdModeEdit } from 'react-icons/md';
+import { useHistory, useParams } from 'react-router-dom';
+import Button from '../Button';
 
-
-function DashboardUI({ screenName, itemActive, children }) {
+function DashboardUI({ screenName, itemActive, children, isProfessorActivity, isProfessorProject, isProfessorOrientation }) {
 
     const [showSidebar, setShowSidebar] = useState(true);
     const [showDropdown, setShowDropdown] = useState(false);
+    const [openDeleteActivityModal, setOpenDeleteActivityModal] = useState(false);
+    const [openDeleteProjectModal, setOpenDeleteProjectModal] = useState(false);
+    const [openDeleteOrientationModal, setOpenDeleteOrientationModal] = useState(false);
+
+    const history = useHistory();
+    const { id, activity, orientation } = useParams();
 
     const toggle = useCallback(() => {
         setShowSidebar(!showSidebar)
@@ -33,7 +44,29 @@ function DashboardUI({ screenName, itemActive, children }) {
                 <Content showSidebar={showSidebar}>
                     <Main >
                         <MainCard>
-                            <ViewTitle>{screenName}</ViewTitle>
+                            <MainHeader>
+                                <ViewTitle>{screenName}</ViewTitle>
+                                {isProfessorActivity &&
+                                    <HeaderButtons>
+                                        <MdModeEdit onClick={() => history.push(`/professor/projetos/${id}/atividades/editar/${activity}`)} />
+                                        <MdDelete onClick={() => setOpenDeleteActivityModal(true)} />
+                                    </HeaderButtons>
+                                }
+                                {isProfessorProject &&
+                                    <HeaderButtons>
+                                        <MdModeEdit onClick={() => history.push(`/professor/projetos/editar/${id}`)} />
+                                        <MdDelete onClick={() => setOpenDeleteProjectModal(true)} />
+                                    </HeaderButtons>
+                                }
+
+                                {isProfessorOrientation &&
+                                    <HeaderButtons>
+                                        <MdModeEdit onClick={() => history.push(`/professor/projetos/${id}/orientacoes/editar/${orientation}`)} />
+                                        <MdDelete onClick={() => setOpenDeleteOrientationModal(true)} />
+                                    </HeaderButtons>
+                                }
+
+                            </MainHeader>
                             {children}
                         </MainCard>
                     </Main>
@@ -43,6 +76,67 @@ function DashboardUI({ screenName, itemActive, children }) {
                     showDropdown={showDropdown}
                 />
             </Wrapper>
+            <Modal
+                open={openDeleteProjectModal}
+                onClose={() => setOpenDeleteProjectModal(false)}
+                center
+                classNames={{
+                    overlay: 'customOverlay',
+                    modal: 'customModal',
+                }}
+            >
+                <h2>
+                    Deseja realmente excluir este projeto em andamento?
+                </h2>
+                <p>
+                    Esta ação é irreversível e deve ser tomada com cautela.
+                </p>
+                <div style={{ display: 'grid', marginTop: '.4rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
+                    <Button onClick={() => setOpenDeleteProjectModal(false)}>Excluir</Button>
+                    <Button onClick={() => setOpenDeleteProjectModal(false)}>Cancelar</Button>
+                </div>
+            </Modal>
+            <Modal
+                open={openDeleteActivityModal}
+                onClose={() => setOpenDeleteActivityModal(false)}
+                center
+                classNames={{
+                    overlay: 'customOverlay',
+                    modal: 'customModal',
+                }}
+            >
+                <h1>
+                    Deseja realmente excluir esta atividade?
+                </h1>
+                <p>
+                    Esta ação é irreversível
+                </p>
+                <div style={{ display: 'grid', marginTop: '.4rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
+                    <Button onClick={() => setOpenDeleteActivityModal(false)}>Excluir</Button>
+                    <Button onClick={() => setOpenDeleteActivityModal(false)}>Cancelar</Button>
+                </div>
+            </Modal>
+            <Modal
+                open={openDeleteOrientationModal}
+                onClose={() => setOpenDeleteOrientationModal(false)}
+                center
+                classNames={{
+                    overlay: 'customOverlay',
+                    modal: 'customModal',
+                }}
+            >
+                <h1>
+                    Deseja realmente excluir esta orientação?
+                </h1>
+                <p>
+                    Esta ação é irreversível.
+                </p>
+                <div style={{ display: 'grid', marginTop: '.4rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
+                    <Button onClick={() => setOpenDeleteOrientationModal(false)}>Excluir</Button>
+                    <Button onClick={() => setOpenDeleteOrientationModal(false)}>Cancelar</Button>
+                </div>
+            </Modal>
+
         </ThemeProvider>
     );
 }
@@ -101,6 +195,30 @@ const MainCard = styled.div`
     max-width: 1050px;
     margin: 0 auto;
     position: relative;
+`;
+
+const MainHeader = styled.div`
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: .6rem;
+`;
+
+const HeaderButtons = styled.div`
+    height: 25px;
+
+    svg {
+        font-size: 25px;
+        cursor: pointer;
+        margin-left: 5px;
+        
+        &:hover:nth-child(1){
+            color: ${props => props.theme.color.primary};
+        }
+
+        &:hover:nth-child(2){
+            color: ${props => props.theme.color.secondary};
+        }
+    }
 `;
 
 const Footer = styled.footer`

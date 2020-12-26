@@ -16,16 +16,14 @@ import Checkbox from '../../components/Checkbox';
 import ErrorMessage from '../../components/Error'
 import light from '../../themes/light';
 import Label from '../../components/Label/Label';
-import Select from '../../components/Select';
-import StyledDropzone from '../../components/StyledDropzone/StyledDropzone';
+import StyledDatePicker from '../../components/StyledDatePicker';
+
 
 function AtividadeProfessorCadastrar(props) {
-    const [checked, setChecked] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
-    const [studentsWithoutProject, setStudentsWithoutProject] = useState();
-    const [selectedStudentOne, setSelectedStudentOne] = useState('Aluno 1');
-    const [selectedStudentTwo, setSelectedStudentTwo] = useState('');
-    const [fileUploading, setFileUploading] = useState();
+    const [startDate, setStartDate] = useState(new Date());
+    console.debug('Data selecionada', startDate);
+    console.debug('Data atual', new Date());
 
     const { register, handleSubmit, errors, formState: { isSubmitting }, watch } = useForm({ mode: 'onSubmit' });
     const watchAddStudentTwo = watch('addStudendTwo');
@@ -39,13 +37,11 @@ function AtividadeProfessorCadastrar(props) {
         api.get(`usuarios/listar_usuarios/aluno_sem_projeto/1`)
             .then(response => {
                 console.log(response)
-                setStudentsWithoutProject(response.data.docs)
-                setSelectedStudentOne(response.data.docs[0])
+
             })
             .catch(error => {
                 if (error.response) {
                     console.log(error.response);
-                    setSelectedStudentOne('-')
                 }
                 if (error.request) {
                     console.log(error.request);
@@ -56,39 +52,16 @@ function AtividadeProfessorCadastrar(props) {
             });
     }, [])
 
-    const handleCheckboxChange = event => {
-        if (!event.target.checked)
-            setSelectedStudentTwo('')
-        setChecked(event.target.checked)
-    }
 
     const onSubmit = ({ title, description, studentOne }) => {
-        console.log('title:', title)
-        console.log('description', description)
-        console.log('id', studentOne)
-        console.log(selectedStudentOne)
-        if (selectedStudentOne == '-' || selectedStudentTwo == '-') {
-            console.log('Deu ruim')
-            setErrorMessage('Não há alunos disponíveis para orientação.');
-            return;
-        }
-
-        if (selectedStudentOne === selectedStudentTwo) {
-            setErrorMessage('Selecione alunos diferentes.');
-        }
-
 
         api.post('/projeto/cadastrar_projeto', {
-            title,
-            description,
-            studentOne: selectedStudentOne,
-            studentTwo: selectedStudentTwo,
-            advisor: id.current,
+
         })
             .then(response => {
                 console.log(response.data);
                 const notify = () =>
-                    toast.success("Projeto cadastrado com sucesso", {
+                    toast.success("Atividade cadastrada com sucesso", {
                         autoClose: 2000,
                     }
                     );
@@ -102,7 +75,7 @@ function AtividadeProfessorCadastrar(props) {
                 if (error.response) {
                     const msg = error.response.data;
                     console.log(msg);
-                    setErrorMessage('Erro ao inserir usuário. Tente novamente.')
+                    setErrorMessage('Erro ao cadastrar a atividade. Tente novamente.')
                 }
                 if (error.request) {
                     console.log(error.request);
@@ -120,14 +93,6 @@ function AtividadeProfessorCadastrar(props) {
         });
     }
 
-    const onChangeSelectStudentOne = e => {
-        setSelectedStudentOne(e.target.value)
-    }
-
-    const onChangeSelectStudentTwo = e => {
-        setSelectedStudentTwo(e.target.value)
-    }
-
     return (
         <DashboardUI screenName='Cadastrar Atividade' itemActive="Meus Projetos">
 
@@ -143,7 +108,7 @@ function AtividadeProfessorCadastrar(props) {
                         })}
                         placeholder='Título'
                         autoFocus
-                        style={{ borderColor: errors.fullName && light.color.secondary }}
+                        style={{ borderColor: errors.title && light.color.secondary }}
                     />
                 </IconTextField>
                 {errors.title &&
@@ -172,93 +137,15 @@ function AtividadeProfessorCadastrar(props) {
                     </ErrorMessage>
                 }
 
-                <StyledDropzone
-                    accept='.pdf'
-                    multiple={false}
-                    maxSize={2097152}
-                    text="Arraste ou clique para adicionar o arquivo desejado."
-                    setFileUploading={setFileUploading}
+                <Label htmlFor='deadline'>Prazo de entrega</Label>
+                <StyledDatePicker
+                    startDate={startDate}
+                    setStartDate={date => setStartDate(date)}
+                    locale='pt-BR'
+                    timeIntervals={15}
                 />
 
-                <Label htmlFor='studentOne'>Aluno 1</Label>
-                <Select
-                    formSelect={true}
-                    value={selectedStudentOne}
-                    ref={register}
-                    onChange={e => onChangeSelectStudentOne(e)}
-                    name='studentOne'
-                    id='studentOne'
-                >
-                    {
-                        studentsWithoutProject ?
-                            studentsWithoutProject.map(({ _id, name }) => {
-                                console.log('student 1 id', _id);
-                                return (<option
-                                    key={_id}
-                                    value={_id}
-                                    style={{ width: '100%' }}
-                                >
-                                    {name}
-                                </option>);
-                            }) :
-                            <option
-                                key={1}
-                                value={1}
-                                style={{ width: '100%' }}
-                            >
-                                Nenhum aluno disponível
-                            </option>
 
-                    }
-                </Select>
-
-
-                <Label style={{ fontSize: '1.1rem' }}>
-                    <Checkbox
-                        name='addStudendTwo'
-                        checked={checked}
-                        onChange={e => handleCheckboxChange(e)}
-                        register={register}
-                    />
-                    <span style={{ marginLeft: 8, cursor: 'pointer' }}>Adicionar segundo aluno</span>
-                </Label>
-                <br />
-
-                {watchAddStudentTwo &&
-                    <>
-                        <Label htmlFor='studentOne'>Aluno 2</Label>
-                        <Select
-                            formSelect={true}
-                            value={selectedStudentTwo}
-                            ref={register}
-                            onChange={e => onChangeSelectStudentTwo(e)}
-                            name='studentTwo'
-                            id='studentTwo'
-                        >
-                            {
-                                studentsWithoutProject ?
-                                    studentsWithoutProject.map(({ _id, name }) => {
-                                        console.log('student 2 id', _id);
-                                        return (<option
-                                            key={_id}
-                                            value={_id}
-                                            style={{ width: '100%' }}
-                                        >
-                                            {name}
-                                        </option>);
-                                    }) :
-                                    <option
-                                        key={1}
-                                        value={1}
-                                        style={{ width: '100%' }}
-                                    >
-                                        Nenhum aluno disponível
-                            </option>
-
-                            }
-                        </Select>
-                    </>
-                }
 
                 {errors.registration &&
                     <ErrorMessage left marginTop marginBottom>
@@ -275,7 +162,7 @@ function AtividadeProfessorCadastrar(props) {
                     Salvar
                 </Button>
                 &nbsp;
-                <Button new={true} type='button' width='100px' onClick={() => history.replace('/professor')}>
+                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${id.current}/atividades`)}>
                     Cancelar
                 </Button>
             </form>

@@ -13,6 +13,7 @@ const Button = styled.button`
     font-size: 1rem;
     cursor: pointer;
     margin-top: .5rem;
+    margin-right: 0;
     outline: none;
     display: inline-flex;
     justify-content: center;
@@ -35,12 +36,14 @@ const Button = styled.button`
         width: ${props => props.width ? props.width : '100%'};
         margin-top: ${props => props.new ? '0' : '.7rem'};;
         margin-left: 0;
+        margin-right: .5rem;
     }
 
     @media ${device.laptop}{
         width: ${props => props.width ? props.width : '100%'};
         margin-top: ${props => props.new ? '0' : '.7rem'};;
         margin-left: 0;
+        margin-right: .5rem;
     }
 
 `

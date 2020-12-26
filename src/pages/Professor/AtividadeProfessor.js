@@ -7,8 +7,10 @@ import Button from '../../components/Button';
 import DashboardUI from '../../components/DashboardUI';
 import StyledDropzone from '../../components/StyledDropzone/StyledDropzone';
 import { device } from '../../device';
-import Modal from 'react-modal';
+import { Modal } from 'react-responsive-modal';
+import 'react-responsive-modal/styles.css';
 import { MdModeEdit, MdDelete } from 'react-icons/md';
+import '../../../src/index.css'
 
 function AtividadeProfessor(props) {
 
@@ -19,21 +21,7 @@ function AtividadeProfessor(props) {
     const { register, handleSubmit, errors, formState: { isSubmitting } }
         = useForm({ mode: 'onSubmit' });
 
-    let modalHeight = 0;
-
-    Modal.setAppElement('#root');
-
     let modalMessage = useRef('')
-
-
-    if (window.innerWidth <= 437) {
-        modalHeight = '150px';
-    } else {
-        modalHeight = '120px';
-    }
-
-    console.debug('LARGURA DA TELA: ', window.innerWidth)
-    console.debug('ALTURA DO MODAL: ', modalHeight)
 
     const onSubmit = async ({ title: comment }) => {
         console.log(comment)
@@ -51,7 +39,7 @@ function AtividadeProfessor(props) {
 
 
     return (
-        <DashboardUI screenName='Atividade Atividade Atividade Atividade Atividade 1' itemActive="Meus Projetos">
+        <DashboardUI screenName='Atividade 1' itemActive="Meus Projetos" isProfessorActivity={true}>
             <ActivityHeader>
                 <ActivityDescription>
                     Uma boa introdução possui inúmeros fatores importantes, como tamanho
@@ -72,15 +60,8 @@ function AtividadeProfessor(props) {
                         ref={register({
                             required: true,
                         })}
-                        rows={2}
+                        rows={4}
                         placeholder='Digite o seu comentário...' />
-                    <StyledDropzone
-                        accept='.pdf'
-                        multiple={false}
-                        maxSize={2097152}
-                        text="Arraste ou clique para adicionar o arquivo desejado."
-                        setFileUploading={setFileUploading}
-                    />
                     <Button type='submit' width='100px'>
                         Comentar
                     </Button>
@@ -193,25 +174,15 @@ function AtividadeProfessor(props) {
             {/* editar comentário */}
 
             <Modal
-                isOpen={modalEditIsOpen}
-                onRequestClose={() => setModalEditIsOpen(false)}
-                style={{
-                    content: {
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -70%)',
-                        height: '208px', width: '500px', maxWidth: '90%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-between'
-                    },
-                    overlay: {
-                        zIndex: '15',
-
-                    }
+                open={modalEditIsOpen}
+                onClose={() => setModalEditIsOpen(false)}
+                center
+                classNames={{
+                    overlay: 'customOverlay',
+                    modal: 'customEditComentModal',
                 }}
             >
-                <ModalTitle>Editar comentário</ModalTitle>
+                <h1>Editar comentário</h1>
                 <ActivityCommentBox style={{ marginTop: '0' }}>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <textarea
@@ -219,42 +190,34 @@ function AtividadeProfessor(props) {
                             ref={register({
                                 required: true,
                             })}
-                            rows={2}
+                            rows={4}
                             placeholder='Digite o seu comentário...' />
                     </form>
 
                 </ActivityCommentBox>
-                <div style={{ display: 'grid', marginTop: '-1.8rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
+                <div style={{ display: 'grid', marginTop: '.5rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
                     <Button onClick={() => setModalEditIsOpen(false)}>Editar</Button>
                     <Button onClick={() => setModalEditIsOpen(false)}>Cancelar</Button>
                 </div>
             </Modal>
 
-            {/* editar comentário */}
+            {/* excluir comentário */}
 
 
             <Modal
-                isOpen={modalDeleteIsOpen}
-                onRequestClose={() => setModalDeleteIsOpen(false)}
-                style={{
-                    content: {
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -70%)',
-                        height: modalHeight, width: '500px', maxWidth: '90%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-between'
-                    },
-                    overlay: {
-                        zIndex: '15',
-
-                    }
+                open={modalDeleteIsOpen}
+                onClose={() => setModalDeleteIsOpen(false)}
+                center
+                classNames={{
+                    overlay: 'customOverlay',
+                    modal: 'customModal',
                 }}
-            >
-                <ModalTitle>Deseja remover este comentário?</ModalTitle>
 
-                <div style={{ display: 'grid', marginTop: '-1.8rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
+            >
+                <h1>Deseja remover este comentário?</h1>
+                <p>Esta ação é irreversível.</p>
+
+                <div style={{ display: 'grid', marginTop: '.1rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
                     <Button onClick={() => setModalDeleteIsOpen(false)}>Sim</Button>
                     <Button onClick={() => setModalDeleteIsOpen(false)}>Cancelar</Button>
                 </div>
