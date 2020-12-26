@@ -160,7 +160,7 @@ const Content = styled.div`
     height: calc(100vh - 60px);
     overflow: auto;
     
-    margin-top: 60px;
+    top: 60px;
     display: flex;
     flex-direction: column;
     transition: margin-left .3s;
