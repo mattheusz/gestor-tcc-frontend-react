@@ -161,6 +161,7 @@ const Content = styled.div`
     overflow: auto;
     
     top: 60px;
+    scroll-margin-top: 60px;
     display: flex;
     flex-direction: column;
     transition: margin-left .3s;
