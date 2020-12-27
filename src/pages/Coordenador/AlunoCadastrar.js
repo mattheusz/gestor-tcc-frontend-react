@@ -39,6 +39,7 @@ function AlunoCadastrar(props) {
             password,
             confirmPassword,
             userType: 'aluno',
+            available: 'sim',
             status: 'ativo'
         })
             .then(response => {

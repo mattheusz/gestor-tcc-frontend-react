@@ -100,12 +100,29 @@ export const administrativo = [
 ]
 
 
-export const alunoPreProjeto = {
-    professores: 'Professores',
-    calendario: 'Calendário',
-    documentos: 'Documentos',
-    repositorio: 'Repositório',
-}
+export const alunoPreProjeto = [
+    {
+        icon: <VscProject />,
+        description: 'Professores',
+        to: '/professor'
+    },
+
+    {
+        icon: <BsCalendar />,
+        description: 'Datas Importantes*',
+        to: '/datas_importantes'
+    },
+    {
+        icon: <CgFileDocument />,
+        description: 'Documentos',
+        to: '/documentos/visualizar'
+    },
+    {
+        icon: <RiGitRepositoryLine />,
+        description: 'Repositório*',
+        to: '/trabalhos_anteriores'
+    },
+]
 
 export const alunoOrientando = {
     atividades: 'Atividades',
@@ -131,7 +148,7 @@ export const professor = [
     {
         icon: <CgFileDocument />,
         description: 'Documentos',
-        to: '/documentos'
+        to: '/documentos/visualizar'
     },
     {
         icon: <RiGitRepositoryLine />,

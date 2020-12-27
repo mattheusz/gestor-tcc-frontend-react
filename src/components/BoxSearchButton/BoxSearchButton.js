@@ -6,9 +6,10 @@ const BoxSearchButton = styled.div`
     height: 2.5rem;
     width: 100%;
 
-    @media ${device.mobileL}{
-        width: 290px;
+    @media ${device.tablet}{
+        width: 310px;
     }
+
 `
 export default BoxSearchButton
 

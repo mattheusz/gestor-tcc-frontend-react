@@ -6,7 +6,7 @@ import api from '../../api/api'
 
 import DashboardUI from '../../components/DashboardUI';
 import SearchBar from '../../components/SearchBar';
-import { Table } from 'semantic-ui-react'
+import { Icon, Menu, Table } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -18,7 +18,7 @@ import usePaginatorNumbers from '../../hooks/usePaginator';
 import ActionModal from '../../components/ActionModal';
 import Paginator from '../../components/Paginator/Paginator';
 
-function Alunos(props) {
+function DocumentosAlunoProfessor(props) {
     const [searchText, setSearchText] = useState('');
     const [user, setUser] = useState([]);
 
@@ -65,7 +65,7 @@ function Alunos(props) {
         if (mountedPagination)
             return;
         setMountedPagination(false);
-        api.get('usuarios/todos_usuarios/aluno/ativo/1')
+        api.get(`documentos/listar_todos_documentos/${currentPage}`)
             .then(({ data }) => {
                 setCurrentPage(data.page);
                 totalPages.current = data.totalPages;
@@ -85,7 +85,7 @@ function Alunos(props) {
                     console.log('Error', error.message);
                 }
             });
-    }, []);
+    }, [currentPage]);
 
     // filtrando professor por todos, ativo e inativo
     const [selectedValue, setSelectedValue] = useState('ativo');
@@ -139,13 +139,13 @@ function Alunos(props) {
         setSelectedValue(e.target.value)
     }
 
-    const addUser = () => {
-        history.push('/alunos/novo');
+    const addDocument = () => {
+        history.push('/documentos/novo');
     }
 
     const editUser = (_id, registration, name, email, status) => {
         setUserRegistration({ _id, registration, name, email, status })
-        history.push(`/alunos/editar/${_id}`);
+        history.push(`/coordenador/alunos/editar/${_id}`);
     }
 
     const activeAndInactive = (id, name, status) => {
@@ -162,7 +162,8 @@ function Alunos(props) {
         setModalIsOpen(true)
     }
 
-    const changeStatusUser = () => {
+    // remover doccumentos (falta o back)
+    const removeDocument = () => {
 
         api.put('usuarios/atualizar_status', {
             id: userId.current,
@@ -179,6 +180,7 @@ function Alunos(props) {
                         autoClose: 3000,
                     });
                 }
+                setStatusUserChanged(!statusUserChanged)
             })
             .catch(error => {
                 if (error.response) {
@@ -209,14 +211,15 @@ function Alunos(props) {
         let path;
         // tratando buscar por texto + status
         if (searchText === '') {
-            path = `usuarios/todos_usuarios/aluno/${selectedValue}/${page}`
+            path = `documentos/listar_todos_documentos/${page}`
             if (selectedValue === 'todos')
                 path = `usuarios/todos_usuarios/aluno/${page}`
         }
         else {
-            path = `usuarios/listar_usuarios/aluno/${selectedValue}/${searchText}/${page}`
+            path = `documentos/listar_todos_documentos/${page}`
             if (selectedValue === 'todos')
-                path = `usuarios/listar_usuarios/aluno/${searchText}/${page}`
+                path = `documentos/listar_todos_documentos/${page}`
+
         }
 
         setCurrentPage(page);
@@ -241,18 +244,17 @@ function Alunos(props) {
                     console.log('Error', error.message);
                 }
             });
-        buildPaginatorDesign();
     }
 
     return (
-        <DashboardUI screenName='Alunos' itemActive="Alunos">
+        <DashboardUI screenName='Documentos' itemActive="Documentos">
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}
                     setSearchText={setSearchText}
                     selectedValue={selectedValue}
                     onChangeSelect={onChangeSelect}
-                    addUser={addUser}
+                    addUser={addDocument}
                     selectItems={selectItems}
                 />
             </form>
@@ -260,9 +262,8 @@ function Alunos(props) {
                 <Table basic='very' striped selectable>
                     <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell width={2}>Matrícula</Table.HeaderCell>
-                            <Table.HeaderCell width={6}>Nome</Table.HeaderCell>
-                            <Table.HeaderCell width={6}>E-mail</Table.HeaderCell>
+                            <Table.HeaderCell width={6}>Título</Table.HeaderCell>
+                            <Table.HeaderCell width={6}>Anexo</Table.HeaderCell>
                             <Table.HeaderCell width={2}>Ações</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
@@ -270,13 +271,16 @@ function Alunos(props) {
 
                     <Table.Body>
                         {
-                            user.map(({ _id, registration, name, email, status }) => (
+                            user.map(({ _id, title, name, email, status, documentIformation: { nameDocumentation, url } }) => (
                                 <Table.Row key={_id}>
-                                    <Table.Cell>{registration}</Table.Cell>
-                                    <Table.Cell>{name}</Table.Cell>
-                                    <Table.Cell>{email}</Table.Cell>
+                                    <Table.Cell>{title}</Table.Cell>
+                                    <Table.Cell>
+                                        <a href={url} target='_blank'>
+                                            {nameDocumentation}
+                                        </a>
+                                    </Table.Cell>
                                     <Table.Cell style={{ display: 'flex !important', alignItems: 'center', position: 'relative' }}>
-                                        <AiOutlineEdit cursor='pointer' onClick={() => { editUser(_id, registration, name, email, status) }} color={light.color.primary} size='2rem' /> &nbsp;&nbsp;
+                                        <AiOutlineEdit cursor='pointer' onClick={() => { editUser(_id, name, email, status) }} color={light.color.primary} size='2rem' /> &nbsp;&nbsp;
                                         <Switch
                                             on='ativo'
                                             off='inativo'
@@ -315,7 +319,7 @@ function Alunos(props) {
                 modalIsOpen={modalIsOpen}
                 setModalIsOpen={setModalIsOpen}
                 modalMessage={modalMessage.current}
-                handleConfirmAction={changeStatusUser}
+                handleConfirmAction={removeDocument}
             />
             <ToastContainer />
         </DashboardUI>
@@ -323,4 +327,4 @@ function Alunos(props) {
     );
 }
 
-export default Alunos;
+export default DocumentosAlunoProfessor;

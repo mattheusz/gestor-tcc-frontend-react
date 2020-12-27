@@ -32,6 +32,8 @@ import ListarOrientacoesProfessor from '../pages/Professor/ListarOrientacoesProf
 import OrientacaoProfessorCadastrar from '../pages/Professor/OrientacaoProfessorCadastrar';
 import OrientacaoProfessor from '../pages/Professor/OrientacaoProfessor';
 import OrientacaoProfessorEditar from '../pages/Professor/OrientacaoProfessorEditar';
+import DocumentosAlunoProfessor from '../pages/AlunoProfessor/DocumetosAlunoProfessor';
+import ListarProfessoresAluno from '../pages/Aluno/ListarProfessoresAluno';
 
 
 
@@ -60,7 +62,10 @@ function CustomRoute({ isPrivate, roles, ...rest }) {
         case 'professor':
             rootRoute = 'professor';
             break;
-        case 'aluno':
+        case 'aluno-pre-projeto':
+            rootRoute = 'aluno-pre';
+            break;
+        case 'aluno-orientando':
             rootRoute = 'aluno';
             break;
         case 'administrativo':
@@ -143,6 +148,14 @@ export default function Routes() {
                         <CustomRoute exact isPrivate path='/professor/projetos/:id/orientacoes/novo' roles={['professor']} component={OrientacaoProfessorCadastrar} />
                         <CustomRoute exact isPrivate path='/professor/projetos/:id/orientacoes/:orientation' roles={['professor']} component={OrientacaoProfessor} />
                         <CustomRoute exact isPrivate path='/professor/projetos/:id/orientacoes/editar/:orientation' roles={['professor']} component={OrientacaoProfessorEditar} />
+
+
+                        {/* Aluno pre-projeto */}
+                        <CustomRoute exact isPrivate path='/aluno-pre' roles={['aluno-pre-projeto']} component={ListarProfessoresAluno} />
+
+                        <CustomRoute exact isPrivate path='/documentos/visualizar' roles={['professor', 'aluno']} component={DocumentosAlunoProfessor} />
+
+
 
                         <CustomRoute exact isPrivate path='/professor/alunos' roles={['coordenador']} component={Alunos} />
                         <CustomRoute exact isPrivate path='/professor/professores' roles={['coordenador']} component={Alunos} />
