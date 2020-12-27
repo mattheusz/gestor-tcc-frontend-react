@@ -10,7 +10,7 @@ export const StyledSearchBar = styled.div`
 
     @media ${device.mobileL}{
         width: 100%;
-        flex-direction: co;
+        flex-direction: row;
         justify-content: space-between;
     }
 
