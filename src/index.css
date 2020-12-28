@@ -42,6 +42,15 @@ code {
   font-weight: 400;
 }
 
+/* Modal que exibe mais detalhadas de um professor (estando em aluno)*/
+.customDetailProfessorModal {
+  background: #444444;
+  text-align: center !important;
+  max-width: 400px !important;
+
+}
+
+
 @media only screen and (max-width: 500px){
   .customEditComentModal h1{
     padding-right: 7rem;
@@ -49,3 +58,4 @@ code {
     font-weight: 400;
   }
 }
+

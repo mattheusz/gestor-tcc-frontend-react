@@ -367,7 +367,8 @@ const ActivityCommentAttachment = styled.span`
 `;
 
 const ModalTitle = styled.h2`
-    margin-bottom: -22px;
+    
     font-weight: 500;
     color: ${props => props.theme.color.dark};
+    text-align: center;
 `;

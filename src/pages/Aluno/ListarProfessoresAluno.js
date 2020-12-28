@@ -11,16 +11,22 @@ import 'semantic-ui-css/semantic.min.css';
 
 import { ToastContainer, toast } from 'react-toastify';
 import Switch from 'react-input-switch';
-import Modal from 'react-modal';
 import { AiOutlineEdit } from 'react-icons/ai';
 import usePaginatorNumbers from '../../hooks/usePaginator';
-import ActionModal from '../../components/ActionModal';
+
 import Paginator from '../../components/Paginator/Paginator';
 import { ProjectContext } from '../../context/ProjectContext';
-import ProfessorProjectList from '../../components/ProfessorProjectList/ProfessorProjectList';
-import ProjectInfo from '../../components/ProjectInfo/ProjectInfo';
 import styled from 'styled-components';
 import { device } from '../../device';
+import { Modal } from 'react-responsive-modal';
+import 'react-responsive-modal/styles.css';
+import '../../index.css'
+import Button from '../../components/Button';
+import { FaInstagram, FaYoutube, FaFacebookF } from "react-icons/fa";
+import { TiSocialLinkedin } from "react-icons/ti";
+import Lattes from '../../assets/lattes.svg';
+
+
 
 function ListarProfessoresAluno(props) {
 
@@ -192,7 +198,7 @@ function ListarProfessoresAluno(props) {
                     <ProfessorCardBody>
                         <ProfessorCardBodyName>Roberto</ProfessorCardBodyName>
                         <p>Sistema web</p>
-                        <ProfessorCardBodyButton>Ver mais</ProfessorCardBodyButton>
+                        <ProfessorCardBodyButton onClick={() => setModalIsOpen(true)}>Ver mais</ProfessorCardBodyButton>
                     </ProfessorCardBody>
                 </ProfessorCard>
                 <ProfessorCard>
@@ -228,6 +234,40 @@ function ListarProfessoresAluno(props) {
 
             </ProfessorList>
             <ToastContainer />
+            <Modal
+                open={modalIsOpen}
+                onClose={() => setModalIsOpen(false)}
+                center
+                classNames={{
+                    overlay: 'customOverlay',
+                    modal: 'customDetailProfessorModal',
+                }}
+
+            >
+                <ModalImage>
+                    <img src='https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' />
+                </ModalImage>
+                <ProfessorCardBodyName>
+                    Roberto Coutinho Júnior
+                </ProfessorCardBodyName>
+                <p>
+                    Desenvolvimento de sistemas web com ênfase em Java, além de especialização elementos
+                    modelagem orientada a objeto.
+                </p>
+                <p style={{ wordBreak: 'break-all' }}>
+                    robertocoutinhojunior@gmail.com
+                </p>
+                <SocialMedias>
+                    <img src={Lattes} id='lattes' alt='Lattes' />
+                    <TiSocialLinkedin id='linkedin' />
+                    <FaFacebookF id='facebook' />
+                    <FaInstagram id='instagram' />
+                    <FaYoutube id='youtube' />
+                </SocialMedias>
+
+
+
+            </Modal>
         </DashboardUI>
 
     );
@@ -338,5 +378,61 @@ const ProfessorCardBodyButton = styled.button`
 
 `;
 
+const ModalImage = styled.div`
+    padding: .5rem .5rem;
+    margin: 0 auto;
+    width: 150px;
+    height: 150px;
+
+    img{
+        max-width: 100%;
+        height: auto;
+        border-radius: 50%;
+    }
+
+    @media ${device.mobileL}{
+
+    }
+
+    @media ${device.tablet}{
+
+    }
+`;
+const SocialMedias = styled.div`
+    display: inline-block;
+
+    svg, img{
+        width: 40px;
+        height: 40px;
+        font-size: 40px;
+        line-height: 40px;
+        padding: 8px;
+        border-radius: 50%;
+        margin: 0 5px;
+        background-color: ${props => props.theme.color.primary};
+        color: white;
+        fill: white;
+        cursor: pointer;
+        transition: all .2s;
+       
+    }
+
+    svg[id=linkedin]:hover{
+        background-color: #0077B5;
+    }
+    svg[id=facebook]:hover{
+        background-color: #3b5999;
+    }
+    svg[id=instagram]:hover{
+        background-color: #e4405f;
+    }
+    svg[id=youtube]:hover{
+        background-color: #c4302b;
+    }
+
+    img[id=lattes]:hover{
+        background-color: #0077B5;
+    }
+`;
 
 export default ListarProfessoresAluno;
