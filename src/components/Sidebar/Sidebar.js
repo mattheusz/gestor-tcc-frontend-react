@@ -17,7 +17,7 @@ function menuToBeDisplayed() {
     if (userType === 'coordenador') {
         return coordenador;
     }
-    if (userType === 'aluno-pre-projeto') {
+    if (userType === 'aluno-pre') {
         return alunoPreProjeto;
     }
     if (userType === 'aluno-orientando') {

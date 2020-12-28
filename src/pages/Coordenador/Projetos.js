@@ -269,10 +269,10 @@ function Projetos(props) {
                 <Table basic='very' striped selectable>
                     <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell width={6}>Projeto</Table.HeaderCell>
-                            <Table.HeaderCell width={6}>Orientandos</Table.HeaderCell>
-                            <Table.HeaderCell width={2}>Orientador</Table.HeaderCell>
-                            <Table.HeaderCell width={2}>Ações</Table.HeaderCell>
+                            <Table.HeaderCell width={5}>Projeto</Table.HeaderCell>
+                            <Table.HeaderCell width={5}>Orientandos</Table.HeaderCell>
+                            <Table.HeaderCell width={3}>Orientador</Table.HeaderCell>
+                            <Table.HeaderCell width={3}>Ações</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
 

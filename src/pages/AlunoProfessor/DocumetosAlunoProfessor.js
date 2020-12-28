@@ -254,17 +254,17 @@ function DocumentosAlunoProfessor(props) {
                     setSearchText={setSearchText}
                     selectedValue={selectedValue}
                     onChangeSelect={onChangeSelect}
-                    addUser={addDocument}
                     selectItems={selectItems}
+                    showAddButton={true}
+                    noShowSelect={true}
                 />
             </form>
             {noUserFound ? <h3 style={{ margin: ' 2.5rem', textAlign: 'center' }}>Nenhum usuário encontrado</h3> :
                 <Table basic='very' striped selectable>
                     <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell width={6}>Título</Table.HeaderCell>
-                            <Table.HeaderCell width={6}>Anexo</Table.HeaderCell>
-                            <Table.HeaderCell width={2}>Ações</Table.HeaderCell>
+                            <Table.HeaderCell width={5}>Título</Table.HeaderCell>
+                            <Table.HeaderCell width={9}>Anexo</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
 
@@ -279,30 +279,7 @@ function DocumentosAlunoProfessor(props) {
                                             {nameDocumentation}
                                         </a>
                                     </Table.Cell>
-                                    <Table.Cell style={{ display: 'flex !important', alignItems: 'center', position: 'relative' }}>
-                                        <AiOutlineEdit cursor='pointer' onClick={() => { editUser(_id, name, email, status) }} color={light.color.primary} size='2rem' /> &nbsp;&nbsp;
-                                        <Switch
-                                            on='ativo'
-                                            off='inativo'
-                                            style={{
-                                                width: '2rem',
-                                                height: '1.2rem',
-                                                position: 'absolute',
-                                                top: '50%',
-                                                transform: 'translateY(-50%)'
-                                            }}
-                                            styles={{
-                                                trackChecked: {
-                                                    backgroundColor: light.color.primary
-                                                },
-                                                buttonChecked: {
-                                                    backgroundColor: 'white'
-                                                }
-                                            }}
-                                            value={status}
-                                            onChange={() => { activeAndInactive(_id, name, status) }} />
 
-                                    </Table.Cell>
                                 </Table.Row>
                             ))
                         }

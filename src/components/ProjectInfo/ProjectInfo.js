@@ -189,7 +189,7 @@ const CardHeader = styled.div`
     border-bottom: 1px solid ${props => props.theme.color.grey}55;
     text-align: center;
     font-size: 1.3rem;
-    font-weight: 500;
+    font-weight: 400;
     border-radius: 5px 5px 0 0;
     padding: .8rem;
 `
@@ -212,16 +212,16 @@ const CardFooter = styled(Link)`
     background-color: ${props => props.theme.color.secondary};
     text-align: center;
     font-size: 1.2rem;
-    font-weight: 300;
+    font-weight: 400;
     border-radius: 0 0 5px 5px;
-    padding: .8rem;
+    padding: .6rem;
     border-top: 1px solid ${props => props.theme.color.grey}55;
     color: white;
 
     &:hover{
 
         color: white;
-        /*background-color: ${props => props.theme.color.secondaryShadow};*/
+        background-color: ${props => props.theme.color.secondaryShadow};
     }
 `
 

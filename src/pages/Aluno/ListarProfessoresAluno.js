@@ -180,112 +180,163 @@ function ListarProfessoresAluno(props) {
                     setSearchText={setSearchText}
                     selectedValue={selectedValue}
                     onChangeSelect={onChangeSelect}
-                    addUser={addUser}
                     selectItems={selectItems}
+                    showAddButton={true}
                 />
             </form>
-            <ActivityList>
-                <ActivityItem onClick={(e) => openActivity(e, 1)}>
-                    <ActivityTitle>Introdução</ActivityTitle><br />
-                    <Deadline>
-                        Prazo de entrega: 20/01/2020
-                    </Deadline>
-                    <ActivitySituation>em andamento</ActivitySituation>
-                </ActivityItem>
-                <ActivityItem>
-                    <ActivityTitle>Referencial teórico</ActivityTitle><br />
-                    <Deadline>
-                        Prazo de entrega: 20/01/2020
-                    </Deadline>
-                    <ActivitySituation>em andamento</ActivitySituation>
-                </ActivityItem>
-                <ActivityItem>
-                    <ActivityTitle>Desenvolvimento</ActivityTitle><br />
-                    <Deadline>
-                        Prazo de entrega: 20/01/2020
-                    </Deadline>
-                    <ActivitySituation>em andamento</ActivitySituation>
-                </ActivityItem>
-            </ActivityList>
+            <ProfessorList>
+                <ProfessorCard>
+                    <ProfessorCardImage>
+                        <img src='https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' />
+                    </ProfessorCardImage>
+                    <ProfessorCardBody>
+                        <ProfessorCardBodyName>Roberto</ProfessorCardBodyName>
+                        <p>Sistema web</p>
+                        <ProfessorCardBodyButton>Ver mais</ProfessorCardBodyButton>
+                    </ProfessorCardBody>
+                </ProfessorCard>
+                <ProfessorCard>
+                    <ProfessorCardImage>
+                        <img src='https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' />
+                    </ProfessorCardImage>
+                    <ProfessorCardBody>
+                        <ProfessorCardBodyName>Roberto</ProfessorCardBodyName>
+                        <p>Sistema web</p>
+                        <ProfessorCardBodyButton>Ver mais</ProfessorCardBodyButton>
+                    </ProfessorCardBody>
+                </ProfessorCard>
+                <ProfessorCard>
+                    <ProfessorCardImage>
+                        <img src='https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' />
+                    </ProfessorCardImage>
+                    <ProfessorCardBody>
+                        <ProfessorCardBodyName>Roberto</ProfessorCardBodyName>
+                        <p>Sistema web</p>
+                        <ProfessorCardBodyButton>Ver mais</ProfessorCardBodyButton>
+                    </ProfessorCardBody>
+                </ProfessorCard>
+                <ProfessorCard>
+                    <ProfessorCardImage>
+                        <img src='https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' />
+                    </ProfessorCardImage>
+                    <ProfessorCardBody>
+                        <ProfessorCardBodyName>Roberto</ProfessorCardBodyName>
+                        <p>Sistema web</p>
+                        <ProfessorCardBodyButton>Ver mais</ProfessorCardBodyButton>
+                    </ProfessorCardBody>
+                </ProfessorCard>
+
+            </ProfessorList>
             <ToastContainer />
         </DashboardUI>
 
     );
 }
 
-const ActivityList = styled.div`
-    display: flex;
-    flex-direction: column;
+const ProfessorList = styled.div`
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.2rem;
     margin-top: 1rem;
-`
+    width: 100%;
 
-const ActivityItem = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    flex: 1 0 115px;
-    border: 1px solid ${props => props.theme.color.grey}55;
-    box-shadow: 3px 3px 3px ${props => props.theme.color.primary}15;
-    position: relative;
-    background-color: white;
-    color: ${props => props.theme.color.dark};
-    font-size: 1.2rem;
-    font-weight: 300;
-    padding: 1.3rem 1rem;
-    margin-bottom: 1rem;
-    cursor: pointer;
-    border-radius: 5px;
-
-    @media ${device.tablet}{
-        border-radius: 5px;
-        
+    @media ${device.mobileM}{
+        grid-template-columns: minmax(0, 1fr);
     }
-
-    &:hover{
-        box-shadow: 3px 3px 3px ${props => props.theme.color.primary}75;
-    }
-`
-
-const ActivityTitle = styled.span`
-    font-size: 1.5rem;
-    font-weight: 400;
-`
-const Deadline = styled.span`
-    font-size: 1rem;
-    font-weight: 400;
-    padding: 3px;
-    border: 1px solid ${props => props.theme.color.primary};
-    border-radius: 5px;
-    color: ${props => props.theme.color.primary};
-    align-self: flex-start;
-    box-shadow: 3px 3px 3px ${props => props.theme.color.primary}15;
-`
-
-const ActivitySituation = styled.span`
-    display: inline-block;
-    align-self: flex-start;
-    margin-top: 10px;
-    border-radius: 5px;
-    border: 1px solid ${props => props.theme.color.primary};
-    padding: 3px;
-    color: ${props => props.theme.color.primary};
-    font-size: 1rem;
 
     @media ${device.mobileL}{
-        margin-top: 0;
-        position: absolute;
-        bottom: 1.3rem;
-        right: 11px;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    @media ${device.medium}{
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
 
     @media ${device.tablet}{
-        position: absolute;
-        bottom: 21px;
-        right: 11px;
-        padding: 4px;
-        border-radius: 5px;
-        box-shadow: 1px 1px 1px ${props => props.theme.color.grey}55;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    @media ${device.tabletL}{
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    @media ${device.laptopL}{
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
     }
 `;
+
+const ProfessorCard = styled.div`
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    border-radius: 5px;
+    border: 1px solid ${props => props.theme.color.grey}55;
+    box-shadow: 2px 2px 2px ${props => props.theme.color.grey}55;
+    transform: translateY(0, 0);
+    transition: transform .2s;
+
+    &:hover{
+        transform: translate(0, -5px);
+
+    }
+
+
+`;
+
+const ProfessorCardImage = styled.div`
+    padding: .5rem 1.5rem;
+    margin: 0 auto;
+    width: 90%;
+
+    img{
+        max-width: 100%;
+        height: auto;
+        border-radius: 50%;
+    }
+
+    @media ${device.mobileL}{
+
+    }
+
+    @media ${device.tablet}{
+
+    }
+`;
+
+const ProfessorCardBody = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Roboto';
+`;
+
+const ProfessorCardBodyName = styled.h3`
+    color: ${props => props.theme.color.dark};
+    font-size: 1.3rem;
+    font-weight: 400;
+    font-family: Roboto;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+`;
+
+const ProfessorCardBodyButton = styled.button`
+    padding: 7px 20px;
+    cursor: pointer;
+    width: 100%;
+    background-color: ${props => props.theme.color.primary};
+    color: white;
+    border: 1px solid ${props => props.theme.color.primary};
+    border-radius: 5px;
+    transition: all .3s;
+    outline: none;
+
+    &:hover{
+        background-color: transparent;
+        color: ${props => props.theme.color.primary};
+        border: 1px solid ${props => props.theme.color.primary};
+    }
+
+`;
+
 
 export default ListarProfessoresAluno;

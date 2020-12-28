@@ -4,7 +4,7 @@ export function detectUserType(userType, isCoordinator, available) {
     else if (userType === 'professor' && isCoordinator === true)
         return 'coordenador'
     else if (userType === 'aluno' && available === 'sim')
-        return 'aluno-pre-projeto'
+        return 'aluno-pre'
     else if (userType === 'aluno' && available === 'não')
         return 'aluno-orientando'
     else if (userType === 'administrativo')

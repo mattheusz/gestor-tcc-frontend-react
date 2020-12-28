@@ -10,7 +10,7 @@ export const StyledSearchBar = styled.div`
 
     @media ${device.mobileL}{
         width: 100%;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: space-between;
     }
 
@@ -28,14 +28,16 @@ export const LeftSearchBar = styled.div`
 
     @media ${device.mobileL}{
         width: auto;
-        margin-left: .5rem;
-        flex-direction: row;
+        flex-direction: column;
     }
 
     @media ${device.tablet}{
         width: auto;
         margin-left: 0;
+        margin-right: .5rem;
         flex-direction: row;
+        justify-content: flex-start;
+        flex: 1 1 310px;
     }
 `
 

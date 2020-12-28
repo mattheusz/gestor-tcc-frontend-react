@@ -55,14 +55,12 @@ function CustomRoute({ isPrivate, roles, ...rest }) {
         return <Redirect to='/login' />
     }
 
-
-    // se a rota pública, mas usuário está autenticado: vá para a Home
     let rootRoute;
     switch (userType) {
         case 'professor':
             rootRoute = 'professor';
             break;
-        case 'aluno-pre-projeto':
+        case 'aluno-pre':
             rootRoute = 'aluno-pre';
             break;
         case 'aluno-orientando':
@@ -79,8 +77,10 @@ function CustomRoute({ isPrivate, roles, ...rest }) {
             break;
     }
 
-    console.debug('Rota padrão: ', rootRoute)
 
+
+    console.debug('Rota padrão: ', rootRoute)
+    // se rota pública, mas usuário autenticado, usuário redirecionado para a sua home
     if (!isPrivate && authenticated) {
         return <Redirect to={`/${rootRoute}`} />
     }
@@ -151,9 +151,9 @@ export default function Routes() {
 
 
                         {/* Aluno pre-projeto */}
-                        <CustomRoute exact isPrivate path='/aluno-pre' roles={['aluno-pre-projeto']} component={ListarProfessoresAluno} />
+                        <CustomRoute exact isPrivate path='/aluno-pre' roles={['aluno-pre']} component={ListarProfessoresAluno} />
 
-                        <CustomRoute exact isPrivate path='/documentos/visualizar' roles={['professor', 'aluno']} component={DocumentosAlunoProfessor} />
+                        <CustomRoute exact isPrivate path='/documentos/visualizar' roles={['professor', 'aluno-pre', 'aluno-orientando']} component={DocumentosAlunoProfessor} />
 
 
 

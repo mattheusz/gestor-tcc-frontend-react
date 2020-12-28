@@ -104,7 +104,7 @@ export const alunoPreProjeto = [
     {
         icon: <VscProject />,
         description: 'Professores',
-        to: '/professor'
+        to: '/aluno-pre'
     },
 
     {

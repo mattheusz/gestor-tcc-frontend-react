@@ -22,12 +22,13 @@ const Select = styled.select`
     @media ${device.mobileL} {
         /*margin-left: ${props => props.formSelect ? 0 : '.5rem'};
         width: ${props => props.formSelect ? '100%' : '100px'};*/
-        margin-top: 0;
+        
     }
 
     @media ${device.tablet}{
         width: ${props => props.formSelect ? '100%' : '100px'};
         margin-left: ${props => props.formSelect ? 0 : '.5rem'};
+        margin-top: 0;
     }
     
     @media ${device.laptop}{

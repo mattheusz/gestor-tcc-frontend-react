@@ -7,7 +7,7 @@ const BoxSearchButton = styled.div`
     width: 100%;
 
     @media ${device.tablet}{
-        width: 310px;
+        flex: 0 1 310px;
     }
 
 `
@@ -23,6 +23,7 @@ export const SearchInput = styled.input`
     height: 100%;
     font-size: 1rem;
     flex-grow: 1;
+    
 
     &:focus {
         outline: 0;
@@ -34,8 +35,8 @@ export const SearchInput = styled.input`
         opacity: 1;
     }
 
-    @media ${device.mobileL}{
-        width: 250px;
+    @media ${device.tablet}{
+        flex: 1 1 250;
     }
 `
 

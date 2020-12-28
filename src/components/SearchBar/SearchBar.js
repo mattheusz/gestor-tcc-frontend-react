@@ -6,7 +6,7 @@ import Select from '../../components/Select'
 import BoxSearchButton, { SearchButton, SearchInput } from '../BoxSearchButton/BoxSearchButton';
 import { LeftSearchBar, RightSearchBar, StyledSearchBar } from './styled';
 
-function SearchBar({ searchText, setSearchText, selectedValue, onChangeSelect, addUser, selectItems, showAddButton }) {
+function SearchBar({ searchText, setSearchText, selectedValue, onChangeSelect, addUser, selectItems, showAddButton, noShowSelect }) {
     return (
         <StyledSearchBar >
             <LeftSearchBar>
@@ -16,11 +16,14 @@ function SearchBar({ searchText, setSearchText, selectedValue, onChangeSelect, a
                         <BiSearch style={{ color: 'white' }} />
                     </SearchButton>
                 </BoxSearchButton>
-                <Select value={selectedValue} onChange={e => onChangeSelect(e)}>
-                    {selectItems.map(({ value, displayValue }) =>
-                        <option key={value} value={value} > {displayValue} </option>
-                    )}
-                </Select>
+                {noShowSelect ||
+                    <Select value={selectedValue} onChange={e => onChangeSelect(e)}>
+                        {selectItems.map(({ value, displayValue }) =>
+                            <option key={value} value={value} > {displayValue} </option>
+                        )}
+
+                    </Select>
+                }
             </LeftSearchBar>
             <RightSearchBar>
                 {showAddButton ||

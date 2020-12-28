@@ -33,17 +33,13 @@ const Button = styled.button`
     }
 
     @media ${device.mobileL}{
-        width: ${props => props.width ? props.width : '100%'};
-        margin-top: ${props => props.new ? '0' : '.7rem'};;
         margin-left: 0;
-        margin-right: .5rem;
     }
 
-    @media ${device.laptop}{
+    @media ${device.tablet}{
         width: ${props => props.width ? props.width : '100%'};
-        margin-top: ${props => props.new ? '0' : '.7rem'};;
-        margin-left: 0;
-        margin-right: .5rem;
+        margin-top: ${props => props.new ? '0px' : '.7rem'};
+        margin-left: 5px;
     }
 
 `

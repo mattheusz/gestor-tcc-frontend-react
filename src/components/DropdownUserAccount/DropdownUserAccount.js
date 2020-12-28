@@ -13,7 +13,9 @@ const StyledDropdownUserAccount = styled.div`
     right: 15px;
     width: 250px;
     padding: .5rem;
-    background-color: #fff;
+    border-radius: 5px;
+    border: 1px solid ${props => props.theme.color.grey}55;
+    box-shadow: 2px 2px 2px ${props => props.theme.color.grey}55;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -22,9 +24,9 @@ const StyledDropdownUserAccount = styled.div`
     opacity: 0;
     */
     transition: .1s;
-    z-index: 2;
-    background-color: ${props => props.theme.color.primary};
-    color: white;
+    z-index: 20;
+    background-color: white;
+    color: ${props => props.theme.color.dark};
     visibility: ${props => props.showDropdown ? 'visible' : 'hidden'}
 `;
 
@@ -32,9 +34,11 @@ const ListItemDropdown = styled(Link)`
     padding: .6rem .3rem .6rem 1.7rem;
     list-style-type: none;
     display: block;
-    color: white;
+    color: ${props => props.theme.color.dark};
     font-size: 1.1rem;
     position: relative;
+    background-color: white;
+    z-index: 2;
 
     svg{
         width: 20px;
@@ -52,19 +56,20 @@ const ListItemDropdown = styled(Link)`
     &:hover{
         color: ${props => props.theme.color.primary};
         font-weight: 400;
-        color: white;
 
     }
 `;
 
 const ListItemDropdownLi = styled.li`
+    z-index: 2;
     padding: .6rem .3rem .6rem 1.7rem;
     list-style-type: none;
     display: block;
-    color: white;
+    color: ${props => props.theme.color.dark};
     font-size: 1.1rem;
     position: relative;
     cursor: pointer;
+    background-color: white;
 
     svg{
         width: 20px;
@@ -82,7 +87,6 @@ const ListItemDropdownLi = styled.li`
     &:hover{
         color: ${props => props.theme.color.primary};
         font-weight: 400;
-        color: white;
 
     }
 `;
