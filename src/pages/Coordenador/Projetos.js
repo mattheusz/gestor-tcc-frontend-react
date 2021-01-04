@@ -44,7 +44,7 @@ function Projetos(props) {
             displayValue: 'TCC 2'
         },
         {
-            value: 'concluído',
+            value: 'concluido',
             displayValue: 'Concluídos'
         },
         {
@@ -96,7 +96,7 @@ function Projetos(props) {
     }, []);
 
     // filtrando projeto por todos, ativo e inativo
-    const [selectedValue, setSelectedValue] = useState('ativo');
+    const [selectedValue, setSelectedValue] = useState('todos');
     const [statusUserChanged, setStatusUserChanged] = useState(false);
     useEffect(() => {
         if (isInitialMount.current) {
@@ -218,14 +218,14 @@ function Projetos(props) {
         let path;
         // tratando buscar por texto + status
         if (searchText === '') {
-            path = `usuarios/todos_usuarios/aluno/${selectedValue}/${page}`
+            path = `projeto/listar_todos/${selectedValue}/${page}`
             if (selectedValue === 'todos')
-                path = `usuarios/todos_usuarios/aluno/${page}`
+                path = `projeto/listar_todos/${page}`
         }
         else {
-            path = `usuarios/listar_usuarios/aluno/${selectedValue}/${searchText}/${page}`
+            path = `projeto/listar_todos/${selectedValue}/${searchText}/${page}`
             if (selectedValue === 'todos')
-                path = `usuarios/listar_usuarios/aluno/${searchText}/${page}`
+                path = `projeto/listar_todos/titulo/${searchText}/${page}`
         }
 
         setCurrentPage(page);

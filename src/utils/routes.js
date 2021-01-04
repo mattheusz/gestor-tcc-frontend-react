@@ -34,6 +34,7 @@ import OrientacaoProfessor from '../pages/Professor/OrientacaoProfessor';
 import OrientacaoProfessorEditar from '../pages/Professor/OrientacaoProfessorEditar';
 import DocumentosAlunoProfessor from '../pages/AlunoProfessor/DocumetosAlunoProfessor';
 import ListarProfessoresAluno from '../pages/Aluno/ListarProfessoresAluno';
+import ProjetoAluno from '../pages/Aluno/ProjetoAluno';
 
 
 
@@ -152,6 +153,9 @@ export default function Routes() {
 
                         {/* Aluno pre-projeto */}
                         <CustomRoute exact isPrivate path='/aluno-pre' roles={['aluno-pre']} component={ListarProfessoresAluno} />
+
+                        {/* Aluno orientando */}
+                        <CustomRoute exact isPrivate path='/aluno-orientando' roles={['aluno-orientando']} component={ProjetoAluno} />
 
                         <CustomRoute exact isPrivate path='/documentos/visualizar' roles={['professor', 'aluno-pre', 'aluno-orientando']} component={DocumentosAlunoProfessor} />
 

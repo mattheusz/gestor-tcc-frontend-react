@@ -431,7 +431,7 @@ const SocialMedias = styled.div`
     }
 
     img[id=lattes]:hover{
-        background-color: #0077B5;
+        background-color: #2c2b64;
     }
 `;
 

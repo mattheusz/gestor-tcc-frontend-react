@@ -102,7 +102,7 @@ export const administrativo = [
 
 export const alunoPreProjeto = [
     {
-        icon: <VscProject />,
+        icon: <GiTeacher />,
         description: 'Professores',
         to: '/aluno-pre'
     },
@@ -124,13 +124,29 @@ export const alunoPreProjeto = [
     },
 ]
 
-export const alunoOrientando = {
-    atividades: 'Atividades',
-    orientacoes: 'Orientações',
-    calendario: 'Calendário',
-    documentos: 'Documentos',
-    repositorio: 'Repositório',
-}
+export const alunoOrientando = [
+    {
+        icon: <VscProject />,
+        description: 'Meu Projeto',
+        to: '/aluno-orientando'
+    },
+
+    {
+        icon: <BsCalendar />,
+        description: 'Datas Importantes*',
+        to: '/datas_importantes'
+    },
+    {
+        icon: <CgFileDocument />,
+        description: 'Documentos',
+        to: '/documentos/visualizar'
+    },
+    {
+        icon: <RiGitRepositoryLine />,
+        description: 'Repositório*',
+        to: '/trabalhos_anteriores'
+    },
+]
 
 export const professor = [
 

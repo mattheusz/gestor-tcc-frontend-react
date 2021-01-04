@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { device } from '../../device';
 
-function ProjectInfo({ projectId }) {
+function ProjectInfo({ projectId, isStudent }) {
     return (
         <>
             <HeaderContainer>
+                {isStudent && <h3>Roberto Coutinho 🎓</h3>}
                 <h3>Guilherme Muniz e Matheus Justino</h3>
 
                 <p>
@@ -64,9 +65,14 @@ const HeaderContainer = styled.div`
 
     h3{
         font-family: 'Roboto', sans-serif !important;
-        font-weight: 400;
+        font-weight: 400;    
         margin-bottom: .4rem;
     }
+
+    h3:last-of-type{
+            margin-top: 0;
+            margin-bottom: .4rem;
+        }
 `
 
 const Situation = styled.span`
