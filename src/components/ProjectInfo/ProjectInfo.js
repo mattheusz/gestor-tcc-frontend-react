@@ -1,39 +1,60 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { device } from '../../device';
+import format from 'date-fns/format'
 
-function ProjectInfo({ projectId, isStudent }) {
+function ProjectInfo({ projectId, isStudent, projectInfos, lastTask }) {
+
+    const [read, setRead] = useState(false);
+    const deadlineRef = useRef();
+
+
+    lastTask && setRead(true)
+
+
+    const redirectToActivity = isStudent ? `/aluno-orientando/projeto/${projectId}/atividades` : `/professor/projetos/${projectId}/atividades`
+    const redirectToOrientation = isStudent ? `/aluno-orientando/projeto/${projectId}/orientacoes` : `/professor/projetos/${projectId}/orientacoes`
+    const { students, description, situation, tasks } = projectInfos;
+    console.log(lastTask, 'LAST TASK')
+    //setDeadlineLastTask(lastTask.deadline)
+    //console.log(format(new Date(lastTask.deadLine), 'dd/MM/yyyy'), 'today')
+
+    // fazer depois a listagem da última atividade registrada
+
     return (
         <>
             <HeaderContainer>
                 {isStudent && <h3>Roberto Coutinho 🎓</h3>}
-                <h3>Guilherme Muniz e Matheus Justino</h3>
+                {students &&
+                    <h3>{students[0].name}  {students[1] && (' e ' + students[1].name)}</h3>
+                }
 
                 <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Nunc malesuada, est et malesuada tristique, eros massa
-                    luctus mi, eget vestibulum sem massa eu augue. Mauris ligula leo,
-                    iaculis no
+                    {description && description}
                 </p>
-                <Situation>pre-tcc</Situation>
+
+                <Situation>{situation && situation}</Situation>
             </HeaderContainer>
-            <CardContainer>
-                <ActivityCard>
+            <CardContainer isStudent={isStudent}>
+                <ActivityCard >
                     <CardHeader>
                         Atividades
                     </CardHeader>
 
                     <CardBody>
-                        <ActivityTitle>Atividade 1</ActivityTitle>
-                        <Deadline>Data de entrega: 12/01/2020</Deadline>
-                        <ActivitySituation>concluído</ActivitySituation>
+                        <ActivityTitle>{lastTask.title}</ActivityTitle>
+                        <Deadline>Data de entrega: {read && format(new Date(lastTask.deadLine), 'dd/MM/yyyy')}</Deadline>
+                        {console.debug('...........................')}
+                        <ActivitySituation>{lastTask.situation}</ActivitySituation>
                     </CardBody>
 
-                    <CardFooter to={`/professor/projetos/${projectId}/atividades`}>
+                    <CardFooter to={redirectToActivity}>
                         Ver mais
                     </CardFooter>
                 </ActivityCard>
+
+
                 <OrientationCard>
                     <CardHeader>
                         Orientações
@@ -43,10 +64,11 @@ function ProjectInfo({ projectId, isStudent }) {
                         Revisão textual
                     </CardBody>
 
-                    <CardFooter to={`/professor/projetos/${projectId}/orientacoes`} >
+                    <CardFooter to={redirectToOrientation} >
                         Ver mais
                     </CardFooter>
                 </OrientationCard>
+
             </CardContainer>
 
         </>
@@ -117,7 +139,7 @@ const CardContainer = styled.div`
     }
 
     @media ${device.laptop}{
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: ${props => props.isStudent ? '2fr 1fr' : '1fr 1fr'};
     }
 `
 

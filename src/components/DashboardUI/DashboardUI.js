@@ -13,7 +13,7 @@ import { MdDelete, MdModeEdit } from 'react-icons/md';
 import { useHistory, useParams } from 'react-router-dom';
 import Button from '../Button';
 
-function DashboardUI({ screenName, itemActive, children, isProfessorActivity, isProfessorProject, isProfessorOrientation }) {
+function DashboardUI({ screenName, itemActive, children, isProfessorActivity, isProfessorProject, deleteProject, isProfessorOrientation }) {
 
     const [showSidebar, setShowSidebar] = useState(true);
     const [showDropdown, setShowDropdown] = useState(false);
@@ -92,7 +92,7 @@ function DashboardUI({ screenName, itemActive, children, isProfessorActivity, is
                     Esta ação é irreversível e deve ser tomada com cautela.
                 </p>
                 <div style={{ display: 'grid', marginTop: '.4rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
-                    <Button onClick={() => setOpenDeleteProjectModal(false)}>Excluir</Button>
+                    <Button onClick={() => deleteProject()}>Excluir</Button>
                     <Button onClick={() => setOpenDeleteProjectModal(false)}>Cancelar</Button>
                 </div>
             </Modal>

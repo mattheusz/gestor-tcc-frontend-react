@@ -39,7 +39,7 @@ const Button = styled.button`
     @media ${device.tablet}{
         width: ${props => props.width ? props.width : '100%'};
         margin-top: ${props => props.new ? '0px' : '.7rem'};
-        margin-left: 5px;
+        margin-left: 0;
     }
 
 `

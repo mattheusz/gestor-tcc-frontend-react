@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form'
-import { useHistory } from 'react-router-dom'
+import { useForm, Controller } from 'react-hook-form'
+import { useHistory, useParams } from 'react-router-dom'
 import api from '../../api/api'
 import 'semantic-ui-css/semantic.min.css';
 import { ToastContainer, toast } from 'react-toastify';
@@ -17,21 +17,24 @@ import ErrorMessage from '../../components/Error'
 import light from '../../themes/light';
 import Label from '../../components/Label/Label';
 import StyledDatePicker from '../../components/StyledDatePicker';
+import ReactDatePicker from 'react-datepicker';
+import format from 'date-fns/format'
 
 
 function AtividadeProfessorCadastrar(props) {
     const [errorMessage, setErrorMessage] = useState();
-    const [startDate, setStartDate] = useState(new Date());
-    console.debug('Data selecionada', startDate);
+    const [currentDate, setCurrentDate] = useState(new Date());
+    console.debug('Data selecionada', currentDate);
     console.debug('Data atual', new Date());
 
-    const { register, handleSubmit, errors, formState: { isSubmitting }, watch } = useForm({ mode: 'onSubmit' });
+    const { register, handleSubmit, errors, formState: { isSubmitting }, watch, control } = useForm({ mode: 'onSubmit' });
     const watchAddStudentTwo = watch('addStudendTwo');
 
-    let id = useRef();
-    id.current = localStorage.getItem('reg')
+    let idAdvisor = useRef();
+    idAdvisor.current = localStorage.getItem('reg')
 
     const history = useHistory()
+    const { id } = useParams();
 
     useEffect(() => {
         api.get(`usuarios/listar_usuarios/aluno_sem_projeto/1`)
@@ -53,9 +56,17 @@ function AtividadeProfessorCadastrar(props) {
     }, [])
 
 
-    const onSubmit = ({ title, description, studentOne }) => {
+    const onSubmit = ({ title, description, initialDate, deadline }) => {
+        initialDate = format(initialDate, 'dd/MM/yyyy')
+        deadline = format(deadline, 'dd/MM/yyyy')
 
-        api.post('/projeto/cadastrar_projeto', {
+        api.post('/tarefas/cadastrar_tarefas', {
+            title,
+            description,
+            projectId: id,
+            initialDate: initialDate,
+            deadLine: deadline,
+            userId: idAdvisor.current
 
         })
             .then(response => {
@@ -67,7 +78,7 @@ function AtividadeProfessorCadastrar(props) {
                     );
                 notify()
                 setTimeout(() => {
-                    history.push('/professor')
+                    history.push(`/professor/projetos/${id}/atividades`)
                 }, 2000);
 
             })
@@ -75,7 +86,7 @@ function AtividadeProfessorCadastrar(props) {
                 if (error.response) {
                     const msg = error.response.data;
                     console.log(msg);
-                    setErrorMessage('Erro ao cadastrar a atividade. Tente novamente.')
+                    setErrorMessage(msg)
                 }
                 if (error.request) {
                     console.log(error.request);
@@ -137,19 +148,61 @@ function AtividadeProfessorCadastrar(props) {
                     </ErrorMessage>
                 }
 
-                <Label htmlFor='deadline'>Prazo de entrega</Label>
-                <StyledDatePicker
-                    startDate={startDate}
-                    setStartDate={date => setStartDate(date)}
-                    locale='pt-BR'
-                    timeIntervals={15}
+                <Label htmlFor='initialDate'>Data de início</Label>
+
+                <Controller
+                    control={control}
+                    name="initialDate"
+                    render={({ onChange, onBlur, value }) => (
+                        <StyledDatePicker
+                            value={value}
+                            onChange={onChange}
+                            locale='pt-BR'
+                            timeIntervals={15}
+                            name="initialDate"
+                            error={errors.initialDate}
+                            placeholder="Data de início..."
+                            style={{ borderColor: errors.initialDate && light.color.secondary }}
+                        />
+                    )}
+                    rules={{ required: true }}
+
                 />
 
 
 
-                {errors.registration &&
+                {errors.initialDate &&
                     <ErrorMessage left marginTop marginBottom>
-                        A matrícula  é obrigatória
+                        A data de inicío é obrigatória
+                    </ErrorMessage>
+                }
+
+
+                <Label htmlFor='initialDate'>Prazo de entrega</Label>
+                <Controller
+                    control={control}
+                    name="deadline"
+                    render={({ onChange, onBlur, value }) => (
+                        <StyledDatePicker
+                            value={value}
+                            onChange={onChange}
+                            locale='pt-BR'
+                            timeIntervals={15}
+                            name="deadline"
+                            error={errors.deadline}
+                            placeholder="Prazo de entrega..."
+                            style={{ borderColor: errors.deadline && light.color.secondary }}
+                        />
+                    )}
+                    rules={{ required: true }}
+
+                />
+
+
+
+                {errors.deadline &&
+                    <ErrorMessage left marginTop marginBottom>
+                        O prazo de entrega é obrigatório
                     </ErrorMessage>
                 }
 
@@ -161,7 +214,7 @@ function AtividadeProfessorCadastrar(props) {
                 <Button new={true} type='submit' width='100px' disabled={isSubmitting}>
                     Salvar
                 </Button>
-                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${id.current}/atividades`)}>
+                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${idAdvisor.current}/atividades`)}>
                     Cancelar
                 </Button>
             </form>

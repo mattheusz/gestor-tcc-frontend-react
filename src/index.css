@@ -34,12 +34,30 @@ code {
   font-weight: 400;
 }
 
-.customEditComentModal{
+.customEditCommentModal{
 }
-.customEditComentModal h1{
+.customEditCommentModal h1{
   padding-right: 15rem;
   color: #444444;
   font-weight: 400;
+  font-size: 1.5rem;
+  margin-bottom: 7px;
+}
+
+.customEditCommentModal .or {
+  width:100%; 
+  text-align:center; 
+  border-bottom: 1px solid #444444; 
+  line-height:0.1em; 
+  margin:15px 0 10px;
+  z-index: 0;
+}
+
+.customEditCommentModal .or span {
+  background:#d3d3d3; 
+  padding:0 10px;
+  z-index: 5;
+  color: #444444;
 }
 
 /* Modal que exibe mais detalhadas de um professor (estando em aluno)*/
@@ -51,7 +69,7 @@ code {
 
 
 @media only screen and (max-width: 500px){
-  .customEditComentModal h1{
+  .customEditCommentModal h1{
     padding-right: 7rem;
     color: #444444;
     font-weight: 400;

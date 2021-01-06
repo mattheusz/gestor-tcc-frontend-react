@@ -8,7 +8,6 @@ import DashboardUI from '../../components/DashboardUI';
 import SearchBar from '../../components/SearchBar';
 import { Table } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
-import ReactLoading from 'react-loading';
 
 import { ToastContainer, toast } from 'react-toastify';
 import Switch from 'react-input-switch';
@@ -22,19 +21,16 @@ import ProfessorProjectList from '../../components/ProfessorProjectList/Professo
 import ProjectInfo from '../../components/ProjectInfo/ProjectInfo';
 import styled from 'styled-components';
 import { device } from '../../device';
-import format from 'date-fns/format'
 
-function ListarAtividadesProfessor(props) {
+function ListarAtividadesAluno(props) {
 
     const [searchText, setSearchText] = useState('');
+    const [projects, setProjets] = useState([]);
 
-    const [someTaskFound, setSomeTaskFound] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
+    const [noProjectFound, setNoProjectFound] = useState(false);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [mountedPagination, setMountedPagination] = useState(false);
     const [formIsSubmitted, setFormIsSubmitted] = useState(true);
-    const [listTasks, setListTasks] = useState();
-
 
     const selectItems = [
         {
@@ -83,15 +79,10 @@ function ListarAtividadesProfessor(props) {
 
     // carregando informações do projeto aberto
     useEffect(() => {
-        api.get(`/tarefa/projeto_tarefas/${id}/1`)
-            .then(({ data: { docs } }) => {
-                console.log('Tarefas do projeto', docs);
-                const { title, students, description, situation, tasks } = docs;
-                setListTasks(docs);
-                setSomeTaskFound(true);
-                setIsLoading(false);
 
-
+        // pegar projeto por id
+        api.get(``)
+            .then(({ data }) => {
 
             })
             .catch(error => {
@@ -177,13 +168,15 @@ function ListarAtividadesProfessor(props) {
         api.get(path)
             .then(response => {
                 console.log(response.data);
+                setNoProjectFound(false);
+                setProjets(response.data.docs);
 
             })
             .catch(error => {
                 if (error.response) {
                     const msg = error.response.data;
                     console.log(msg);
-
+                    setNoProjectFound(true)
                 }
                 if (error.request) {
                     console.log(error.request);
@@ -196,7 +189,7 @@ function ListarAtividadesProfessor(props) {
     }
 
     const openActivity = (e, idActivity) => {
-        history.push(`/professor/projetos/${id}/atividades/${idActivity}`)
+        history.push(`/aluno-orientando/projeto/${id}/atividades/${idActivity}`)
     }
     return (
         <DashboardUI screenName='Atividades' itemActive="Meus Projetos">
@@ -208,32 +201,32 @@ function ListarAtividadesProfessor(props) {
                     onChangeSelect={onChangeSelect}
                     addUser={addUser}
                     selectItems={selectItems}
+                    showAddButton={true}
                 />
             </form>
             <ActivityList>
-                {
-                    isLoading ? <Spinner type='spin' color={light.color.primaryShadow} height={20} width={20} /> :
-                        someTaskFound ?
-                            listTasks.map(({ _id, title, deadLine, situation }) =>
-                                <ActivityItem key={_id} onClick={(e) => openActivity(e, _id)}>
-                                    <ActivityTitle>{title}</ActivityTitle><br />
-                                    <Deadline>
-                                        Prazo de entrega: {format(new Date(deadLine), 'dd/MM/yyyy')}
-                                        {console.log('deadline', deadLine)}
-                                    </Deadline>
-                                    <ActivitySituation>{situation}</ActivitySituation>
-                                </ActivityItem>
-                            ) :
-                            'Nenhuma tarefa cadastrada'
-                }
-
+                <ActivityItem onClick={(e) => openActivity(e, 1)}>
+                    <ActivityTitle>Introdução</ActivityTitle><br />
+                    <Deadline>
+                        Prazo de entrega: 20/01/2020
+                    </Deadline>
+                    <ActivitySituation>em andamento</ActivitySituation>
+                </ActivityItem>
+                <ActivityItem>
+                    <ActivityTitle>Referencial teórico</ActivityTitle><br />
+                    <Deadline>
+                        Prazo de entrega: 20/01/2020
+                    </Deadline>
+                    <ActivitySituation>em andamento</ActivitySituation>
+                </ActivityItem>
+                <ActivityItem>
+                    <ActivityTitle>Desenvolvimento</ActivityTitle><br />
+                    <Deadline>
+                        Prazo de entrega: 20/01/2020
+                    </Deadline>
+                    <ActivitySituation>em andamento</ActivitySituation>
+                </ActivityItem>
             </ActivityList>
-            <Paginator
-                totalPages={totalPages.current}
-                currentPage={currentPage.current}
-                paginationNumbers={paginationNumbers.current}
-                choosePage={choosePage}
-            />
             <ToastContainer />
         </DashboardUI>
 
@@ -315,8 +308,4 @@ const ActivitySituation = styled.span`
     }
 `;
 
-const Spinner = styled(ReactLoading)`
-    margin: 7rem auto 7rem;
-`
-
-export default ListarAtividadesProfessor;
+export default ListarAtividadesAluno;

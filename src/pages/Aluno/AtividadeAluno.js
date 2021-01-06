@@ -7,33 +7,19 @@ import Button from '../../components/Button';
 import DashboardUI from '../../components/DashboardUI';
 import StyledDropzone from '../../components/StyledDropzone/StyledDropzone';
 import { device } from '../../device';
-import Modal from 'react-modal';
+import Modal from 'react-responsive-modal';
 import { MdModeEdit, MdDelete } from 'react-icons/md';
+import IconTextField, { Input } from '../../components/IconTextField'
+import { AiOutlineLink } from 'react-icons/ai';
 
 function AtividadeAluno(props) {
 
     const [fileUploading, setFileUploading] = useState();
-    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [modalSendActivityIsOpen, setModalSendActivityIsOpen] = useState(false);
     const [modalEditIsOpen, setModalEditIsOpen] = useState(false);
     const [modalDeleteIsOpen, setModalDeleteIsOpen] = useState(false);
     const { register, handleSubmit, errors, formState: { isSubmitting } }
         = useForm({ mode: 'onSubmit' });
-
-    let modalHeight = 0;
-
-    Modal.setAppElement('#root');
-
-    let modalMessage = useRef('')
-
-
-    if (window.innerWidth <= 437) {
-        modalHeight = '150px';
-    } else {
-        modalHeight = '120px';
-    }
-
-    console.debug('LARGURA DA TELA: ', window.innerWidth)
-    console.debug('ALTURA DO MODAL: ', modalHeight)
 
     const onSubmit = async ({ title: comment }) => {
         console.log(comment)
@@ -60,7 +46,7 @@ function AtividadeAluno(props) {
                 </ActivityDescription>
                 <Deadline>Prazo de entrega: 14/02/2021</Deadline>
                 <ActivitySituation>em andamento</ActivitySituation>
-                <Button type='button' width='150px' onClick={() => setModalIsOpen(true)}>
+                <Button type='button' width='150px' onClick={() => setModalSendActivityIsOpen(true)}>
                     Entregar atividade
                 </Button>
 
@@ -145,35 +131,22 @@ function AtividadeAluno(props) {
                     <ActivityCommentText>Este é um comentário referente as boas vindas. Bom trabalho!</ActivityCommentText>
                 </ActivityCommentListItem>
             </ActivityCommentList>
-            <Modal
-                isOpen={modalIsOpen}
-                onRequestClose={() => setModalIsOpen(false)}
-                style={{
-                    content: {
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -70%)',
-                        height: '270px', width: '500px', maxWidth: '90%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-between'
-                    },
-                    overlay: {
-                        zIndex: '15',
 
-                    }
+            {/* entregar atividade */}
+            <Modal
+                open={modalSendActivityIsOpen}
+                onClose={() => setModalSendActivityIsOpen(false)}
+                center
+                classNames={{
+                    overlay: 'customOverlay',
+                    modal: 'customEditCommentModal',
                 }}
             >
-                <ModalTitle>Entregar...</ModalTitle>
+                <h1>Entregar atividade</h1>
                 <ActivityCommentBox >
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        <textarea
-                            name='comment'
-                            ref={register({
-                                required: true,
-                            })}
-                            rows={2}
-                            placeholder='Digite o seu comentário...' />
+
+                        <p>Arquivo:</p>
                         <StyledDropzone
                             accept='.pdf'
                             multiple={false}
@@ -181,37 +154,37 @@ function AtividadeAluno(props) {
                             text="Arraste ou clique para adicionar o arquivo desejado."
                             setFileUploading={setFileUploading}
                         />
+
+                        <p className='or'><span>ou</span></p>
+
+                        <p>Link:</p>
+                        <IconTextField>
+                            <AiOutlineLink />
+                            <Input></Input>
+                        </IconTextField>
                     </form>
 
                 </ActivityCommentBox>
-                <div style={{ display: 'grid', marginTop: '-1.2rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
-                    <Button onClick={() => setModalIsOpen(false)}>Entregar</Button>
-                    <Button onClick={() => setModalIsOpen(false)}>Cancelar</Button>
+                <div style={{ display: 'grid', marginTop: '.5rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
+                    <Button onClick={() => setModalSendActivityIsOpen(false)}>Entregar</Button>
+                    <Button onClick={() => setModalSendActivityIsOpen(false)}>Cancelar</Button>
                 </div>
             </Modal>
+
+
 
             {/* editar comentário */}
 
             <Modal
-                isOpen={modalEditIsOpen}
-                onRequestClose={() => setModalEditIsOpen(false)}
-                style={{
-                    content: {
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -70%)',
-                        height: '208px', width: '500px', maxWidth: '90%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-between'
-                    },
-                    overlay: {
-                        zIndex: '15',
-
-                    }
+                open={modalEditIsOpen}
+                onClose={() => setModalEditIsOpen(false)}
+                center
+                classNames={{
+                    overlay: 'customOverlay',
+                    modal: 'customEditCommentModal',
                 }}
             >
-                <ModalTitle>Editar comentário</ModalTitle>
+                <h1>Editar comentário</h1>
                 <ActivityCommentBox style={{ marginTop: '0' }}>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <textarea
@@ -219,42 +192,33 @@ function AtividadeAluno(props) {
                             ref={register({
                                 required: true,
                             })}
-                            rows={2}
+                            rows={4}
                             placeholder='Digite o seu comentário...' />
                     </form>
 
                 </ActivityCommentBox>
-                <div style={{ display: 'grid', marginTop: '-1.8rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
+                <div style={{ display: 'grid', marginTop: '.5rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
                     <Button onClick={() => setModalEditIsOpen(false)}>Editar</Button>
                     <Button onClick={() => setModalEditIsOpen(false)}>Cancelar</Button>
                 </div>
             </Modal>
 
-            {/* editar comentário */}
 
+            {/* remover comentario*/}
 
             <Modal
-                isOpen={modalDeleteIsOpen}
-                onRequestClose={() => setModalDeleteIsOpen(false)}
-                style={{
-                    content: {
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -70%)',
-                        height: modalHeight, width: '500px', maxWidth: '90%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-between'
-                    },
-                    overlay: {
-                        zIndex: '15',
-
-                    }
+                open={modalDeleteIsOpen}
+                onClose={() => setModalDeleteIsOpen(false)}
+                center
+                classNames={{
+                    overlay: 'customOverlay',
+                    modal: 'customEditCommentModal',
                 }}
             >
-                <ModalTitle>Deseja remover este comentário?</ModalTitle>
+                <h1>Deseja remover este comentário?</h1>
+                <p>Esta ação é irreversível</p>
 
-                <div style={{ display: 'grid', marginTop: '-1.8rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
+                <div style={{ display: 'grid', marginTop: '.5rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
                     <Button onClick={() => setModalDeleteIsOpen(false)}>Sim</Button>
                     <Button onClick={() => setModalDeleteIsOpen(false)}>Cancelar</Button>
                 </div>
@@ -319,8 +283,8 @@ const ActivitySituation = styled.span`
 `;
 
 const ActivityCommentBox = styled.div`
-    border: 1px solid ${props => props.theme.color.grey}55;
-    background: ${props => props.theme.color.grey}55;
+    border: 1px solid ${props => props.theme.color.lightGrey};
+    background-color: ${props => props.theme.color.lightGrey};
     border-radius: 5px;
     margin-top: 1.2rem;
     padding: 1.2rem;
@@ -339,6 +303,10 @@ const ActivityCommentBox = styled.div`
         &:focus{
             border: 1px solid ${props => props.theme.color.primary};
         }
+    }
+
+    p {
+        margin-bottom: .2rem;
     }
 `;
 

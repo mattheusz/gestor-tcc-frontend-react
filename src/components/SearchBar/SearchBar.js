@@ -18,6 +18,7 @@ function SearchBar({ searchText, setSearchText, selectedValue, onChangeSelect, a
                 </BoxSearchButton>
                 {noShowSelect ||
                     <Select value={selectedValue} onChange={e => onChangeSelect(e)}>
+                        {console.log('VALOR SELECIONADO:', selectedValue)}
                         {selectItems.map(({ value, displayValue }) =>
                             <option key={value} value={value} > {displayValue} </option>
                         )}

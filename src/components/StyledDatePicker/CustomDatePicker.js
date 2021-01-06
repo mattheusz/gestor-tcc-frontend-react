@@ -6,19 +6,26 @@ import "react-datepicker/dist/react-datepicker.css";
 import ptBR from "date-fns/locale/pt-BR"; // the locale you want
 import IconTextField from '../IconTextField';
 import { FiCalendar } from 'react-icons/fi';
+import light from '../../themes/light';
 
 registerLocale("pt-BR", ptBR); // register it with the name you want
 
 
-function CustomDatePicker({ startDate, locale, setStartDate }) {
+function CustomDatePicker({ value, locale, onChange, style, error, placeholder }) {
+
+    const borderColor = error && light.color.secondary;
     return (
-        <IconTextField>
+        <IconTextField >
             <FiCalendar />
             <StyledDatePicker
-                selected={startDate}
-                onChange={setStartDate}
+                selected={value}
+                onChange={onChange}
+                minDate={new Date()}
                 locale={locale}
                 dateFormat="dd/MM/yyyy"
+                borderColor={borderColor}
+                placeholderText={placeholder}
+
             />
         </IconTextField>
     );
@@ -37,6 +44,8 @@ const StyledDatePicker = styled(DatePicker)`
     height: 2.5rem;
     font-size: 1rem;
     width: 100%;
+    border-color: ${props => props.borderColor};
+
 
     &:focus {
         outline: 0;

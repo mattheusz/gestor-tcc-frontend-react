@@ -35,6 +35,9 @@ import OrientacaoProfessorEditar from '../pages/Professor/OrientacaoProfessorEdi
 import DocumentosAlunoProfessor from '../pages/AlunoProfessor/DocumetosAlunoProfessor';
 import ListarProfessoresAluno from '../pages/Aluno/ListarProfessoresAluno';
 import ProjetoAluno from '../pages/Aluno/ProjetoAluno';
+import ListarAtividadesAluno from '../pages/Aluno/ListarAtividadesAluno';
+import AtividadeAluno from '../pages/Aluno/AtividadeAluno';
+import ListarOrientacoesAluno from '../pages/Aluno/ListarOrientacoesAluno';
 
 
 
@@ -65,7 +68,7 @@ function CustomRoute({ isPrivate, roles, ...rest }) {
             rootRoute = 'aluno-pre';
             break;
         case 'aluno-orientando':
-            rootRoute = 'aluno';
+            rootRoute = 'aluno-orientando';
             break;
         case 'administrativo':
             rootRoute = 'alunos';
@@ -156,6 +159,11 @@ export default function Routes() {
 
                         {/* Aluno orientando */}
                         <CustomRoute exact isPrivate path='/aluno-orientando' roles={['aluno-orientando']} component={ProjetoAluno} />
+                        <CustomRoute exact isPrivate path='/aluno-orientando/projeto/:id/' roles={['aluno-orientando']} component={ProjetoAluno} />
+                        <CustomRoute exact isPrivate path='/aluno-orientando/projeto/:id/atividades' roles={['aluno-orientando']} component={ListarAtividadesAluno} />
+                        <CustomRoute exact isPrivate path='/aluno-orientando/projeto/:id/atividades/:activity' roles={['aluno-orientando']} component={AtividadeAluno} />
+                        <CustomRoute exact isPrivate path='/aluno-orientando/projeto/:id/orientacoes' roles={['aluno-orientando']} component={ListarOrientacoesAluno} />
+                        <CustomRoute exact isPrivate path='/aluno-orientando/projeto/:id/orientacoes/:orientation' roles={['aluno-orientando']} component={AtividadeAluno} />
 
                         <CustomRoute exact isPrivate path='/documentos/visualizar' roles={['professor', 'aluno-pre', 'aluno-orientando']} component={DocumentosAlunoProfessor} />
 

@@ -215,7 +215,7 @@ function ProjetoCadastrar(props) {
 
                 {watchAddStudentTwo &&
                     <>
-                        <Label htmlFor='studentOne'>Aluno 2</Label>
+                        <Label htmlFor='studentTwo'>Aluno 2</Label>
                         <Select
                             formSelect={true}
                             value={selectedStudentTwo}

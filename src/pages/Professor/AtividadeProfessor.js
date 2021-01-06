@@ -179,7 +179,7 @@ function AtividadeProfessor(props) {
                 center
                 classNames={{
                     overlay: 'customOverlay',
-                    modal: 'customEditComentModal',
+                    modal: 'customEditCommentModal',
                 }}
             >
                 <h1>Editar comentário</h1>
