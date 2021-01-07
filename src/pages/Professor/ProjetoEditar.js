@@ -98,7 +98,7 @@ function ProjetoEditar(props) {
         }
 
 
-        api.put('/projeto/atualizar_projeto', {
+        api.patch(`/projeto/atualizar_projeto/${id}`, {
             title,
             description,
             studentOne: selectedStudentOne,
@@ -121,7 +121,7 @@ function ProjetoEditar(props) {
             .catch(error => {
                 if (error.response) {
                     const msg = error.response.data;
-                    console.log(msg);
+                    console.log('erro', msg);
                     setErrorMessage('Erro ao inserir usuário. Tente novamente.')
                 }
                 if (error.request) {
@@ -213,7 +213,6 @@ function ProjetoEditar(props) {
                         <Label htmlFor='studentOne'>Aluno 1</Label>
                         <Select
                             formSelect={true}
-                            value={selectedStudentOne}
                             defaultValue={project && project.students[0]}
                             ref={register}
                             onChange={e => onChangeSelectStudentOne(e)}
@@ -253,6 +252,13 @@ function ProjetoEditar(props) {
                             name='studentTwo'
                             id='studentTwo'
                         >
+                            <option
+                                key={project && project.students[0]}
+                                value={project && project.students[0]}
+                                style={{ width: '100%' }}
+                            >
+                                {project && project.students[0].name}
+                            </option>
                             {
                                 studentsWithoutProject ?
                                     studentsWithoutProject.map(({ _id, name }) => {
