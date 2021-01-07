@@ -22,8 +22,9 @@ function ProjetoCadastrar(props) {
     const [checked, setChecked] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
     const [studentsWithoutProject, setStudentsWithoutProject] = useState();
-    const [selectedStudentOne, setSelectedStudentOne] = useState('Aluno 1');
-    const [selectedStudentTwo, setSelectedStudentTwo] = useState('');
+    const [selectedStudentOne, setSelectedStudentOne] = useState();
+    const [selectedStudentTwo, setSelectedStudentTwo] = useState();
+    const [selectedStudentHasBeenModified, setSelectedStudentHasBeenModified] = useState(false);
 
     const { register, handleSubmit, errors, formState: { isSubmitting }, watch } = useForm({ mode: 'onSubmit' });
     const watchAddStudentTwo = watch('addStudendTwo');
@@ -72,7 +73,7 @@ function ProjetoCadastrar(props) {
         }
 
         if (selectedStudentOne === selectedStudentTwo) {
-            setErrorMessage('Selecione alunos diferentes.');
+            return setErrorMessage('Selecione alunos diferentes.');
         }
 
 
@@ -119,11 +120,15 @@ function ProjetoCadastrar(props) {
     }
 
     const onChangeSelectStudentOne = e => {
-        setSelectedStudentOne(e.target.value)
+        console.log('e.target.value (2)', e.target.value)
+        setSelectedStudentOne(e.target.value);
+        setSelectedStudentHasBeenModified(!selectedStudentHasBeenModified);
     }
 
     const onChangeSelectStudentTwo = e => {
-        setSelectedStudentTwo(e.target.value)
+        console.log('e.target.value (2)', e.target.value)
+        setSelectedStudentTwo(e.target.value);
+        setSelectedStudentHasBeenModified(!selectedStudentHasBeenModified);
     }
 
     return (
@@ -141,7 +146,7 @@ function ProjetoCadastrar(props) {
                         })}
                         placeholder='Título'
                         autoFocus
-                        style={{ borderColor: errors.fullName && light.color.secondary }}
+                        style={{ borderColor: errors.title && light.color.secondary }}
                     />
                 </IconTextField>
                 {errors.title &&
@@ -181,7 +186,9 @@ function ProjetoCadastrar(props) {
                     {
                         studentsWithoutProject ?
                             studentsWithoutProject.map(({ _id, name }) => {
-                                console.log('student 1 id', _id);
+                                //console.log('student 1 id', _id);
+                                //if (_id === selectedStudentTwo._id) return;
+                                if (_id === selectedStudentTwo) return;
                                 return (<option
                                     key={_id}
                                     value={_id}
@@ -227,9 +234,10 @@ function ProjetoCadastrar(props) {
                             {
                                 studentsWithoutProject ?
                                     studentsWithoutProject.map(({ _id, name }) => {
-                                        console.log('student 1', selectedStudentOne);
-                                        console.log('student 1', name);
-                                        if (name === selectedStudentOne) return;
+                                        console.log('aluno selecionado no select 1', selectedStudentOne);
+                                        console.log('name do aluno do select 2 a ser renderizado ', name);
+                                        if (_id === selectedStudentOne._id) return;
+                                        if (_id === selectedStudentOne) return;
                                         return (<option
                                             key={_id}
                                             value={_id}

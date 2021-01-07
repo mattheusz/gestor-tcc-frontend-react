@@ -82,7 +82,7 @@ function Projetos(props) {
         setMountedPagination(false);
 
         // pegando todos os projetos de um professor
-        api.get(`projeto/professor_projetos/${id.current}/1`)
+        api.get(`projeto/listar_todos/1`)
             .then(({ data }) => {
                 currentPage.current = data.page;
                 totalPages.current = data.totalPages;

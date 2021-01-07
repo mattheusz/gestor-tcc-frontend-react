@@ -24,15 +24,36 @@ function ProjetoEditar(props) {
     const [studentsWithoutProject, setStudentsWithoutProject] = useState();
     const [selectedStudentOne, setSelectedStudentOne] = useState('Aluno 1');
     const [selectedStudentTwo, setSelectedStudentTwo] = useState('');
+    const [project, setProject] = useState();
 
     const { register, handleSubmit, errors, formState: { isSubmitting }, watch } = useForm({ mode: 'onSubmit' });
-    const watchAddStudentTwo = watch('addStudendTwo');
+    const watchChangeStudents = watch('changeStudents');
 
     let idAdvisor = useRef();
     idAdvisor.current = localStorage.getItem('reg')
 
     const history = useHistory()
     const { id } = useParams();
+
+    useEffect(() => {
+        api.get(`/projeto/${id}`)
+            .then(response => {
+                console.log(response)
+                setProject(response.data.docs[0])
+            })
+            .catch(error => {
+                if (error.response) {
+                    console.log(error.response);
+                    setSelectedStudentOne('-')
+                }
+                if (error.request) {
+                    console.log(error.request);
+                }
+                else {
+                    console.log('Error', error.message);
+                }
+            });
+    }, [])
 
     useEffect(() => {
         api.get(`usuarios/listar_usuarios/aluno_sem_projeto/1`)
@@ -77,7 +98,7 @@ function ProjetoEditar(props) {
         }
 
 
-        api.post('/projeto/cadastrar_projeto', {
+        api.put('/projeto/atualizar_projeto', {
             title,
             description,
             studentOne: selectedStudentOne,
@@ -137,6 +158,7 @@ function ProjetoEditar(props) {
                     <Input
                         id='title'
                         name='title'
+                        defaultValue={project && project.title}
                         ref={register({
                             required: true
                         })}
@@ -158,6 +180,7 @@ function ProjetoEditar(props) {
                         id='description'
                         name='description'
                         type='text'
+                        defaultValue={project && project.description}
                         ref={register({
                             required: true
                         })}
@@ -170,52 +193,57 @@ function ProjetoEditar(props) {
                         Uma descrição é obrigatória
                     </ErrorMessage>
                 }
-                <Label htmlFor='studentOne'>Aluno 1</Label>
-                <Select
-                    formSelect={true}
-                    value={selectedStudentOne}
-                    ref={register}
-                    onChange={e => onChangeSelectStudentOne(e)}
-                    name='studentOne'
-                    id='studentOne'
-                >
-                    {
-                        studentsWithoutProject ?
-                            studentsWithoutProject.map(({ _id, name }) => {
-                                console.log('student 1 id', _id);
-                                return (<option
-                                    key={_id}
-                                    value={_id}
-                                    style={{ width: '100%' }}
-                                >
-                                    {name}
-                                </option>);
-                            }) :
-                            <option
-                                key={1}
-                                value={1}
-                                style={{ width: '100%' }}
-                            >
-                                Nenhum aluno disponível
-                            </option>
-
-                    }
-                </Select>
-
 
                 <Label style={{ fontSize: '1.1rem' }}>
                     <Checkbox
-                        name='addStudendTwo'
+                        name='changeStudents'
                         checked={checked}
                         onChange={e => handleCheckboxChange(e)}
                         register={register}
                     />
-                    <span style={{ marginLeft: 8, cursor: 'pointer' }}>Adicionar segundo aluno</span>
+                    <span style={{ marginLeft: 8, cursor: 'pointer' }}>Alterar aluno(s)</span>
                 </Label>
+
                 <br />
 
-                {watchAddStudentTwo &&
+
+
+                {watchChangeStudents &&
                     <>
+                        <Label htmlFor='studentOne'>Aluno 1</Label>
+                        <Select
+                            formSelect={true}
+                            value={selectedStudentOne}
+                            defaultValue={project && project.students[0]}
+                            ref={register}
+                            onChange={e => onChangeSelectStudentOne(e)}
+                            name='studentOne'
+                            id='studentOne'
+                        >
+                            {
+                                studentsWithoutProject ?
+
+                                    studentsWithoutProject.map(({ _id, name }) => {
+                                        console.log('student 1 id', _id);
+                                        return (<option
+                                            key={_id}
+                                            value={_id}
+                                            style={{ width: '100%' }}
+                                        >
+                                            {name}
+                                        </option>);
+                                    }) :
+                                    <option
+                                        key={1}
+                                        value={1}
+                                        style={{ width: '100%' }}
+                                    >
+                                        Nenhum aluno disponível
+                            </option>
+
+                            }
+                        </Select>
+
                         <Label htmlFor='studentOne'>Aluno 2</Label>
                         <Select
                             formSelect={true}

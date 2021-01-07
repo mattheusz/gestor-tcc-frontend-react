@@ -6,17 +6,10 @@ import format from 'date-fns/format'
 
 function ProjectInfo({ projectId, isStudent, projectInfos, lastTask }) {
 
-    const [read, setRead] = useState(false);
-    const deadlineRef = useRef();
-
-
-    lastTask && setRead(true)
-
-
-    const redirectToActivity = isStudent ? `/aluno-orientando/projeto/${projectId}/atividades` : `/professor/projetos/${projectId}/atividades`
+    const redirectToTask = isStudent ? `/aluno-orientando/projeto/${projectId}/atividades` : `/professor/projetos/${projectId}/atividades`
     const redirectToOrientation = isStudent ? `/aluno-orientando/projeto/${projectId}/orientacoes` : `/professor/projetos/${projectId}/orientacoes`
     const { students, description, situation, tasks } = projectInfos;
-    console.log(lastTask, 'LAST TASK')
+
     //setDeadlineLastTask(lastTask.deadline)
     //console.log(format(new Date(lastTask.deadLine), 'dd/MM/yyyy'), 'today')
 
@@ -37,22 +30,22 @@ function ProjectInfo({ projectId, isStudent, projectInfos, lastTask }) {
                 <Situation>{situation && situation}</Situation>
             </HeaderContainer>
             <CardContainer isStudent={isStudent}>
-                <ActivityCard >
+                <TaskCard >
                     <CardHeader>
-                        Atividades
+                        Tarefas
                     </CardHeader>
 
                     <CardBody>
-                        <ActivityTitle>{lastTask.title}</ActivityTitle>
-                        <Deadline>Data de entrega: {read && format(new Date(lastTask.deadLine), 'dd/MM/yyyy')}</Deadline>
+                        <TaskTitle>{lastTask.title}</TaskTitle>
+                        <TaskDeadline>Data de entrega: {Object.keys(lastTask).length && format(new Date(lastTask.deadLine), 'dd/MM/yyyy')}</TaskDeadline>
                         {console.debug('...........................')}
-                        <ActivitySituation>{lastTask.situation}</ActivitySituation>
+                        <TaskSituation>{lastTask.situation}</TaskSituation>
                     </CardBody>
 
-                    <CardFooter to={redirectToActivity}>
+                    <CardFooter to={redirectToTask}>
                         Ver mais
                     </CardFooter>
-                </ActivityCard>
+                </TaskCard>
 
 
                 <OrientationCard>
@@ -143,7 +136,7 @@ const CardContainer = styled.div`
     }
 `
 
-const ActivityCard = styled.div`
+const TaskCard = styled.div`
     display: flex;
     flex-direction: column;
     border: 1px solid ${props => props.theme.color.grey}55;
@@ -156,11 +149,11 @@ const ActivityCard = styled.div`
     }
 `
 
-const ActivityTitle = styled.span`
+const TaskTitle = styled.span`
     font-size: 1.2rem;
     font-weight: 400;
 `
-const ActivitySituation = styled.span`
+const TaskSituation = styled.span`
     display: inline-block;
     border-radius: 5px;
     align-self: flex-start;
@@ -187,7 +180,7 @@ const ActivitySituation = styled.span`
     }
 `;
 
-const Deadline = styled.span`
+const TaskDeadline = styled.span`
     font-size: 1rem;
     font-weight: 400;
     margin-top: 12px;

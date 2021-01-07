@@ -24,7 +24,7 @@ import styled from 'styled-components';
 import { device } from '../../device';
 import format from 'date-fns/format'
 
-function ListarAtividadesProfessor(props) {
+function ListarTarefasProfessor(props) {
 
     const [searchText, setSearchText] = useState('');
 
@@ -90,8 +90,6 @@ function ListarAtividadesProfessor(props) {
                 setListTasks(docs);
                 setSomeTaskFound(true);
                 setIsLoading(false);
-
-
 
             })
             .catch(error => {
@@ -199,7 +197,7 @@ function ListarAtividadesProfessor(props) {
         history.push(`/professor/projetos/${id}/atividades/${idActivity}`)
     }
     return (
-        <DashboardUI screenName='Atividades' itemActive="Meus Projetos">
+        <DashboardUI screenName='Tarefas' itemActive="Meus Projetos">
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}
@@ -210,24 +208,24 @@ function ListarAtividadesProfessor(props) {
                     selectItems={selectItems}
                 />
             </form>
-            <ActivityList>
+            <TaskList>
                 {
                     isLoading ? <Spinner type='spin' color={light.color.primaryShadow} height={20} width={20} /> :
                         someTaskFound ?
                             listTasks.map(({ _id, title, deadLine, situation }) =>
-                                <ActivityItem key={_id} onClick={(e) => openActivity(e, _id)}>
-                                    <ActivityTitle>{title}</ActivityTitle><br />
-                                    <Deadline>
+                                <TaskItem key={_id} onClick={(e) => openActivity(e, _id)}>
+                                    <TaskTitle>{title}</TaskTitle><br />
+                                    <TaskDeadline>
                                         Prazo de entrega: {format(new Date(deadLine), 'dd/MM/yyyy')}
                                         {console.log('deadline', deadLine)}
-                                    </Deadline>
-                                    <ActivitySituation>{situation}</ActivitySituation>
-                                </ActivityItem>
+                                    </TaskDeadline>
+                                    <TaskSituation>{situation}</TaskSituation>
+                                </TaskItem>
                             ) :
                             'Nenhuma tarefa cadastrada'
                 }
 
-            </ActivityList>
+            </TaskList>
             <Paginator
                 totalPages={totalPages.current}
                 currentPage={currentPage.current}
@@ -240,13 +238,13 @@ function ListarAtividadesProfessor(props) {
     );
 }
 
-const ActivityList = styled.div`
+const TaskList = styled.div`
     display: flex;
     flex-direction: column;
     margin-top: 1rem;
 `
 
-const ActivityItem = styled.div`
+const TaskItem = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -273,11 +271,11 @@ const ActivityItem = styled.div`
     }
 `
 
-const ActivityTitle = styled.span`
+const TaskTitle = styled.span`
     font-size: 1.5rem;
     font-weight: 400;
 `
-const Deadline = styled.span`
+const TaskDeadline = styled.span`
     font-size: 1rem;
     font-weight: 400;
     padding: 3px;
@@ -288,7 +286,7 @@ const Deadline = styled.span`
     box-shadow: 3px 3px 3px ${props => props.theme.color.primary}15;
 `
 
-const ActivitySituation = styled.span`
+const TaskSituation = styled.span`
     display: inline-block;
     align-self: flex-start;
     margin-top: 10px;
@@ -319,4 +317,4 @@ const Spinner = styled(ReactLoading)`
     margin: 7rem auto 7rem;
 `
 
-export default ListarAtividadesProfessor;
+export default ListarTarefasProfessor;
