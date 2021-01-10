@@ -19,19 +19,11 @@ function ProjetoProfessor(props) {
     const history = useHistory();
     const { id } = useParams();
 
-    function getProject() {
-        return api.get(`/projeto/${id}`);
-    }
-
-    function getLastTask() {
-        return api.get(`/tarefa/projeto_tarefas/${id}/1`);
-    }
-
     useEffect(() => {
-        Promise.all([getProject(), getLastTask()])
-            .then((results) => {
-                setLastTask(results[1].data.docs[0]);
-                setProjectInfos(results[0].data.docs[0]);
+        api.get(`/projeto/${id}`)
+            .then(({ data }) => {
+                console.log('Projeto:', data.docs[0])
+                setProjectInfos(data.docs[0]);
             })
             .catch(error => {
                 if (error.response) {
@@ -81,7 +73,7 @@ function ProjetoProfessor(props) {
 
     return (
         <DashboardUI screenName={projectInfos.title} itemActive="Meus Projetos" isProfessorProject={true} deleteProject={deleteProject}>
-            <ProjectInfo projectId={id} projectInfos={projectInfos} lastTask={lastTask} />
+            <ProjectInfo projectId={id} projectInfos={projectInfos} />
             <ToastContainer />
         </DashboardUI>
 

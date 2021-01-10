@@ -7,7 +7,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import Button from '../../components/Button'
 import DashboardUI from '../../components/DashboardUI';
-import { FaUserAlt, FaGraduationCap, FaEnvelope, FaLock } from 'react-icons/fa';
 import { MdTitle } from 'react-icons/md';
 import { BiDetail } from 'react-icons/bi';
 
@@ -19,7 +18,8 @@ import Label from '../../components/Label/Label';
 import Select from '../../components/Select';
 
 function ProjetoEditar(props) {
-    const [checked, setChecked] = useState(false);
+    const [checkedChangeStudents, setCheckedChangeStudents] = useState(false);
+    const [checkedAddStudentTwo, setCheckedAddStudentTwo] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
     const [studentsWithoutProject, setStudentsWithoutProject] = useState();
     const [selectedStudentOne, setSelectedStudentOne] = useState('Aluno 1');
@@ -28,6 +28,7 @@ function ProjetoEditar(props) {
 
     const { register, handleSubmit, errors, formState: { isSubmitting }, watch } = useForm({ mode: 'onSubmit' });
     const watchChangeStudents = watch('changeStudents');
+    const watchAddStudentTwo = watch('addStudendTwo');
 
     let idAdvisor = useRef();
     idAdvisor.current = localStorage.getItem('reg')
@@ -76,13 +77,17 @@ function ProjetoEditar(props) {
             });
     }, [])
 
-    const handleCheckboxChange = event => {
-        if (!event.target.checked)
-            setSelectedStudentTwo('')
-        setChecked(event.target.checked)
+    const handleCheckboxChangeStudents = event => {
+        setCheckedChangeStudents(event.target.checked)
     }
 
-    const onSubmit = ({ title, description, studentOne }) => {
+    const handleCheckboxAddStudentTwo = event => {
+        if (!event.target.checked)
+            setSelectedStudentTwo('')
+        setCheckedAddStudentTwo(event.target.checked)
+    }
+
+    const onSubmit = ({ title, description, studentOne, studentTwo }) => {
         console.log('title:', title)
         console.log('description', description)
         console.log('id', studentOne)
@@ -96,13 +101,24 @@ function ProjetoEditar(props) {
         if (selectedStudentOne === selectedStudentTwo) {
             setErrorMessage('Selecione alunos diferentes.');
         }
+        console.log('student 1 submit:', studentOne)
+        if (!studentOne)
+            studentOne = project.students[0]._id;
+        if (!studentTwo)
+            studentTwo = project.students[1] ? project.students[1]._id : '';
 
+
+        if (watchChangeStudents && !watchAddStudentTwo)
+            studentTwo = '';
+
+
+        console.log(project.students[0]._id)
 
         api.patch(`/projeto/atualizar_projeto/${id}`, {
             title,
             description,
-            studentOne: selectedStudentOne,
-            studentTwo: selectedStudentTwo,
+            studentOne: studentOne,
+            studentTwo: studentTwo,
             advisor: idAdvisor.current,
         })
             .then(response => {
@@ -197,8 +213,8 @@ function ProjetoEditar(props) {
                 <Label style={{ fontSize: '1.1rem' }}>
                     <Checkbox
                         name='changeStudents'
-                        checked={checked}
-                        onChange={e => handleCheckboxChange(e)}
+                        checked={checkedChangeStudents}
+                        onChange={e => handleCheckboxChangeStudents(e)}
                         register={register}
                     />
                     <span style={{ marginLeft: 8, cursor: 'pointer' }}>Alterar aluno(s)</span>
@@ -209,16 +225,24 @@ function ProjetoEditar(props) {
 
 
                 {watchChangeStudents &&
+
                     <>
                         <Label htmlFor='studentOne'>Aluno 1</Label>
                         <Select
                             formSelect={true}
-                            defaultValue={project && project.students[0]}
+                            defaultValue={project.students[0] && project.students[0].name}
                             ref={register}
                             onChange={e => onChangeSelectStudentOne(e)}
                             name='studentOne'
                             id='studentOne'
                         >
+                            <option
+                                key={project.students[0] && project.students[0]._id}
+                                value={project.students[0] && project.students[0]._id}
+                                style={{ width: '100%' }}
+                            >
+                                {project.students[0] && project.students[0].name}
+                            </option>
                             {
                                 studentsWithoutProject ?
 
@@ -243,46 +267,62 @@ function ProjetoEditar(props) {
                             }
                         </Select>
 
-                        <Label htmlFor='studentOne'>Aluno 2</Label>
-                        <Select
-                            formSelect={true}
-                            value={selectedStudentTwo}
-                            ref={register}
-                            onChange={e => onChangeSelectStudentTwo(e)}
-                            name='studentTwo'
-                            id='studentTwo'
-                        >
-                            <option
-                                key={project && project.students[0]}
-                                value={project && project.students[0]}
-                                style={{ width: '100%' }}
-                            >
-                                {project && project.students[0].name}
-                            </option>
-                            {
-                                studentsWithoutProject ?
-                                    studentsWithoutProject.map(({ _id, name }) => {
-                                        console.log('student 1', selectedStudentOne);
-                                        console.log('student 1', name);
-                                        if (name === selectedStudentOne) return;
-                                        return (<option
-                                            key={_id}
-                                            value={_id}
-                                            style={{ width: '100%' }}
-                                        >
-                                            {name}
-                                        </option>);
-                                    }) :
+                        <Label style={{ fontSize: '1.1rem' }}>
+                            <Checkbox
+                                name='addStudendTwo'
+                                checked={checkedAddStudentTwo}
+                                onChange={e => handleCheckboxAddStudentTwo(e)}
+                                register={register}
+                            />
+                            <span style={{ marginLeft: 8, cursor: 'pointer' }}>Adicionar segundo aluno</span>
+                        </Label>
+                        <br />
+
+                        {watchAddStudentTwo &&
+                            <>
+
+                                <Label htmlFor='studentTwo'>Aluno 2</Label>
+                                <Select
+                                    formSelect={true}
+                                    value={selectedStudentTwo}
+                                    ref={register}
+                                    onChange={e => onChangeSelectStudentTwo(e)}
+                                    name='studentTwo'
+                                    id='studentTwo'
+                                >
                                     <option
-                                        key={1}
-                                        value={1}
+                                        key={project.students[1] && project.students[1]._id}
+                                        value={project.students[1] && project.students[1]._id}
                                         style={{ width: '100%' }}
                                     >
-                                        Nenhum aluno disponível
+                                        {project.students[1] && project.students[1].name}
+                                    </option>
+                                    {
+                                        studentsWithoutProject ?
+                                            studentsWithoutProject.map(({ _id, name }) => {
+                                                console.log('student 1', selectedStudentOne);
+                                                console.log('student 1', name);
+                                                if (name === selectedStudentOne) return;
+                                                return (<option
+                                                    key={_id}
+                                                    value={_id}
+                                                    style={{ width: '100%' }}
+                                                >
+                                                    {name}
+                                                </option>);
+                                            }) :
+                                            <option
+                                                key={1}
+                                                value={1}
+                                                style={{ width: '100%' }}
+                                            >
+                                                Nenhum aluno disponível
                             </option>
 
-                            }
-                        </Select>
+                                    }
+                                </Select>
+                            </>
+                        }
                     </>
                 }
 

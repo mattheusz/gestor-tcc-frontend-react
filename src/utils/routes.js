@@ -25,7 +25,7 @@ import ProjetoCadastrar from '../pages/Professor/ProjetoCadastrar';
 import ProjetoProfessor from '../pages/Professor/ProjetoTCC';
 import ListarTarefasProfessor from '../pages/Professor/ListarTarefasProfessor';
 import AtividadeProfessor from '../pages/Professor/AtividadeProfessor';
-import AtividadeProfessorCadastrar from '../pages/Professor/AtividadeProfessorCadastrar';
+import TarefaProfessorCadastrar from '../pages/Professor/TarefaProfessorCadastrar';
 import AtividadeProfessorEditar from '../pages/Professor/AtividadeProfessorEditar';
 import ProjetoEditar from '../pages/Professor/ProjetoEditar';
 import ListarOrientacoesProfessor from '../pages/Professor/ListarOrientacoesProfessor';
@@ -145,7 +145,7 @@ export default function Routes() {
                         <CustomRoute exact isPrivate path='/professor/projetos/editar/:id' roles={['professor']} component={ProjetoEditar} />
                         <CustomRoute exact isPrivate path='/professor/projetos/:id' roles={['professor']} component={ProjetoProfessor} />
                         <CustomRoute exact isPrivate path='/professor/projetos/:id/atividades' roles={['professor']} component={ListarTarefasProfessor} />
-                        <CustomRoute exact isPrivate path='/professor/projetos/:id/atividades/novo' roles={['professor']} component={AtividadeProfessorCadastrar} />
+                        <CustomRoute exact isPrivate path='/professor/projetos/:id/atividades/novo' roles={['professor']} component={TarefaProfessorCadastrar} />
                         <CustomRoute exact isPrivate path='/professor/projetos/:id/atividades/editar/:activity' roles={['professor']} component={AtividadeProfessorEditar} />
                         <CustomRoute exact isPrivate path='/professor/projetos/:id/atividades/:activity' roles={['professor']} component={AtividadeProfessor} />
                         <CustomRoute exact isPrivate path='/professor/projetos/:id/orientacoes' roles={['professor']} component={ListarOrientacoesProfessor} />

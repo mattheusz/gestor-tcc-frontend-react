@@ -4,11 +4,13 @@ import styled from 'styled-components';
 import { device } from '../../device';
 import format from 'date-fns/format'
 
-function ProjectInfo({ projectId, isStudent, projectInfos, lastTask }) {
+function ProjectInfo({ projectId, isStudent, projectInfos }) {
 
     const redirectToTask = isStudent ? `/aluno-orientando/projeto/${projectId}/atividades` : `/professor/projetos/${projectId}/atividades`
     const redirectToOrientation = isStudent ? `/aluno-orientando/projeto/${projectId}/orientacoes` : `/professor/projetos/${projectId}/orientacoes`
-    const { students, description, situation, tasks } = projectInfos;
+    const { students, description, situation, tasks, orientation } = projectInfos;
+    console.debug('STUDENTS', students);
+    console.debug('TASKS', tasks);
 
     //setDeadlineLastTask(lastTask.deadline)
     //console.log(format(new Date(lastTask.deadLine), 'dd/MM/yyyy'), 'today')
@@ -36,10 +38,14 @@ function ProjectInfo({ projectId, isStudent, projectInfos, lastTask }) {
                     </CardHeader>
 
                     <CardBody>
-                        <TaskTitle>{lastTask.title}</TaskTitle>
-                        <TaskDeadline>Data de entrega: {Object.keys(lastTask).length && format(new Date(lastTask.deadLine), 'dd/MM/yyyy')}</TaskDeadline>
-                        {console.debug('...........................')}
-                        <TaskSituation>{lastTask.situation}</TaskSituation>
+                        {tasks && tasks.length > 0 ?
+                            <>
+                                <CardBodyTitle>{tasks && tasks.length > 0 && tasks[0].title}</CardBodyTitle>
+                                <CardBodyDate>Data de entrega: {tasks && tasks.length > 0 && format(new Date(tasks[0].deadLine), 'dd/MM/yyyy')}</CardBodyDate>
+                                <CardBodySituation>{tasks && tasks.length > 0 && tasks[0].situation}</CardBodySituation>
+                            </> : tasks &&
+                            <NoTaskInTaskCard>Nenhuma tarefa registrada. Clique em "Ver Mais" para registrar.</NoTaskInTaskCard>
+                        }
                     </CardBody>
 
                     <CardFooter to={redirectToTask}>
@@ -54,7 +60,14 @@ function ProjectInfo({ projectId, isStudent, projectInfos, lastTask }) {
                     </CardHeader>
 
                     <CardBody>
-                        Revisão textual
+                        {orientation && orientation.length > 0 ?
+                            <>
+                                <CardBodyTitle>{orientation && orientation.length > 0 && orientation[0].title}</CardBodyTitle>
+                                <CardBodyDate>Data de entrega: {orientation && orientation.length > 0 && format(new Date(orientation[0].deadLine), 'dd/MM/yyyy')}</CardBodyDate>
+
+                            </> : tasks &&
+                            <NoTaskInTaskCard>Nenhuma orientação registrada. Clique em "Ver Mais" para registrar.</NoTaskInTaskCard>
+                        }
                     </CardBody>
 
                     <CardFooter to={redirectToOrientation} >
@@ -148,12 +161,20 @@ const TaskCard = styled.div`
         box-shadow: 3px 3px 3px ${props => props.theme.color.grey}55;
     }
 `
+const NoTaskInTaskCard = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-align: center;
 
-const TaskTitle = styled.span`
+`
+
+const CardBodyTitle = styled.span`
     font-size: 1.2rem;
     font-weight: 400;
 `
-const TaskSituation = styled.span`
+const CardBodySituation = styled.span`
     display: inline-block;
     border-radius: 5px;
     align-self: flex-start;
@@ -180,7 +201,7 @@ const TaskSituation = styled.span`
     }
 `;
 
-const TaskDeadline = styled.span`
+const CardBodyDate = styled.span`
     font-size: 1rem;
     font-weight: 400;
     margin-top: 12px;

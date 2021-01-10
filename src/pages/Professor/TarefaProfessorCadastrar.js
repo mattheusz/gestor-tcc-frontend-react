@@ -21,7 +21,7 @@ import ReactDatePicker from 'react-datepicker';
 import format from 'date-fns/format'
 
 
-function AtividadeProfessorCadastrar(props) {
+function TarefaProfessorCadastrar(props) {
     const [errorMessage, setErrorMessage] = useState();
     const [currentDate, setCurrentDate] = useState(new Date());
     console.debug('Data selecionada', currentDate);
@@ -35,26 +35,6 @@ function AtividadeProfessorCadastrar(props) {
 
     const history = useHistory()
     const { id } = useParams();
-
-    useEffect(() => {
-        api.get(`usuarios/listar_usuarios/aluno_sem_projeto/1`)
-            .then(response => {
-                console.log(response)
-
-            })
-            .catch(error => {
-                if (error.response) {
-                    console.log(error.response);
-                }
-                if (error.request) {
-                    console.log(error.request);
-                }
-                else {
-                    console.log('Error', error.message);
-                }
-            });
-    }, [])
-
 
     const onSubmit = ({ title, description, initialDate, deadline }) => {
         initialDate = format(initialDate, 'dd/MM/yyyy')
@@ -105,7 +85,7 @@ function AtividadeProfessorCadastrar(props) {
     }
 
     return (
-        <DashboardUI screenName='Cadastrar Atividade' itemActive="Meus Projetos">
+        <DashboardUI screenName='Cadastrar Tarefa' itemActive="Meus Projetos">
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='title'>Título</Label>
@@ -224,4 +204,4 @@ function AtividadeProfessorCadastrar(props) {
     );
 }
 
-export default AtividadeProfessorCadastrar;
+export default TarefaProfessorCadastrar;
