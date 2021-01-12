@@ -6,13 +6,10 @@ import api from '../../api/api'
 
 import DashboardUI from '../../components/DashboardUI';
 import SearchBar from '../../components/SearchBar';
-import { Table } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 import { ToastContainer, toast } from 'react-toastify';
-import Switch from 'react-input-switch';
 import Modal from 'react-modal';
-import { AiOutlineEdit } from 'react-icons/ai';
 import usePaginatorNumbers from '../../hooks/usePaginator';
 import ActionModal from '../../components/ActionModal';
 import Paginator from '../../components/Paginator/Paginator';
@@ -66,6 +63,8 @@ function Projetos(props) {
     let totalPages = useRef();
     let currentPage = useRef();
     let paginationNumbers = useRef([]);
+
+    // montando paginator
     const { getReadyPaginator, getTotalPages, populatePaginator } = usePaginatorNumbers();
 
     let id = useRef();
@@ -82,7 +81,7 @@ function Projetos(props) {
         setMountedPagination(false);
 
         // pegando todos os projetos de um professor
-        api.get(`projeto/listar_todos/1`)
+        api.get(`/projeto/professor_projetos/${id.current}/1`)
             .then(({ data }) => {
                 currentPage.current = data.page;
                 totalPages.current = data.totalPages;
@@ -115,15 +114,15 @@ function Projetos(props) {
             let path;
 
             if (searchText === '') {
-                path = `projeto/listar_todos/${selectedValue}/1`;
+                path = `projeto/professor_projetos/${id}/${selectedValue}/1`;
                 if (selectedValue === 'todos')
-                    path = 'projeto/listar_todos/1'
+                    path = 'projeto/professor_projetos/1'
 
             }
             else {
-                path = `projeto/listar_todos/${selectedValue}/${searchText}/1`;
+                path = `projeto/professor_projetos/${id}/${selectedValue}/${searchText}/1`;
                 if (selectedValue === 'todos')
-                    path = `projeto/listar_todos/titulo/${searchText}/1`
+                    path = `projeto/professor_projetos/${id}/titulo/${searchText}/1`
             }
             api.get(path)
                 .then(({ data }) => {
@@ -228,14 +227,14 @@ function Projetos(props) {
         let path;
         // tratando buscar por texto + status
         if (searchText === '') {
-            path = `projeto/listar_todos/${selectedValue}/${page}`
+            path = `projeto/professor_projetos/${id.current}/${selectedValue}/${page}`
             if (selectedValue === 'todos')
-                path = `projeto/listar_todos/${page}`
+                path = `projeto/professor_projetos/${id}/${page}`
         }
         else {
-            path = `projeto/listar_todos/${selectedValue}/${searchText}/${page}`
+            path = `projeto/professor_projetos/${id.current}/${selectedValue}/${searchText}/${page}`
             if (selectedValue === 'todos')
-                path = `projeto/listar_todos/titulo/${searchText}/${page}`
+                path = `projeto/professor_projetos/${id.current}/titulo/${searchText}/${page}`
         }
         currentPage.current = page;
 

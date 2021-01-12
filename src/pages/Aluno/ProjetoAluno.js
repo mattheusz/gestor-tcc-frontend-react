@@ -1,40 +1,32 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom'
 import api from '../../api/api'
 import DashboardUI from '../../components/DashboardUI';
-
 import { ToastContainer, toast } from 'react-toastify';
-import Modal from 'react-modal';
 import ProjectInfo from '../../components/ProjectInfo/ProjectInfo';
 
 function ProjetoAluno(props) {
-    const [projectName, setProjectName] = useState([]);
+    const [projectInfo, setProjectInfo] = useState({});
 
-    const isInitialMount = useRef(true);
+    let studentId = useRef();
+    studentId.current = localStorage.getItem('reg')
+    console.log('id', studentId.current)
 
-    let professorId = useRef();
-    professorId.current = localStorage.getItem('reg')
-    console.log('id', professorId.current)
-
-    Modal.setAppElement('#root');
-
-    const history = useHistory();
-    const { id } = useParams();
-
-    // carregando informações do projeto aberto
     useEffect(() => {
-
-        // pegar projeto por id
-        api.get(``)
+        api.get(`/projeto/aluno_projetos/${studentId.current}`)
             .then(({ data }) => {
-
+                console.log('Projeto:', data.docs[0])
+                setProjectInfo(data.docs[0]);
             })
             .catch(error => {
                 if (error.response) {
                     console.log(error.response);
+                    const notify = () => toast.error(
+                        "Erro interno no servidor. Recarregue a página novamente.",
+                        {});
+                    notify()
                 }
                 if (error.request) {
-                    console.log(error.request);
+                    console.log(error.request, 'R E Q U I S I Ç Ã O');
                 }
                 else {
                     console.log('Error', error.message);
@@ -42,36 +34,9 @@ function ProjetoAluno(props) {
             });
     }, []);
 
-    useEffect(() => {
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
-        } else {
-
-        }
-        api.get(``)
-            .then(({ data }) => {
-
-            })
-            .catch(error => {
-                if (error.response) {
-                    console.log(error.response);
-                }
-                if (error.request) {
-                    console.log(error.request);
-                }
-                else {
-                    console.log('Error', error.message);
-                }
-            });
-    }, [])
-
-    const editInfoProject = () => {
-
-    }
-
     return (
-        <DashboardUI screenName='Projeto Aberto' itemActive="Meus Projetos" >
-            <ProjectInfo projectId={id} isStudent={true} />
+        <DashboardUI screenName={projectInfo && projectInfo.title} itemActive="Meus Projeto" >
+            <ProjectInfo projectId={projectInfo && projectInfo._id} isStudent={true} projectInfos={projectInfo} />
             <ToastContainer />
         </DashboardUI>
 

@@ -6,9 +6,9 @@ import format from 'date-fns/format'
 
 function ProjectInfo({ projectId, isStudent, projectInfos }) {
 
-    const redirectToTask = isStudent ? `/aluno-orientando/projeto/${projectId}/atividades` : `/professor/projetos/${projectId}/atividades`
+    const redirectToTask = isStudent ? `/aluno-orientando/projeto/${projectId}/tarefas` : `/professor/projetos/${projectId}/atividades`
     const redirectToOrientation = isStudent ? `/aluno-orientando/projeto/${projectId}/orientacoes` : `/professor/projetos/${projectId}/orientacoes`
-    const { students, description, situation, tasks, orientation } = projectInfos;
+    const { students, description, situation, tasks, orientation, advisor } = projectInfos;
     console.debug('STUDENTS', students);
     console.debug('TASKS', tasks);
 
@@ -20,9 +20,9 @@ function ProjectInfo({ projectId, isStudent, projectInfos }) {
     return (
         <>
             <HeaderContainer>
-                {isStudent && <h3>Roberto Coutinho 🎓</h3>}
+                {isStudent && <h3>{advisor && advisor.name} 🎓</h3>}
                 {students &&
-                    <h3>{students[0].name}  {students[1] && (' e ' + students[1].name)}</h3>
+                    <h3>{students[0].name}   {students[1] && (' e ' + students[1].name)} </h3>
                 }
 
                 <p>

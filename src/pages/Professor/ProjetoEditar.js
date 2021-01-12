@@ -25,6 +25,7 @@ function ProjetoEditar(props) {
     const [selectedStudentOne, setSelectedStudentOne] = useState('Aluno 1');
     const [selectedStudentTwo, setSelectedStudentTwo] = useState('');
     const [project, setProject] = useState();
+    const [sucessSubmiting, setSucessSubmiting] = useState()
 
     const { register, handleSubmit, errors, formState: { isSubmitting }, watch } = useForm({ mode: 'onSubmit' });
     const watchChangeStudents = watch('changeStudents');
@@ -129,6 +130,7 @@ function ProjetoEditar(props) {
                     }
                     );
                 notify()
+                setSucessSubmiting(true)
                 setTimeout(() => {
                     history.push('/professor')
                 }, 2000);
@@ -147,7 +149,7 @@ function ProjetoEditar(props) {
                     console.log('Error', error.message);
                 }
                 return new Promise((resolve) => {
-                    setTimeout(() => resolve(), 2000);
+                    setTimeout(() => resolve(), 6000);
                 });
 
             });
@@ -337,7 +339,7 @@ function ProjetoEditar(props) {
                         {errorMessage}
                     </ErrorMessage>
                 }
-                <Button new={true} type='submit' width='100px' disabled={isSubmitting}>
+                <Button new={true} type='submit' width='100px' disabled={sucessSubmiting || isSubmitting}>
                     Salvar
                 </Button>
                 <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${id}`)}>

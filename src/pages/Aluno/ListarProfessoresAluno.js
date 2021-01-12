@@ -32,6 +32,8 @@ function ListarProfessoresAluno(props) {
 
     const [searchText, setSearchText] = useState('');
     const [projects, setProjets] = useState([]);
+    const [teachers, setTeachers] = useState();
+    const [modalTeacherInfo, setModalTeacherInfo] = useState();
 
     const [noProjectFound, setNoProjectFound] = useState(false);
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -71,8 +73,10 @@ function ListarProfessoresAluno(props) {
     useEffect(() => {
 
         // pegar projeto por id
-        api.get(``)
-            .then(({ data }) => {
+        api.get(`/usuarios/professores_perfil/1`)
+            .then(({ data: { docs } }) => {
+                console.log('Professores:', docs)
+                setTeachers(docs)
 
             })
             .catch(error => {
@@ -178,6 +182,12 @@ function ListarProfessoresAluno(props) {
     const openActivity = (e, idActivity) => {
         history.push(`/professor/projetos/${id}/atividades/${idActivity}`)
     }
+
+    const openModal = (value) => {
+        setModalTeacherInfo(value);
+        setModalIsOpen(true);
+    }
+
     return (
         <DashboardUI screenName='Professores' itemActive="Professores">
             <form onSubmit={(e) => onSubmit(e)}>
@@ -191,6 +201,22 @@ function ListarProfessoresAluno(props) {
                 />
             </form>
             <ProfessorList>
+                {teachers ?
+                    teachers.map((value, index) =>
+                        <ProfessorCard key={index}>
+                            <ProfessorCardImage>
+                                <img src='https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' />
+                            </ProfessorCardImage>
+                            <ProfessorCardBody>
+                                <ProfessorCardBodyName>{value.name}</ProfessorCardBodyName>
+                                <ProfessorCardBodyAboutProfile>{value.aboutProfile}</ProfessorCardBodyAboutProfile>
+                                <ProfessorAvailability available={value.available}>{value.available === 'sim' ? 'Disponível 🟢' : 'Indisponível 🔴'}</ProfessorAvailability>
+                                <ProfessorCardBodyButton onClick={() => openModal(value)}>Ver mais</ProfessorCardBodyButton>
+                            </ProfessorCardBody>
+                        </ProfessorCard>
+                    ) :
+                    <p>0 professores</p>
+                }
                 <ProfessorCard>
                     <ProfessorCardImage>
                         <img src='https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' />
@@ -248,27 +274,38 @@ function ListarProfessoresAluno(props) {
                     <img src='https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' />
                 </ModalImage>
                 <ProfessorCardBodyName>
-                    Roberto Coutinho Júnior
+                    {modalTeacherInfo && modalTeacherInfo.name}
                 </ProfessorCardBodyName>
                 <p>
                     Desenvolvimento de sistemas web com ênfase em Java, além de especialização elementos
                     modelagem orientada a objeto.
                 </p>
                 <p style={{ wordBreak: 'break-all' }}>
-                    robertocoutinhojunior@gmail.com
+                    {modalTeacherInfo && modalTeacherInfo.email}
                 </p>
                 <SocialMedias>
-                    <img src={Lattes} id='lattes' alt='Lattes' />
-                    <TiSocialLinkedin id='linkedin' />
-                    <FaFacebookF id='facebook' />
-                    <FaInstagram id='instagram' />
-                    <FaYoutube id='youtube' />
+                    {modalTeacherInfo && modalTeacherInfo.links && modalTeacherInfo.links.lattes &&
+                        <img src={Lattes} id='lattes' alt='Lattes' />
+                    }
+                    {modalTeacherInfo && modalTeacherInfo.links && modalTeacherInfo.links.linkedin &&
+                        <a href={modalTeacherInfo.links.linkedin} target=' blank'><TiSocialLinkedin id='linkedin' /></a>
+                    }
+                    {modalTeacherInfo && modalTeacherInfo.links && modalTeacherInfo.links.facebook &&
+                        <a href={modalTeacherInfo.links.facebook} target='blank'><FaFacebookF id='facebook' /></a>
+                    }
+                    {modalTeacherInfo && modalTeacherInfo.links && modalTeacherInfo.links.instagram &&
+                        <FaInstagram id='instagram' />
+                    }
+                    {modalTeacherInfo && modalTeacherInfo.links && modalTeacherInfo.links.youtubex &&
+                        <FaYoutube id='youtube' />
+                    }
+                    {console.debug('Modal is rendering')}
                 </SocialMedias>
 
 
 
             </Modal>
-        </DashboardUI>
+        </DashboardUI >
 
     );
 }
@@ -308,6 +345,7 @@ const ProfessorList = styled.div`
 const ProfessorCard = styled.div`
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     padding: 1rem;
     border-radius: 5px;
     border: 1px solid ${props => props.theme.color.grey}55;
@@ -347,6 +385,7 @@ const ProfessorCardBody = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     font-family: 'Roboto';
 `;
 
@@ -357,7 +396,19 @@ const ProfessorCardBodyName = styled.h3`
     font-family: Roboto;
     letter-spacing: 1px;
     margin-bottom: 5px;
+    text-align: center;
 `;
+const ProfessorCardBodyAboutProfile = styled.p`
+    color: ${props => props.theme.color.dark};
+    font-size: 1.05rem;
+    font-weight: 400;
+    font-family: Roboto;
+    letter-spacing: 1px;
+    margin-bottom: 0;
+    text-align: center;
+`;
+
+
 
 const ProfessorCardBodyButton = styled.button`
     padding: 7px 20px;
@@ -433,6 +484,17 @@ const SocialMedias = styled.div`
     img[id=lattes]:hover{
         background-color: #2c2b64;
     }
+`;
+
+const ProfessorAvailability = styled.span`
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid ${props => props.available === 'sim' ? props.theme.color.primary : props.theme.color.secondaryDark};
+    padding: 3px;
+    color: ${props => props.available === 'sim' ? props.theme.color.primary : props.theme.color.secondaryDark};
+    font-size: 1rem;
+
 `;
 
 export default ListarProfessoresAluno;

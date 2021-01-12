@@ -6,20 +6,16 @@ import api from '../../api/api'
 
 import DashboardUI from '../../components/DashboardUI';
 import SearchBar from '../../components/SearchBar';
-import { Table } from 'semantic-ui-react'
+
 import 'semantic-ui-css/semantic.min.css';
 import ReactLoading from 'react-loading';
 
 import { ToastContainer, toast } from 'react-toastify';
-import Switch from 'react-input-switch';
+
 import Modal from 'react-modal';
-import { AiOutlineEdit } from 'react-icons/ai';
+
 import usePaginatorNumbers from '../../hooks/usePaginator';
-import ActionModal from '../../components/ActionModal';
 import Paginator from '../../components/Paginator/Paginator';
-import { ProjectContext } from '../../context/ProjectContext';
-import ProfessorProjectList from '../../components/ProfessorProjectList/ProfessorProjectList';
-import ProjectInfo from '../../components/ProjectInfo/ProjectInfo';
 import styled from 'styled-components';
 import { device } from '../../device';
 import format from 'date-fns/format'
@@ -65,8 +61,6 @@ function ListarTarefasProfessor(props) {
     let userId = useRef('');
     let userStatus = useRef('');
 
-    let modalMessage = useRef('');
-
     let totalPages = useRef();
     let currentPage = useRef();
     let paginationNumbers = useRef([]);
@@ -95,6 +89,7 @@ function ListarTarefasProfessor(props) {
             .catch(error => {
                 if (error.response) {
                     console.log(error.response);
+                    setIsLoading(false);
                 }
                 if (error.request) {
                     console.log(error.request);
@@ -194,7 +189,7 @@ function ListarTarefasProfessor(props) {
     }
 
     const openActivity = (e, idActivity) => {
-        history.push(`/professor/projetos/${id}/atividades/${idActivity}`)
+        history.push(`/professor/projetos/${id}/tarefas/${idActivity}`)
     }
     return (
         <DashboardUI screenName='Tarefas' itemActive="Meus Projetos">
