@@ -30,6 +30,13 @@ function TarefaProfessor(props) {
     const { register, handleSubmit, errors, formState: { isSubmitting } }
         = useForm({ mode: 'onSubmit' });
 
+    const {
+        register: registerEdit,
+        handleSubmit: handleSubmitEdit,
+        errors: errorsEdit,
+        formState: { isSubmitting: isSubmittingEdit } }
+        = useForm({ mode: 'onSubmit' });
+
     let modalMessage = useRef('')
 
     const history = useHistory();
@@ -176,22 +183,22 @@ function TarefaProfessor(props) {
 
     return (
         <DashboardUI screenName={task && task.title} itemActive="Meus Projetos" isProfessorActivity={true}>
-            <ActivityHeader>
+            <TaskHeader>
                 {task &&
                     <>
-                        <ActivityDescription>
+                        <TaskDescription>
                             {task && task.description}
-                        </ActivityDescription>
-                        <Deadline>Prazo de entrega: {task && format(new Date(task.deadLine), 'dd/MM/yyyy')}</Deadline>
-                        <ActivitySituation>{task && task.situation}</ActivitySituation>
+                        </TaskDescription>
+                        <TaskDeadline>Prazo de entrega: {task && format(new Date(task.deadLine), 'dd/MM/yyyy')}</TaskDeadline>
+                        <TaskSituation>{task && task.situation}</TaskSituation>
                         <Button type='button' width='150px'>
                             Finalizar atividade
                         </Button>
                     </>
                 }
 
-            </ActivityHeader>
-            <ActivityCommentBox>
+            </TaskHeader>
+            <TaskCommentBox>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <textarea
                         name='comment'
@@ -209,40 +216,40 @@ function TarefaProfessor(props) {
                     </Button>
                 </form>
 
-            </ActivityCommentBox>
-            <ActivityCommentList>
+            </TaskCommentBox>
+            <TaskCommentList>
                 {task && task.comments && task.comments.length > 0 ?
                     task.comments.map(({ comment, commentUser, createdAt, _id }) =>
-                        <ActivityCommentListItem key={_id}>
-                            <ActivityCommentHeader>
+                        <TaskCommentListItem key={_id}>
+                            <TaskCommentHeader>
 
-                                <ActivityCommentDate>
+                                <TaskCommentDate>
                                     {task && task.comments && format(new Date(createdAt), "dd 'de' MMMM 'de' yyyy 'às' p", { locale })}
-                                </ActivityCommentDate>
+                                </TaskCommentDate>
                                 {
                                     commentUser._id === userId.current &&
                                     <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                        <ActivityCommentIcon
+                                        <TaskCommentIcon
                                             onClick={() => {
                                                 commentHandled.current = _id;
+                                                commentTextToEdit.current = comment;
                                                 setModalEditIsOpen(true);
                                             }
                                             }>
                                             <MdModeEdit />
-                                        </ActivityCommentIcon>
-                                        <ActivityCommentIcon onClick={() => {
+                                        </TaskCommentIcon>
+                                        <TaskCommentIcon onClick={() => {
                                             console.log('id do comentario', _id)
                                             commentHandled.current = _id;
-                                            commentTextToEdit.current = comment;
                                             setModalDeleteIsOpen(true)
                                         }}>
                                             <MdDelete />
-                                        </ActivityCommentIcon>
+                                        </TaskCommentIcon>
                                     </div>
                                 }
 
-                            </ActivityCommentHeader>
-                            <ActivityCommentBody>
+                            </TaskCommentHeader>
+                            <TaskCommentBody>
                                 <Avatar
                                     round
                                     color={lightTheme.color.primary}
@@ -253,18 +260,18 @@ function TarefaProfessor(props) {
                                         cursor: 'pointer',
                                     }}
                                 />
-                                <ActivityCommentAuthor>
+                                <TaskCommentAuthor>
                                     {commentUser.name}
-                                </ActivityCommentAuthor>
-                            </ActivityCommentBody>
-                            <ActivityCommentText>
+                                </TaskCommentAuthor>
+                            </TaskCommentBody>
+                            <TaskCommentText>
                                 {comment}
-                            </ActivityCommentText>
-                        </ActivityCommentListItem>
+                            </TaskCommentText>
+                        </TaskCommentListItem>
                     )
                     : 'Comment not found'
                 }
-            </ActivityCommentList>
+            </TaskCommentList>
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={() => setModalIsOpen(false)}
@@ -285,7 +292,7 @@ function TarefaProfessor(props) {
                 }}
             >
                 <ModalTitle>Entregar...</ModalTitle>
-                <ActivityCommentBox >
+                <TaskCommentBox >
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <textarea
                             name='comment'
@@ -303,7 +310,7 @@ function TarefaProfessor(props) {
                         />
                     </form>
 
-                </ActivityCommentBox>
+                </TaskCommentBox>
                 <div style={{ display: 'grid', marginTop: '-1.2rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
                     <Button onClick={() => setModalIsOpen(false)}>Entregar</Button>
                     <Button onClick={() => setModalIsOpen(false)}>Cancelar</Button>
@@ -322,11 +329,11 @@ function TarefaProfessor(props) {
                 }}
             >
                 <h1>Editar comentário</h1>
-                <form onSubmit={handleSubmit(onSubmitEditComment)}>
-                    <ActivityCommentBox style={{ marginTop: '0' }}>
+                <form onSubmit={handleSubmitEdit(onSubmitEditComment)}>
+                    <TaskCommentBox style={{ marginTop: '0' }}>
                         <textarea
                             name='comment1'
-                            ref={register({
+                            ref={registerEdit({
                                 required: true,
                             })}
                             rows={4}
@@ -334,7 +341,7 @@ function TarefaProfessor(props) {
                             defaultValue={commentTextToEdit.current}
                         />
 
-                    </ActivityCommentBox>
+                    </TaskCommentBox>
                     <div style={{ display: 'grid', marginTop: '.5rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
                         <Button onClick={() => setModalEditIsOpen(false)}>Editar</Button>
                         <Button onClick={() => setModalEditIsOpen(false)}>Cancelar</Button>
@@ -371,20 +378,20 @@ function TarefaProfessor(props) {
 
 export default TarefaProfessor;
 
-const ActivityHeader = styled.div`
+const TaskHeader = styled.div`
     border-bottom: 1px solid ${props => props.theme.color.grey}55;
     padding-bottom: 1rem;
     display: flex;
     flex-direction: column;
 `;
 
-const ActivityDescription = styled.div`
+const TaskDescription = styled.div`
     padding: 1rem 0 .7rem;
     border-top: 1px solid ${props => props.theme.color.grey}55;
     color: ${props => props.theme.color.dark};
 `;
 
-const Deadline = styled.span`
+const TaskDeadline = styled.span`
     display: inline; 
     align-self: flex-start;
     font-size: 1rem;
@@ -396,7 +403,7 @@ const Deadline = styled.span`
     box-shadow: 3px 3px 3px ${props => props.theme.color.primary}15;
 `
 
-const ActivitySituation = styled.span`
+const TaskSituation = styled.span`
     display: inline-block;
     border-radius: 5px;
     border: 1px solid ${props => props.theme.color.primary};
@@ -423,7 +430,7 @@ const ActivitySituation = styled.span`
     }*/
 `;
 
-const ActivityCommentBox = styled.div`
+const TaskCommentBox = styled.div`
     border: 1px solid ${props => props.theme.color.grey}55;
     background: ${props => props.theme.color.grey}55;
     border-radius: 5px;
@@ -447,12 +454,12 @@ const ActivityCommentBox = styled.div`
     }
 `;
 
-const ActivityCommentList = styled.div`
+const TaskCommentList = styled.div`
     border-top: 1px solid ${props => props.theme.color.grey}55;
     margin-top: 1.2rem;
 `;
 
-const ActivityCommentListItem = styled.div`
+const TaskCommentListItem = styled.div`
     display: flex;
     flex-direction: column;
     border: 1px solid ${props => props.theme.color.grey}55;
@@ -461,22 +468,22 @@ const ActivityCommentListItem = styled.div`
     border-radius: 5px;
 `;
 
-const ActivityCommentHeader = styled.div`
+const TaskCommentHeader = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
 `;
 
-const ActivityCommentBody = styled.div`
+const TaskCommentBody = styled.div`
 
 `;
 
-const ActivityCommentDate = styled.p`
+const TaskCommentDate = styled.p`
     color: ${props => props.theme.color.dark};
     margin-bottom: 7px;
 `;
 
-const ActivityCommentIcon = styled.span`
+const TaskCommentIcon = styled.span`
     color: ${props => props.theme.color.dark};
     margin-bottom: 7px;
     margin-left: 5px;
@@ -491,14 +498,14 @@ const ActivityCommentIcon = styled.span`
     }
 `;
 
-const ActivityCommentAuthor = styled.span`
+const TaskCommentAuthor = styled.span`
     display: inline-block;
     color: ${props => props.theme.color.dark};
     margin-left: 5px;
     vertical-align: middle;
 `;
 
-const ActivityCommentText = styled.span`
+const TaskCommentText = styled.span`
     color: ${props => props.theme.color.dark};
     margin-top: 3px;
 `;

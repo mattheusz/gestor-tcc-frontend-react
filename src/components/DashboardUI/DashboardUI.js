@@ -12,6 +12,8 @@ import './index.css'
 import { MdDelete, MdModeEdit } from 'react-icons/md';
 import { useHistory, useParams } from 'react-router-dom';
 import Button from '../Button';
+import api from '../../api/api';
+import { toast, ToastContainer } from 'react-toastify';
 
 function DashboardUI({ screenName, itemActive, children, isProfessorActivity, isProfessorProject, deleteProject, isProfessorOrientation }) {
 
@@ -22,7 +24,7 @@ function DashboardUI({ screenName, itemActive, children, isProfessorActivity, is
     const [openDeleteOrientationModal, setOpenDeleteOrientationModal] = useState(false);
 
     const history = useHistory();
-    const { id, activity, orientation } = useParams();
+    const { id, activity, taskId, orientation } = useParams();
 
     const toggle = useCallback(() => {
         setShowSidebar(!showSidebar)
@@ -32,6 +34,28 @@ function DashboardUI({ screenName, itemActive, children, isProfessorActivity, is
         setShowDropdown(!showDropdown);
         console.log('toggle dropdown', showDropdown)
     }, [showDropdown])
+
+    const deleteTask = () => {
+        api.delete(`/tarefa/deletar_tarefa/${taskId}`)
+            .then(response => {
+                console.log(response.data);
+                toast.success("Tarefa excluída com sucesso", {
+                    autoClose: 2000,
+                });
+                history.push(`/professor/projetos/${id}/atividades`)
+            })
+            .catch(error => {
+                if (error.response) {
+                    console.log(error.response);
+                }
+                if (error.request) {
+                    console.log(error.request);
+                }
+                else {
+                    console.log('Error', error.message);
+                }
+            });
+    }
 
     return (
         <ThemeProvider theme={lightTheme}>
@@ -112,7 +136,7 @@ function DashboardUI({ screenName, itemActive, children, isProfessorActivity, is
                     Esta ação é irreversível
                 </p>
                 <div style={{ display: 'grid', marginTop: '.4rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
-                    <Button onClick={() => setOpenDeleteActivityModal(false)}>Excluir</Button>
+                    <Button onClick={() => deleteTask()}>Excluir</Button>
                     <Button onClick={() => setOpenDeleteActivityModal(false)}>Cancelar</Button>
                 </div>
             </Modal>
@@ -136,6 +160,7 @@ function DashboardUI({ screenName, itemActive, children, isProfessorActivity, is
                     <Button onClick={() => setOpenDeleteOrientationModal(false)}>Cancelar</Button>
                 </div>
             </Modal>
+            <ToastContainer style={{ zIndex: '9999999' }} />
 
         </ThemeProvider>
     );
