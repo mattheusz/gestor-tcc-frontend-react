@@ -26,7 +26,7 @@ import ProjetoProfessor from '../pages/Professor/ProjetoTCC';
 import ListarTarefasProfessor from '../pages/Professor/ListarTarefasProfessor';
 import TarefaProfessor from '../pages/Professor/TarefaProfessor';
 import TarefaProfessorCadastrar from '../pages/Professor/TarefaProfessorCadastrar';
-import AtividadeProfessorEditar from '../pages/Professor/AtividadeProfessorEditar';
+import TarefaProfessorEditar from '../pages/Professor/TarefaProfessorEditar';
 import ProjetoEditar from '../pages/Professor/ProjetoEditar';
 import ListarOrientacoesProfessor from '../pages/Professor/ListarOrientacoesProfessor';
 import OrientacaoProfessorCadastrar from '../pages/Professor/OrientacaoProfessorCadastrar';
@@ -146,7 +146,7 @@ export default function Routes() {
                         <CustomRoute exact isPrivate path='/professor/projetos/:id' roles={['professor']} component={ProjetoProfessor} />
                         <CustomRoute exact isPrivate path='/professor/projetos/:id/atividades' roles={['professor']} component={ListarTarefasProfessor} />
                         <CustomRoute exact isPrivate path='/professor/projetos/:id/atividades/novo' roles={['professor']} component={TarefaProfessorCadastrar} />
-                        <CustomRoute exact isPrivate path='/professor/projetos/:id/atividades/editar/:activity' roles={['professor']} component={AtividadeProfessorEditar} />
+                        <CustomRoute exact isPrivate path='/professor/projetos/:id/tarefas/editar/:taskId' roles={['professor']} component={TarefaProfessorEditar} />
                         <CustomRoute exact isPrivate path='/professor/projetos/:id/tarefas/:taskId' roles={['professor']} component={TarefaProfessor} />
                         <CustomRoute exact isPrivate path='/professor/projetos/:id/orientacoes' roles={['professor']} component={ListarOrientacoesProfessor} />
                         <CustomRoute exact isPrivate path='/professor/projetos/:id/orientacoes/novo' roles={['professor']} component={OrientacaoProfessorCadastrar} />

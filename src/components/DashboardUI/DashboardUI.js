@@ -24,7 +24,7 @@ function DashboardUI({ screenName, itemActive, children, isProfessorActivity, is
     const [openDeleteOrientationModal, setOpenDeleteOrientationModal] = useState(false);
 
     const history = useHistory();
-    const { id, activity, taskId, orientation } = useParams();
+    const { id, taskId, orientation } = useParams();
 
     const toggle = useCallback(() => {
         setShowSidebar(!showSidebar)
@@ -72,7 +72,7 @@ function DashboardUI({ screenName, itemActive, children, isProfessorActivity, is
                                 <ViewTitle>{screenName}</ViewTitle>
                                 {isProfessorActivity &&
                                     <HeaderButtons>
-                                        <MdModeEdit onClick={() => history.push(`/professor/projetos/${id}/atividades/editar/${activity}`)} />
+                                        <MdModeEdit onClick={() => history.push(`/professor/projetos/${id}/tarefas/editar/${taskId}`)} />
                                         <MdDelete onClick={() => setOpenDeleteActivityModal(true)} />
                                     </HeaderButtons>
                                 }

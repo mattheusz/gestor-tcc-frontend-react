@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useHistory, useParams } from 'react-router-dom'
 import api from '../../api/api'
 import 'semantic-ui-css/semantic.min.css';
@@ -17,29 +17,40 @@ import ErrorMessage from '../../components/Error'
 import light from '../../themes/light';
 import Label from '../../components/Label/Label';
 import StyledDatePicker from '../../components/StyledDatePicker';
+import format from 'date-fns/format'
 
 
-function AtividadeProfessorEditar(props) {
+function TarefaProfessorEditar(props) {
     const [errorMessage, setErrorMessage] = useState();
-    const [startDate, setStartDate] = useState(new Date());
-    console.debug('Data selecionada', startDate);
-    console.debug('Data atual', new Date());
 
-    const { register, handleSubmit, errors, formState: { isSubmitting }, watch } = useForm({ mode: 'onSubmit' });
-    const watchAddStudentTwo = watch('addStudendTwo');
+    const [task, setTask] = useState();
+    const [initialDate, setInitialDate] = useState();
+    const [deadline, setDeadline] = useState();
+
+    const { register, handleSubmit, errors, formState: { isSubmitting }, watch, control, setValue, getValues } = useForm({
+        mode: 'onSubmit',
+
+    });
+
     /*
     let id = useRef();
     id.current = localStorage.getItem('reg')
     */
 
     const history = useHistory();
-    const { id, activity } = useParams();
+    const { id, taskId } = useParams();
 
     useEffect(() => {
-        api.get(`usuarios/listar_usuarios/aluno_sem_projeto/1`)
-            .then(response => {
-                console.log(response)
-
+        api.get(`/tarefa/${taskId}/`)
+            .then(({ data: { docs } }) => {
+                console.log('Tarefas do projeto', docs[0]);
+                // setting initial state, that the value to display in input date-picker
+                setInitialDate(new Date(docs[0].initialDate))
+                setDeadline(new Date(docs[0].deadLine))
+                // setting initial date to custom register customRegisterInitialDate
+                setValue('customRegisterInitialDate', new Date(docs[0].initialDate))
+                setValue('customRegisterDeadline', new Date(docs[0].deadLine))
+                setTask(docs[0]);
             })
             .catch(error => {
                 if (error.response) {
@@ -52,24 +63,31 @@ function AtividadeProfessorEditar(props) {
                     console.log('Error', error.message);
                 }
             });
-    }, [])
+    }, []);
 
+    const onSubmit = ({ title, description, customRegisterInitialDate, customRegisterDeadline }) => {
 
-    const onSubmit = ({ title, description, studentOne }) => {
+        format(customRegisterInitialDate, 'dd/MM/yyyy');
+        console.debug('initial date:', format(customRegisterInitialDate, 'dd/MM/yyyy'))
+        format(customRegisterDeadline, 'dd/MM/yyyy');
 
-        api.post('/projeto/cadastrar_projeto', {
-
+        api.patch(`/tarefas/atualizar_tarefa/professor/${taskId}`, {
+            title,
+            description,
+            initialDate: format(customRegisterInitialDate, 'dd/MM/yyyy'),
+            deadLine: format(customRegisterDeadline, 'dd/MM/yyyy'),
+            situation: 'iniciado'
         })
             .then(response => {
                 console.log(response.data);
                 const notify = () =>
-                    toast.success("Atividade cadastrada com sucesso", {
+                    toast.success("Tarefa atualizada com sucesso", {
                         autoClose: 2000,
                     }
                     );
                 notify()
                 setTimeout(() => {
-                    history.push('/professor')
+                    history.push(`/professor/projetos/${id}/tarefas/${taskId}`)
                 }, 2000);
 
             })
@@ -95,8 +113,26 @@ function AtividadeProfessorEditar(props) {
         });
     }
 
+    useEffect(() => {
+        // creating custom registers
+        register('customRegisterInitialDate', { required: true })
+        register('customRegisterDeadline', { required: true })
+    }, [register]);
+
+    const handleChangeInitialDate = e => {
+        console.log('e', e)
+        setInitialDate(e); // setting value in the state. necessary for update display of the input initialDate
+        setValue('customRegisterInitialDate', e); // setting value in the custom register
+    }
+
+    const handleChangeDeadline = e => {
+        console.log('e', e)
+        setDeadline(e); // setting value in the state. necessary for update display of the input initialDate
+        setValue('customRegisterDeadline', e); // setting value in the custom register
+    }
+
     return (
-        <DashboardUI screenName='Editar Atividade' itemActive="Meus Projetos">
+        <DashboardUI screenName='Editar Tarefa' itemActive="Meus Projetos">
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='title'>Título</Label>
@@ -111,6 +147,8 @@ function AtividadeProfessorEditar(props) {
                         placeholder='Título'
                         autoFocus
                         style={{ borderColor: errors.title && light.color.secondary }}
+                        defaultValue={task && task.title}
+
                     />
                 </IconTextField>
                 {errors.title &&
@@ -131,6 +169,7 @@ function AtividadeProfessorEditar(props) {
                         })}
                         placeholder='Descrição'
                         style={{ borderColor: errors.description && light.color.secondary }}
+                        defaultValue={task && task.description}
                     />
                 </IconTextField>
                 {errors.description &&
@@ -139,19 +178,49 @@ function AtividadeProfessorEditar(props) {
                     </ErrorMessage>
                 }
 
-                <Label htmlFor='deadline'>Prazo de entrega</Label>
+                <Label htmlFor='initialDate'>Data de início</Label>
+
                 <StyledDatePicker
-                    startDate={startDate}
-                    setStartDate={date => setStartDate(date)}
+                    value={initialDate}
+                    onChange={value => handleChangeInitialDate(value)}
                     locale='pt-BR'
                     timeIntervals={15}
+                    name="initialDate"
+                    error={errors.customRegisterInitialDate}
+                    placeholder="Data de início..."
+                    style={{ borderColor: errors.customRegisterInitialDate && light.color.secondary }}
                 />
 
 
 
-                {errors.registration &&
+                {errors.customRegisterInitialDate &&
                     <ErrorMessage left marginTop marginBottom>
-                        A matrícula  é obrigatória
+                        A data de inicío é obrigatória
+                    </ErrorMessage>
+                }
+
+
+                <input type='date' ref={register} name='datas' defaultValue='2021-02-02'
+                    style={{ padding: '7px', marginBottom: '7px' }}
+                ></input>
+
+                <Label htmlFor='deadline'>Prazo de entrega</Label>
+                <StyledDatePicker
+                    value={deadline}
+                    onChange={value => handleChangeDeadline(value)}
+                    locale='pt-BR'
+                    timeIntervals={15}
+                    name="deadline"
+                    error={errors.deadline}
+                    placeholder="Prazo de entrega..."
+                    style={{ borderColor: errors.deadline && light.color.secondary }}
+                />
+
+
+
+                {errors.deadline &&
+                    <ErrorMessage left marginTop marginBottom>
+                        O prazo de entrega é obrigatório
                     </ErrorMessage>
                 }
 
@@ -163,7 +232,7 @@ function AtividadeProfessorEditar(props) {
                 <Button new={true} type='submit' width='100px' disabled={isSubmitting}>
                     Salvar
                 </Button>
-                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${id}/atividades/${activity}`)}>
+                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${id}/tarefas/${taskId}`)}>
                     Cancelar
                 </Button>
             </form>
@@ -173,4 +242,4 @@ function AtividadeProfessorEditar(props) {
     );
 }
 
-export default AtividadeProfessorEditar;
+export default TarefaProfessorEditar;

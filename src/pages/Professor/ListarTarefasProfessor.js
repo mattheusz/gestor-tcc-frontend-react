@@ -77,7 +77,7 @@ function ListarTarefasProfessor(props) {
 
     // carregando informações do projeto aberto
     useEffect(() => {
-        api.get(`/tarefa/projeto_tarefas/${id}/1`)
+        api.get(`/tarefa/projeto_tarefas/${id}/1/1`)
             .then(({ data: { docs } }) => {
                 console.log('Tarefas do projeto', docs);
                 const { title, students, description, situation, tasks } = docs;

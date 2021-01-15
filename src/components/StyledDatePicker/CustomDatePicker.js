@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from "styled-components";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -11,7 +11,7 @@ import light from '../../themes/light';
 registerLocale("pt-BR", ptBR); // register it with the name you want
 
 
-function CustomDatePicker({ value, locale, onChange, style, error, placeholder }) {
+function CustomDatePicker({ value, locale, onChange, style, error, placeholder, startDate, dateIsLoaded }) {
 
     const borderColor = error && light.color.secondary;
     return (
@@ -25,6 +25,7 @@ function CustomDatePicker({ value, locale, onChange, style, error, placeholder }
                 dateFormat="dd/MM/yyyy"
                 borderColor={borderColor}
                 placeholderText={placeholder}
+                startDate={startDate}
 
             />
         </IconTextField>

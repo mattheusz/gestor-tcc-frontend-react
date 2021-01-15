@@ -172,6 +172,7 @@ function TarefaProfessorCadastrar(props) {
                             error={errors.deadline}
                             placeholder="Prazo de entrega..."
                             style={{ borderColor: errors.deadline && light.color.secondary }}
+                            initialDate={new Date()}
                         />
                     )}
                     rules={{ required: true }}
