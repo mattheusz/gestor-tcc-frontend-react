@@ -19,6 +19,7 @@ import Paginator from '../../components/Paginator/Paginator';
 import styled from 'styled-components';
 import { device } from '../../device';
 import format from 'date-fns/format'
+import { zonedTimeToUtc } from 'date-fns-tz';
 
 function ListarTarefasProfessor(props) {
 
@@ -34,20 +35,16 @@ function ListarTarefasProfessor(props) {
 
     const selectItems = [
         {
-            value: 'pré-tcc',
-            displayValue: 'Pré-TCC'
-        },
-        {
-            value: 'tcc1',
-            displayValue: 'TCC 1'
-        },
-        {
-            value: 'tcc2',
-            displayValue: 'TCC 2'
+            value: 'iniciado',
+            displayValue: 'Iniciado'
         },
         {
             value: 'concluído',
-            displayValue: 'Concluídos'
+            displayValue: 'Concluído'
+        },
+        {
+            value: 'recusado',
+            displayValue: 'Recusado'
         },
         {
             value: 'todos',
@@ -73,18 +70,25 @@ function ListarTarefasProfessor(props) {
     Modal.setAppElement('#root');
 
     const history = useHistory();
-    const { id } = useParams();
+    const { projectId } = useParams();
+    console.log('project id', projectId);
 
-    // carregando informações do projeto aberto
+    // listando tarefas
     useEffect(() => {
-        api.get(`/tarefa/projeto_tarefas/${id}/1/1`)
-            .then(({ data: { docs } }) => {
-                console.log('Tarefas do projeto', docs);
-                const { title, students, description, situation, tasks } = docs;
-                setListTasks(docs);
+        if (mountedPagination)
+            return;
+        setMountedPagination(false);
+        api.get(`/tarefa/projeto_tarefas/${projectId}/1/1`)
+            .then(({ data }) => {
+
+                currentPage.current = data.page;
+                totalPages.current = data.totalPages;
+                console.debug('tarefa vinda', data)
+                console.log(zonedTimeToUtc(new Date(data.docs[0].deadLine), 'Etc/GMT-6'), 'dd/MM/yyyy');
+                setListTasks(data.docs);
                 setSomeTaskFound(true);
                 setIsLoading(false);
-
+                buildPaginatorDesign();
             })
             .catch(error => {
                 if (error.response) {
@@ -100,32 +104,51 @@ function ListarTarefasProfessor(props) {
             });
     }, []);
 
-    const [selectedValue, setSelectedValue] = useState('ativo');
+    const [selectedValue, setSelectedValue] = useState('iniciado');
     useEffect(() => {
         if (isInitialMount.current) {
             isInitialMount.current = false;
         } else {
+            let path;
+            if (searchText === '') {
+                path = `/tarefa/projeto_tarefas/situacao/${projectId}/${selectedValue}/1/1`; //
+                if (selectedValue === 'todos')
+                    path = `/tarefa/projeto_tarefas/${projectId}/1/1`;
+            }
+            else {
+                path = `/tarefa/projeto_tarefas/situacao_titulo/${projectId}/${searchText}/${selectedValue}/1/1`; //
+                if (selectedValue === 'todos')
+                    path = `/tarefa/projeto_tarefas/${projectId}/${searchText}/1/1`; //
+            }
+            setMountedPagination(false);
+            api.get(path)
+                .then(({ data }) => {
+                    totalPages.current = data.totalPages;
+                    console.log(data.docs);
+                    setSomeTaskFound(true);
+                    setListTasks(data.docs);
+                    buildPaginatorDesign();
+                })
+                .catch(error => {
+                    if (error.response) {
+                        console.log(error.response);
+                        totalPages.current = 1;
+                        setSomeTaskFound(false)
+                    }
+                    if (error.request) {
+                        console.log(error.request);
+                    }
+                    else {
+                        console.log('Error', error.message);
+                    }
+                });
 
         }
-        api.get(``)
-            .then(({ data }) => {
 
-            })
-            .catch(error => {
-                if (error.response) {
-                    console.log(error.response);
-                }
-                if (error.request) {
-                    console.log(error.request);
-                }
-                else {
-                    console.log('Error', error.message);
-                }
-            });
-    }, [])
+    }, [selectedValue, formIsSubmitted])
 
     const addUser = () => {
-        history.push(`/professor/projetos/${id}/atividades/novo`);
+        history.push(`/professor/projetos/${projectId}/atividades/novo`);
     }
 
     const editInfoProject = () => {
@@ -151,25 +174,24 @@ function ListarTarefasProfessor(props) {
     }
 
     const choosePage = (e, page) => {
-
         e.preventDefault();
         let path;
-        // tratando buscar por texto + status
         if (searchText === '') {
-            path = `usuarios/todos_usuarios/aluno/${selectedValue}/${page}`
+            path = `/tarefa/projeto_tarefas/situacao/${projectId}/${selectedValue}/1/${page}`; //
             if (selectedValue === 'todos')
-                path = `usuarios/todos_usuarios/aluno/${page}`
+                path = `/tarefa/projeto_tarefas/${projectId}/1/${page}`;
         }
         else {
-            path = `usuarios/listar_usuarios/aluno/${selectedValue}/${searchText}/${page}`
+            path = `/tarefa/projeto_tarefas/situacao_titulo/${projectId}/${searchText}/${selectedValue}/1/${page}`; //
             if (selectedValue === 'todos')
-                path = `usuarios/listar_usuarios/aluno/${searchText}/${page}`
+                path = `/tarefa/projeto_tarefas/${projectId}/${searchText}/1/${page}`; //
         }
         currentPage.current = page;
 
         api.get(path)
             .then(response => {
                 console.log(response.data);
+                setListTasks(response.data.docs)
 
             })
             .catch(error => {
@@ -189,7 +211,7 @@ function ListarTarefasProfessor(props) {
     }
 
     const openActivity = (e, idActivity) => {
-        history.push(`/professor/projetos/${id}/tarefas/${idActivity}`)
+        history.push(`/professor/projetos/${projectId}/tarefas/${idActivity}`)
     }
     return (
         <DashboardUI screenName='Tarefas' itemActive="Meus Projetos">
@@ -211,7 +233,7 @@ function ListarTarefasProfessor(props) {
                                 <TaskItem key={_id} onClick={(e) => openActivity(e, _id)}>
                                     <TaskTitle>{title}</TaskTitle><br />
                                     <TaskDeadline>
-                                        Prazo de entrega: {format(new Date(deadLine), 'dd/MM/yyyy')}
+                                        Prazo de entrega: {format(zonedTimeToUtc(new Date(deadLine), 'America/Sao_Paulo'), 'dd/MM/yyyy')}
                                         {console.log('deadline', deadLine)}
                                     </TaskDeadline>
                                     <TaskSituation>{situation}</TaskSituation>

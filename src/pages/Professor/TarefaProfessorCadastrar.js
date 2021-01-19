@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form'
 import { useHistory, useParams } from 'react-router-dom'
 import api from '../../api/api'
@@ -7,28 +7,20 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import Button from '../../components/Button'
 import DashboardUI from '../../components/DashboardUI';
-import { FaUserAlt, FaGraduationCap, FaEnvelope, FaLock } from 'react-icons/fa';
 import { MdTitle } from 'react-icons/md';
 import { BiDetail } from 'react-icons/bi';
-
 import IconTextField, { Input } from '../../components/IconTextField/IconTextField';
-import Checkbox from '../../components/Checkbox';
 import ErrorMessage from '../../components/Error'
 import light from '../../themes/light';
 import Label from '../../components/Label/Label';
 import StyledDatePicker from '../../components/StyledDatePicker';
-import ReactDatePicker from 'react-datepicker';
 import format from 'date-fns/format'
 
 
 function TarefaProfessorCadastrar(props) {
     const [errorMessage, setErrorMessage] = useState();
-    const [currentDate, setCurrentDate] = useState(new Date());
-    console.debug('Data selecionada', currentDate);
-    console.debug('Data atual', new Date());
 
     const { register, handleSubmit, errors, formState: { isSubmitting }, watch, control } = useForm({ mode: 'onSubmit' });
-    const watchAddStudentTwo = watch('addStudendTwo');
 
     let idAdvisor = useRef();
     idAdvisor.current = localStorage.getItem('reg')

@@ -6,7 +6,7 @@ import api from '../../api/api'
 
 import DashboardUI from '../../components/DashboardUI';
 import SearchBar from '../../components/SearchBar';
-import { Icon, Menu, Table } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -143,8 +143,8 @@ function Documentos(props) {
         history.push('/documentos/novo');
     }
 
-    const editUser = (_id, registration, name, email, status) => {
-        setUserRegistration({ _id, registration, name, email, status })
+    const editUser = (_id, registration, name) => {
+
         history.push(`/coordenador/alunos/editar/${_id}`);
     }
 
@@ -275,12 +275,12 @@ function Documentos(props) {
                                 <Table.Row key={_id}>
                                     <Table.Cell>{title}</Table.Cell>
                                     <Table.Cell>
-                                        <a href={url} target='_blank'>
+                                        <a href={url} target='_blank' rel="noopener">
                                             {nameDocumentation}
                                         </a>
                                     </Table.Cell>
                                     <Table.Cell style={{ display: 'flex !important', alignItems: 'center', position: 'relative' }}>
-                                        <AiOutlineEdit cursor='pointer' onClick={() => { editUser(_id, name, email, status) }} color={light.color.primary} size='2rem' /> &nbsp;&nbsp;
+                                        <AiOutlineEdit cursor='pointer' onClick={() => { editUser(_id, name) }} color={light.color.primary} size='2rem' /> &nbsp;&nbsp;
                                         <Switch
                                             on='ativo'
                                             off='inativo'

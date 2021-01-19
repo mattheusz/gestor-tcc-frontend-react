@@ -7,6 +7,8 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.20.0",
+    "date-fns": "^2.16.1",
+    "date-fns-tz": "^1.0.12",
     "fs": "^0.0.1-security",
     "jwt-decode": "^3.0.0",
     "react": "^16.13.1",

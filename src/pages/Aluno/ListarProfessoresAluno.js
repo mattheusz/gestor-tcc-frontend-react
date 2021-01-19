@@ -1,27 +1,19 @@
-import React, { useRef, useEffect, useState, useContext } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom'
-import light from '../../themes/light';
 
 import api from '../../api/api'
-
 import DashboardUI from '../../components/DashboardUI';
 import SearchBar from '../../components/SearchBar';
-import { Table } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
-import { ToastContainer, toast } from 'react-toastify';
-import Switch from 'react-input-switch';
-import { AiOutlineEdit } from 'react-icons/ai';
+import { ToastContainer } from 'react-toastify';
 import usePaginatorNumbers from '../../hooks/usePaginator';
-
 import Paginator from '../../components/Paginator/Paginator';
-import { ProjectContext } from '../../context/ProjectContext';
 import styled from 'styled-components';
 import { device } from '../../device';
 import { Modal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
 import '../../index.css'
-import Button from '../../components/Button';
 import { FaInstagram, FaYoutube, FaFacebookF } from "react-icons/fa";
 import { TiSocialLinkedin } from "react-icons/ti";
 import Lattes from '../../assets/lattes.svg';
@@ -31,11 +23,8 @@ import Lattes from '../../assets/lattes.svg';
 function ListarProfessoresAluno(props) {
 
     const [searchText, setSearchText] = useState('');
-    const [projects, setProjets] = useState([]);
     const [teachers, setTeachers] = useState();
     const [modalTeacherInfo, setModalTeacherInfo] = useState();
-
-    const [noProjectFound, setNoProjectFound] = useState(false);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [mountedPagination, setMountedPagination] = useState(false);
     const [formIsSubmitted, setFormIsSubmitted] = useState(true);
@@ -116,11 +105,6 @@ function ListarProfessoresAluno(props) {
             });
     }, [])
 
-    const addUser = () => {
-        history.push(`/professor/projetos/${id}/atividades/novo`);
-    }
-
-
     const onSubmit = e => {
         setMountedPagination(false);
         e.preventDefault();
@@ -159,15 +143,12 @@ function ListarProfessoresAluno(props) {
         api.get(path)
             .then(response => {
                 console.log(response.data);
-                setNoProjectFound(false);
-                setProjets(response.data.docs);
 
             })
             .catch(error => {
                 if (error.response) {
                     const msg = error.response.data;
                     console.log(msg);
-                    setNoProjectFound(true)
                 }
                 if (error.request) {
                     console.log(error.request);
@@ -205,7 +186,7 @@ function ListarProfessoresAluno(props) {
                     teachers.map((value, index) =>
                         <ProfessorCard key={index}>
                             <ProfessorCardImage>
-                                <img src='https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' />
+                                <img alt={value.name} src='https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' />
                             </ProfessorCardImage>
                             <ProfessorCardBody>
                                 <ProfessorCardBodyName>{value.name}</ProfessorCardBodyName>
@@ -217,46 +198,6 @@ function ListarProfessoresAluno(props) {
                     ) :
                     <p>0 professores</p>
                 }
-                <ProfessorCard>
-                    <ProfessorCardImage>
-                        <img src='https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' />
-                    </ProfessorCardImage>
-                    <ProfessorCardBody>
-                        <ProfessorCardBodyName>Roberto</ProfessorCardBodyName>
-                        <p>Sistema web</p>
-                        <ProfessorCardBodyButton onClick={() => setModalIsOpen(true)}>Ver mais</ProfessorCardBodyButton>
-                    </ProfessorCardBody>
-                </ProfessorCard>
-                <ProfessorCard>
-                    <ProfessorCardImage>
-                        <img src='https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' />
-                    </ProfessorCardImage>
-                    <ProfessorCardBody>
-                        <ProfessorCardBodyName>Roberto</ProfessorCardBodyName>
-                        <p>Sistema web</p>
-                        <ProfessorCardBodyButton>Ver mais</ProfessorCardBodyButton>
-                    </ProfessorCardBody>
-                </ProfessorCard>
-                <ProfessorCard>
-                    <ProfessorCardImage>
-                        <img src='https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' />
-                    </ProfessorCardImage>
-                    <ProfessorCardBody>
-                        <ProfessorCardBodyName>Roberto</ProfessorCardBodyName>
-                        <p>Sistema web</p>
-                        <ProfessorCardBodyButton>Ver mais</ProfessorCardBodyButton>
-                    </ProfessorCardBody>
-                </ProfessorCard>
-                <ProfessorCard>
-                    <ProfessorCardImage>
-                        <img src='https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' />
-                    </ProfessorCardImage>
-                    <ProfessorCardBody>
-                        <ProfessorCardBodyName>Roberto</ProfessorCardBodyName>
-                        <p>Sistema web</p>
-                        <ProfessorCardBodyButton>Ver mais</ProfessorCardBodyButton>
-                    </ProfessorCardBody>
-                </ProfessorCard>
 
             </ProfessorList>
             <ToastContainer />
@@ -271,7 +212,7 @@ function ListarProfessoresAluno(props) {
 
             >
                 <ModalImage>
-                    <img src='https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' />
+                    <img alt='Professor' src='https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' />
                 </ModalImage>
                 <ProfessorCardBodyName>
                     {modalTeacherInfo && modalTeacherInfo.name}

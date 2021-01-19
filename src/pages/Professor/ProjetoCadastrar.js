@@ -7,7 +7,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import Button from '../../components/Button'
 import DashboardUI from '../../components/DashboardUI';
-import { FaUserAlt, FaGraduationCap, FaEnvelope, FaLock } from 'react-icons/fa';
 import { MdTitle } from 'react-icons/md';
 import { BiDetail } from 'react-icons/bi';
 

@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState, useContext } from 'react';
 import { useHistory, useParams } from 'react-router-dom'
 import api from '../../api/api'
-
 import DashboardUI from '../../components/DashboardUI';
 import SearchBar from '../../components/SearchBar';
 import 'semantic-ui-css/semantic.min.css';
@@ -51,12 +50,6 @@ function ListarTarefasAluno(props) {
     ]
 
     const isInitialMount = useRef(true);
-
-    let userName = useRef('');
-    let userId = useRef('');
-    let userStatus = useRef('');
-
-    let modalMessage = useRef('');
 
     let totalPages = useRef();
     let currentPage = useRef();

@@ -15,8 +15,10 @@ import '../../../src/index.css'
 import api from '../../api/api';
 import format from 'date-fns/format'
 import locale from "date-fns/locale/pt-BR"; // the locale you want
+import addHours from 'date-fns/addHours'
 import { toast, ToastContainer } from 'react-toastify';
 import ErrorMessage from '../../components/Error/ErrorMessage';
+
 
 function TarefaProfessor(props) {
 
@@ -51,7 +53,7 @@ function TarefaProfessor(props) {
     useEffect(() => {
         api.get(`/tarefa/${taskId}/`)
             .then(({ data: { docs } }) => {
-                console.log('Tarefas do projeto', docs[0]);
+                console.log('Task info', docs[0]);
                 setTask(docs[0]);
             })
             .catch(error => {
@@ -189,7 +191,8 @@ function TarefaProfessor(props) {
                         <TaskDescription>
                             {task && task.description}
                         </TaskDescription>
-                        <TaskDeadline>Prazo de entrega: {task && format(new Date(task.deadLine), 'dd/MM/yyyy')}</TaskDeadline>
+                        <TaskDeadline>Prazo de entrega: {task && format(addHours(new Date(task.deadLine), 3), 'dd/MM/yyyy', { locale: locale })}</TaskDeadline>
+                        {console.log(task && addHours(new Date(task.deadLine), 3))}
                         <TaskSituation>{task && task.situation}</TaskSituation>
                         <Button type='button' width='150px'>
                             Finalizar atividade

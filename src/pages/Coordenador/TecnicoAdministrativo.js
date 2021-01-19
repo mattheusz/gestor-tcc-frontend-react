@@ -6,7 +6,7 @@ import api from '../../api/api'
 
 import DashboardUI from '../../components/DashboardUI';
 import SearchBar from '../../components/SearchBar';
-import { Icon, Menu, Table } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -14,7 +14,6 @@ import Switch from 'react-input-switch';
 import Modal from 'react-modal';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { UserRegistrationContext } from '../../context/UserRegistrationContext';
-import Button from '../../components/Button';
 import usePaginatorNumbers from '../../hooks/usePaginator';
 import ActionModal from '../../components/ActionModal';
 import Paginator from '../../components/Paginator/Paginator';

@@ -46,7 +46,7 @@ const StyledDatePicker = styled(DatePicker)`
     font-size: 1rem;
     width: 100%;
     border-color: ${props => props.borderColor};
-
+    z-index: 5;
 
     &:focus {
         outline: 0;

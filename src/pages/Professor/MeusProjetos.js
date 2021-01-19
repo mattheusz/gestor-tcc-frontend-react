@@ -69,7 +69,7 @@ function Projetos(props) {
 
     let id = useRef();
     id.current = localStorage.getItem('reg')
-    console.log('id', id.current)
+    console.log('id professor', id.current)
 
     Modal.setAppElement('#root');
 
@@ -83,8 +83,10 @@ function Projetos(props) {
         // pegando todos os projetos de um professor
         api.get(`/projeto/professor_projetos/${id.current}/1`)
             .then(({ data }) => {
+                console.log('Projeto', data);
                 currentPage.current = data.page;
                 totalPages.current = data.totalPages;
+                console.log('total de páginas', data.totalPages)
                 noProjectFound && setNoProjectFound(false);
                 setProjets(data.docs);
                 buildPaginatorDesign();
@@ -114,18 +116,18 @@ function Projetos(props) {
             let path;
 
             if (searchText === '') {
-                path = `projeto/professor_projetos/${id}/${selectedValue}/1`;
+                path = `projeto/professor_projetos/situacao/${id.current}/${selectedValue}/1`;
                 if (selectedValue === 'todos')
-                    path = 'projeto/professor_projetos/1'
-
+                    path = `projeto/professor_projetos/${id.current}/1`
             }
             else {
-                path = `projeto/professor_projetos/${id}/${selectedValue}/${searchText}/1`;
+                path = `projeto/professor_projetos/titulo/situacao/${id.current}/${searchText}/${selectedValue}/1`;
                 if (selectedValue === 'todos')
-                    path = `projeto/professor_projetos/${id}/titulo/${searchText}/1`
+                    path = `projeto/professor_projetos/titulo/${id.current}/${searchText}/1`
             }
             api.get(path)
                 .then(({ data }) => {
+                    console.debug('Projeto', data)
                     totalPages.current = data.totalPages;
                     setNoProjectFound(false)
                     setProjets(data.docs)
@@ -134,6 +136,7 @@ function Projetos(props) {
                 })
                 .catch(error => {
                     if (error.response) {
+                        totalPages.current = 0;
                         setNoProjectFound(true)
                     }
                     if (error.request) {
@@ -227,14 +230,14 @@ function Projetos(props) {
         let path;
         // tratando buscar por texto + status
         if (searchText === '') {
-            path = `projeto/professor_projetos/${id.current}/${selectedValue}/${page}`
+            path = `projeto/professor_projetos/situacao/${id.current}/${selectedValue}/${page}`
             if (selectedValue === 'todos')
-                path = `projeto/professor_projetos/${id}/${page}`
+                path = `projeto/professor_projetos/${id.current}/${page}`
         }
         else {
-            path = `projeto/professor_projetos/${id.current}/${selectedValue}/${searchText}/${page}`
+            path = `projeto/professor_projetos/titulo/situacao/${id.current}/${selectedValue}/${searchText}/${page}`
             if (selectedValue === 'todos')
-                path = `projeto/professor_projetos/${id.current}/titulo/${searchText}/${page}`
+                path = `projeto/professor_projetos/titulo/${id.current}/${searchText}/${page}`
         }
         currentPage.current = page;
 

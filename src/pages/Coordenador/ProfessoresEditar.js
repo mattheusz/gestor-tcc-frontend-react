@@ -7,7 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import Button from '../../components/Button'
 import DashboardUI from '../../components/DashboardUI';
-import { FaUserAlt, FaAddressCard, FaEnvelope, FaLock } from 'react-icons/fa';
+import { FaUserAlt, FaAddressCard, FaEnvelope } from 'react-icons/fa';
 
 import IconTextField, { Input } from '../../components/IconTextField/IconTextField';
 import Checkbox from '../../components/Checkbox';

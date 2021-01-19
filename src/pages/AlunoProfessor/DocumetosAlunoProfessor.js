@@ -1,18 +1,16 @@
 import React, { useRef, useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom'
-import light from '../../themes/light';
-
 import api from '../../api/api'
 
 import DashboardUI from '../../components/DashboardUI';
 import SearchBar from '../../components/SearchBar';
-import { Icon, Menu, Table } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 import { ToastContainer, toast } from 'react-toastify';
-import Switch from 'react-input-switch';
+
 import Modal from 'react-modal';
-import { AiOutlineEdit } from 'react-icons/ai';
+
 import { UserRegistrationContext } from '../../context/UserRegistrationContext';
 import usePaginatorNumbers from '../../hooks/usePaginator';
 import ActionModal from '../../components/ActionModal';
@@ -139,29 +137,6 @@ function DocumentosAlunoProfessor(props) {
         setSelectedValue(e.target.value)
     }
 
-    const addDocument = () => {
-        history.push('/documentos/novo');
-    }
-
-    const editUser = (_id, registration, name, email, status) => {
-        setUserRegistration({ _id, registration, name, email, status })
-        history.push(`/coordenador/alunos/editar/${_id}`);
-    }
-
-    const activeAndInactive = (id, name, status) => {
-        userId.current = id;
-        userName.current = name;
-        userStatus.current = status;
-        setMountedPagination(false);
-
-        if (status === 'ativo')
-            modalMessage.current = `Deseja desativar o aluno ${userName.current}?`
-        else
-            modalMessage.current = `Deseja ativar o aluno ${userName.current}?`
-
-        setModalIsOpen(true)
-    }
-
     // remover doccumentos (falta o back)
     const removeDocument = () => {
 
@@ -271,11 +246,11 @@ function DocumentosAlunoProfessor(props) {
 
                     <Table.Body>
                         {
-                            user.map(({ _id, title, name, email, status, documentIformation: { nameDocumentation, url } }) => (
+                            user.map(({ _id, title, documentIformation: { nameDocumentation, url } }) => (
                                 <Table.Row key={_id}>
                                     <Table.Cell>{title}</Table.Cell>
                                     <Table.Cell>
-                                        <a href={url} target='_blank'>
+                                        <a href={url} target='_blank' rel="noopener">
                                             {nameDocumentation}
                                         </a>
                                     </Table.Cell>

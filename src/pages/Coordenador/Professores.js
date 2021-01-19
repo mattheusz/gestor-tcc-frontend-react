@@ -6,7 +6,7 @@ import api from '../../api/api'
 
 import DashboardUI from '../../components/DashboardUI';
 import SearchBar from '../../components/SearchBar';
-import { Icon, Menu, Table } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 import { ToastContainer, toast } from 'react-toastify';

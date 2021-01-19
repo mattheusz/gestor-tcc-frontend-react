@@ -93,7 +93,7 @@ function ProjetoEditar(props) {
         console.log('description', description)
         console.log('id', studentOne)
         console.log(selectedStudentOne)
-        if (selectedStudentOne == '-' || selectedStudentTwo == '-') {
+        if (selectedStudentOne === '-' || selectedStudentTwo === '-') {
             console.log('Deu ruim')
             setErrorMessage('Não há alunos disponíveis para orientação.');
             return;
@@ -101,6 +101,7 @@ function ProjetoEditar(props) {
 
         if (selectedStudentOne === selectedStudentTwo) {
             setErrorMessage('Selecione alunos diferentes.');
+            return;
         }
         console.log('student 1 submit:', studentOne)
         if (!studentOne)
@@ -131,6 +132,7 @@ function ProjetoEditar(props) {
                     );
                 notify()
                 setSucessSubmiting(true)
+                setErrorMessage('')
                 setTimeout(() => {
                     history.push('/professor')
                 }, 2000);
@@ -140,7 +142,7 @@ function ProjetoEditar(props) {
                 if (error.response) {
                     const msg = error.response.data;
                     console.log('erro', msg);
-                    setErrorMessage('Erro ao inserir usuário. Tente novamente.')
+                    setErrorMessage(msg)
                 }
                 if (error.request) {
                     console.log(error.request);
@@ -302,8 +304,6 @@ function ProjetoEditar(props) {
                                     {
                                         studentsWithoutProject ?
                                             studentsWithoutProject.map(({ _id, name }) => {
-                                                console.log('student 1', selectedStudentOne);
-                                                console.log('student 1', name);
                                                 if (name === selectedStudentOne) return;
                                                 return (<option
                                                     key={_id}

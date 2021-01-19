@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form'
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form'
 import { useHistory, useParams } from 'react-router-dom'
 import api from '../../api/api'
 import 'semantic-ui-css/semantic.min.css';
@@ -7,12 +7,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import Button from '../../components/Button'
 import DashboardUI from '../../components/DashboardUI';
-import { FaUserAlt, FaGraduationCap, FaEnvelope, FaLock } from 'react-icons/fa';
 import { MdTitle } from 'react-icons/md';
 import { BiDetail } from 'react-icons/bi';
 
 import IconTextField, { Input } from '../../components/IconTextField/IconTextField';
-import Checkbox from '../../components/Checkbox';
 import ErrorMessage from '../../components/Error'
 import light from '../../themes/light';
 import Label from '../../components/Label/Label';
@@ -27,7 +25,7 @@ function TarefaProfessorEditar(props) {
     const [initialDate, setInitialDate] = useState();
     const [deadline, setDeadline] = useState();
 
-    const { register, handleSubmit, errors, formState: { isSubmitting }, watch, control, setValue, getValues } = useForm({
+    const { register, handleSubmit, errors, formState: { isSubmitting }, setValue } = useForm({
         mode: 'onSubmit',
 
     });
@@ -179,7 +177,6 @@ function TarefaProfessorEditar(props) {
                 }
 
                 <Label htmlFor='initialDate'>Data de início</Label>
-
                 <StyledDatePicker
                     value={initialDate}
                     onChange={value => handleChangeInitialDate(value)}
@@ -191,18 +188,11 @@ function TarefaProfessorEditar(props) {
                     style={{ borderColor: errors.customRegisterInitialDate && light.color.secondary }}
                 />
 
-
-
                 {errors.customRegisterInitialDate &&
                     <ErrorMessage left marginTop marginBottom>
                         A data de inicío é obrigatória
                     </ErrorMessage>
                 }
-
-
-                <input type='date' ref={register} name='datas' defaultValue='2021-02-02'
-                    style={{ padding: '7px', marginBottom: '7px' }}
-                ></input>
 
                 <Label htmlFor='deadline'>Prazo de entrega</Label>
                 <StyledDatePicker
