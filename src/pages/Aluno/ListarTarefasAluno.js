@@ -14,6 +14,7 @@ import { device } from '../../device';
 import light from '../../themes/light';
 import format from 'date-fns/format'
 import ReactLoading from 'react-loading';
+import { utcToZonedTime } from 'date-fns-tz';
 
 function ListarTarefasAluno(props) {
 
@@ -63,22 +64,28 @@ function ListarTarefasAluno(props) {
     Modal.setAppElement('#root');
 
     const history = useHistory();
-    const { id } = useParams();
+    const { id: projectId } = useParams();
 
-    // listar todas as tarefas de um projeto
+    // listando tarefas
     useEffect(() => {
-        api.get(`/tarefa/projeto_tarefas/${id}/1`)
-            .then(({ data: { docs } }) => {
-                console.log('Tarefas do projeto', docs);
-                const { title, students, description, situation, tasks } = docs;
-                setListTasks(docs);
+        if (mountedPagination)
+            return;
+        setMountedPagination(false);
+        api.get(`/tarefa/projeto_tarefas/${projectId}/1/1`)
+            .then(({ data }) => {
+
+                currentPage.current = data.page;
+                totalPages.current = data.totalPages;
+                console.debug('Data zonedTimetoUtc sem format', format(utcToZonedTime(data.docs[0].deadLine), 'dd/MM/yyyy HH:MM:sszz'));
+                setListTasks(data.docs);
                 setSomeTaskFound(true);
                 setIsLoading(false);
-
+                buildPaginatorDesign();
             })
             .catch(error => {
                 if (error.response) {
                     console.log(error.response);
+                    setIsLoading(false);
                 }
                 if (error.request) {
                     console.log(error.request);
@@ -89,32 +96,51 @@ function ListarTarefasAluno(props) {
             });
     }, []);
 
-    const [selectedValue, setSelectedValue] = useState('ativo');
+    const [selectedValue, setSelectedValue] = useState('iniciado');
     useEffect(() => {
         if (isInitialMount.current) {
             isInitialMount.current = false;
         } else {
+            let path;
+            if (searchText === '') {
+                path = `/tarefa/projeto_tarefas/situacao/${projectId}/${selectedValue}/1/1`; //
+                if (selectedValue === 'todos')
+                    path = `/tarefa/projeto_tarefas/${projectId}/1/1`;
+            }
+            else {
+                path = `/tarefa/projeto_tarefas/situacao_titulo/${projectId}/${searchText}/${selectedValue}/1/1`; //
+                if (selectedValue === 'todos')
+                    path = `/tarefa/projeto_tarefas/${projectId}/${searchText}/1/1`; //
+            }
+            setMountedPagination(false);
+            api.get(path)
+                .then(({ data }) => {
+                    totalPages.current = data.totalPages;
+                    console.log(data.docs);
+                    setSomeTaskFound(true);
+                    setListTasks(data.docs);
+                    buildPaginatorDesign();
+                })
+                .catch(error => {
+                    if (error.response) {
+                        console.log(error.response);
+                        totalPages.current = 1;
+                        setSomeTaskFound(false)
+                    }
+                    if (error.request) {
+                        console.log(error.request);
+                    }
+                    else {
+                        console.log('Error', error.message);
+                    }
+                });
 
         }
-        api.get(``)
-            .then(({ data }) => {
 
-            })
-            .catch(error => {
-                if (error.response) {
-                    console.log(error.response);
-                }
-                if (error.request) {
-                    console.log(error.request);
-                }
-                else {
-                    console.log('Error', error.message);
-                }
-            });
-    }, [])
+    }, [selectedValue, formIsSubmitted]);
 
     const addUser = () => {
-        history.push(`/professor/projetos/${id}/atividades/novo`);
+        history.push(`/professor/projetos/${projectId}/atividades/novo`);
     }
 
     const editInfoProject = () => {
@@ -140,31 +166,31 @@ function ListarTarefasAluno(props) {
     }
 
     const choosePage = (e, page) => {
-
         e.preventDefault();
         let path;
-        // tratando buscar por texto + status
         if (searchText === '') {
-            path = `usuarios/todos_usuarios/aluno/${selectedValue}/${page}`
+            path = `/tarefa/projeto_tarefas/situacao/${projectId}/${selectedValue}/1/${page}`; //
             if (selectedValue === 'todos')
-                path = `usuarios/todos_usuarios/aluno/${page}`
+                path = `/tarefa/projeto_tarefas/${projectId}/1/${page}`;
         }
         else {
-            path = `usuarios/listar_usuarios/aluno/${selectedValue}/${searchText}/${page}`
+            path = `/tarefa/projeto_tarefas/situacao_titulo/${projectId}/${searchText}/${selectedValue}/1/${page}`; //
             if (selectedValue === 'todos')
-                path = `usuarios/listar_usuarios/aluno/${searchText}/${page}`
+                path = `/tarefa/projeto_tarefas/${projectId}/${searchText}/1/${page}`; //
         }
         currentPage.current = page;
 
         api.get(path)
             .then(response => {
                 console.log(response.data);
+                setListTasks(response.data.docs)
 
             })
             .catch(error => {
                 if (error.response) {
                     const msg = error.response.data;
                     console.log(msg);
+
                 }
                 if (error.request) {
                     console.log(error.request);
@@ -174,13 +200,13 @@ function ListarTarefasAluno(props) {
                 }
             });
         buildPaginatorDesign();
-    }
+    };
 
     const openActivity = (e, idActivity) => {
-        history.push(`/aluno-orientando/projeto/${id}/atividades/${idActivity}`)
+        history.push(`/aluno-orientando/projeto/${projectId}/tarefas/${idActivity}`)
     }
     return (
-        <DashboardUI screenName='Atividades' itemActive="Meus Projetos">
+        <DashboardUI screenName='Tarefas' itemActive="Meu Projeto">
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}
@@ -208,8 +234,13 @@ function ListarTarefasAluno(props) {
                             ) :
                             'Nenhuma tarefa cadastrada'
                 }
-
             </TaskList>
+            <Paginator
+                totalPages={totalPages.current}
+                currentPage={currentPage.current}
+                paginationNumbers={paginationNumbers.current}
+                choosePage={choosePage}
+            />
             <ToastContainer />
         </DashboardUI>
 

@@ -10,8 +10,9 @@ import { Table } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 import { ToastContainer, toast } from 'react-toastify';
+import ReactLoading from 'react-loading';
 import Switch from 'react-input-switch';
-import Modal from 'react-modal';
+import { Modal } from 'react-responsive-modal';
 import { AiOutlineEdit } from 'react-icons/ai';
 import usePaginatorNumbers from '../../hooks/usePaginator';
 import ActionModal from '../../components/ActionModal';
@@ -21,6 +22,8 @@ import ProfessorProjectList from '../../components/ProfessorProjectList/Professo
 import ProjectInfo from '../../components/ProjectInfo/ProjectInfo';
 import styled from 'styled-components';
 import { device } from '../../device';
+import format from 'date-fns/format'
+import { utcToZonedTime } from 'date-fns-tz';
 
 function ListarOrientacoesProfessor(props) {
 
@@ -31,6 +34,10 @@ function ListarOrientacoesProfessor(props) {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [mountedPagination, setMountedPagination] = useState(false);
     const [formIsSubmitted, setFormIsSubmitted] = useState(true);
+    const [listOrientations, setListOrientations] = useState();
+    const [isLoading, setIsLoading] = useState(true);
+    const [someOrientationFound, setSomeOrientationFound] = useState(false);
+    const [modalOrientationInfo, setModalOrientationInfo] = useState();
 
     const selectItems = [
         {
@@ -57,10 +64,6 @@ function ListarOrientacoesProfessor(props) {
 
     const isInitialMount = useRef(true);
 
-    let userName = useRef('');
-    let userId = useRef('');
-    let userStatus = useRef('');
-
     let modalMessage = useRef('');
 
     let totalPages = useRef();
@@ -72,25 +75,27 @@ function ListarOrientacoesProfessor(props) {
     professorId.current = localStorage.getItem('reg')
     console.log('id', professorId.current)
 
-    Modal.setAppElement('#root');
-
     const history = useHistory();
-    const { id } = useParams();
+    const { projectId } = useParams();
 
-    // carregando informações do projeto aberto
+    // carregando todas orientações
     useEffect(() => {
-
         // pegar projeto por id
-        api.get(``)
+        api.get(`/orientacao/orientacoes_projeto/${projectId}/1/1`)
             .then(({ data }) => {
-
+                console.debug('orientações:', data);
+                setListOrientations(data.docs)
+                setSomeOrientationFound(true);
+                setIsLoading(false);
             })
             .catch(error => {
                 if (error.response) {
                     console.log(error.response);
+                    setIsLoading(false);
                 }
                 if (error.request) {
                     console.log(error.request);
+                    setIsLoading(false);
                 }
                 else {
                     console.log('Error', error.message);
@@ -123,7 +128,7 @@ function ListarOrientacoesProfessor(props) {
     }, [])
 
     const addUser = () => {
-        history.push(`/professor/projetos/${id}/orientacoes/novo`);
+        history.push(`/professor/projetos/${projectId}/orientacoes/novo`);
     }
 
     const editInfoProject = () => {
@@ -189,7 +194,12 @@ function ListarOrientacoesProfessor(props) {
     }
 
     const openOrientation = (e, idOrientation) => {
-        history.push(`/professor/projetos/${id}/orientacoes/${idOrientation}`)
+        history.push(`/professor/projetos/${projectId}/orientacoes/${idOrientation}`)
+    }
+
+    const openModal = (value) => {
+        setModalOrientationInfo(value);
+        setModalIsOpen(true);
     }
     return (
         <DashboardUI screenName='Orientação 1' itemActive="Meus Projetos">
@@ -203,42 +213,54 @@ function ListarOrientacoesProfessor(props) {
                     selectItems={selectItems}
                 />
             </form>
-            <ActivityList>
-                <ActivityItem onClick={(e) => openOrientation(e, 1)}>
-                    <ActivityTitle>Introdução</ActivityTitle><br />
-                    <Deadline>
-                        20/01/2020
-                    </Deadline>
-                    <ActivitySituation>tipo</ActivitySituation>
-                </ActivityItem>
-                <ActivityItem>
-                    <ActivityTitle>Referencial teórico</ActivityTitle><br />
-                    <Deadline>
-                        20/01/2020
-                    </Deadline>
-                    <ActivitySituation>tipo</ActivitySituation>
-                </ActivityItem>
-                <ActivityItem>
-                    <ActivityTitle>Desenvolvimento</ActivityTitle><br />
-                    <Deadline>
-                        20/01/2020
-                    </Deadline>
-                    <ActivitySituation>tipo</ActivitySituation>
-                </ActivityItem>
-            </ActivityList>
+            <OrientationList>
+                {
+                    isLoading ? <Spinner type='spin' color={light.color.primaryShadow} height={20} width={20} /> :
+                        someOrientationFound ?
+                            listOrientations.map(({ _id, title, dateOrientation, situation }) =>
+                                <OrientationItem key={_id} onClick={(e) => openModal(title)}>
+                                    <OrientationTitle>{title}</OrientationTitle><br />
+                                    <OrientationDate>
+                                        {format(utcToZonedTime(dateOrientation, 'Europe/London'), 'dd/MM/yyyy')}
+                                    </OrientationDate>
+                                </OrientationItem>
+                            ) :
+                            'Nenhuma orientação cadastrada'
+                }
+
+                <Paginator
+                    totalPages={totalPages.current}
+                    currentPage={currentPage.current}
+                    paginationNumbers={paginationNumbers.current}
+                    choosePage={choosePage}
+                />
+
+            </OrientationList>
             <ToastContainer />
+            <Modal
+                open={modalIsOpen}
+                onClose={() => setModalIsOpen(false)}
+                center
+                classNames={{
+                    overlay: 'customOverlay',
+                    modal: 'customDetailProfessorModal',
+                }}
+
+            >
+                <h1>{modalOrientationInfo && modalOrientationInfo}</h1>
+            </Modal>
         </DashboardUI>
 
     );
 }
 
-const ActivityList = styled.div`
+const OrientationList = styled.div`
     display: flex;
     flex-direction: column;
     margin-top: 1rem;
 `
 
-const ActivityItem = styled.div`
+const OrientationItem = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -265,11 +287,11 @@ const ActivityItem = styled.div`
     }
 `
 
-const ActivityTitle = styled.span`
+const OrientationTitle = styled.span`
     font-size: 1.5rem;
     font-weight: 400;
 `
-const Deadline = styled.span`
+const OrientationDate = styled.span`
     font-size: 1rem;
     font-weight: 400;
     padding: 3px;
@@ -305,6 +327,10 @@ const ActivitySituation = styled.span`
         border-radius: 5px;
         box-shadow: 1px 1px 1px ${props => props.theme.color.grey}55;
     }
+`;
+
+const Spinner = styled(ReactLoading)`
+    margin: 7rem auto 7rem;
 `;
 
 export default ListarOrientacoesProfessor;

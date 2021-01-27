@@ -12,7 +12,7 @@ import 'semantic-ui-css/semantic.min.css';
 import { ToastContainer, toast } from 'react-toastify';
 import Switch from 'react-input-switch';
 import Modal from 'react-modal';
-import { AiOutlineEdit } from 'react-icons/ai';
+import { AiOutlineEdit, AiFillDelete } from 'react-icons/ai';
 import { UserRegistrationContext } from '../../context/UserRegistrationContext';
 import usePaginatorNumbers from '../../hooks/usePaginator';
 import ActionModal from '../../components/ActionModal';
@@ -143,7 +143,7 @@ function Documentos(props) {
         history.push('/documentos/novo');
     }
 
-    const editUser = (_id, registration, name) => {
+    const editDocument = (_id, registration, name) => {
 
         history.push(`/coordenador/alunos/editar/${_id}`);
     }
@@ -280,27 +280,19 @@ function Documentos(props) {
                                         </a>
                                     </Table.Cell>
                                     <Table.Cell style={{ display: 'flex !important', alignItems: 'center', position: 'relative' }}>
-                                        <AiOutlineEdit cursor='pointer' onClick={() => { editUser(_id, name) }} color={light.color.primary} size='2rem' /> &nbsp;&nbsp;
-                                        <Switch
-                                            on='ativo'
-                                            off='inativo'
-                                            style={{
-                                                width: '2rem',
-                                                height: '1.2rem',
-                                                position: 'absolute',
-                                                top: '50%',
-                                                transform: 'translateY(-50%)'
-                                            }}
-                                            styles={{
-                                                trackChecked: {
-                                                    backgroundColor: light.color.primary
-                                                },
-                                                buttonChecked: {
-                                                    backgroundColor: 'white'
-                                                }
-                                            }}
-                                            value={status}
-                                            onChange={() => { activeAndInactive(_id, name, status) }} />
+                                        <AiOutlineEdit
+                                            cursor='pointer'
+                                            onClick={() => { editDocument(_id, name) }}
+                                            color={light.color.primary}
+                                            size='2rem' />
+                                        &nbsp;&nbsp;
+                                        <AiFillDelete
+                                            cursor='pointer'
+                                            onClick={() => { delete (_id, name) }}
+                                            color={light.color.secondary}
+                                            size='2rem'
+                                        />
+
 
                                     </Table.Cell>
                                 </Table.Row>

@@ -83,7 +83,7 @@ function DocumentosCadastrar() {
     }
 
     return (
-        <DashboardUI screenName='Cadastrar Documentos' itemActive="Documentos">
+        <DashboardUI screenName='Cadastrar Documento' itemActive="Documentos">
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='title'>Título</Label>
                 <IconTextField>

@@ -152,23 +152,9 @@ function Projetos(props) {
         history.push('/projetos/novo');
     }
 
-    const editUser = (_id, registration, name, email, status) => {
+    const editProject = (_id, registration, name, email, status) => {
         //setProject({ _id, registration, name, email, status })
         history.push(`/projetos/editar/${_id}`);
-    }
-
-    const activeAndInactive = (id, name, status) => {
-        userId.current = id;
-        userName.current = name;
-        userStatus.current = status;
-        setMountedPagination(false);
-
-        if (status === 'ativo')
-            modalMessage.current = `Deseja desativar o aluno ${userName.current}?`
-        else
-            modalMessage.current = `Deseja ativar o aluno ${userName.current}?`
-
-        setModalIsOpen(true)
     }
 
     const changeStatusUser = () => {
@@ -287,28 +273,12 @@ function Projetos(props) {
                                     </Table.Cell>
                                     <Table.Cell>{name}</Table.Cell>
                                     <Table.Cell style={{ display: 'flex !important', alignItems: 'center', position: 'relative' }}>
-                                        <AiOutlineEdit cursor='pointer' onClick={() => { editUser(_id, title, name, situation, status) }} color={light.color.primary} size='2rem' /> &nbsp;&nbsp;
-                                        <Switch
-                                            on='ativo'
-                                            off='inativo'
-                                            style={{
-                                                width: '2rem',
-                                                height: '1.2rem',
-                                                position: 'absolute',
-                                                top: '50%',
-                                                transform: 'translateY(-50%)'
-                                            }}
-                                            styles={{
-                                                trackChecked: {
-                                                    backgroundColor: light.color.primary
-                                                },
-                                                buttonChecked: {
-                                                    backgroundColor: 'white'
-                                                }
-                                            }}
-                                            value={status}
-                                            onChange={() => { activeAndInactive(_id, name, status) }} />
-
+                                        <AiOutlineEdit title='Editar orientador' cursor='pointer' onClick={
+                                            () => { editProject(_id, title, name, situation, status) }
+                                        }
+                                            color={light.color.primary}
+                                            size='2rem'
+                                        /> &nbsp;&nbsp;
                                     </Table.Cell>
                                 </Table.Row>
                             ))

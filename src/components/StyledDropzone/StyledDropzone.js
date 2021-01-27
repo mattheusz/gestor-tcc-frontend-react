@@ -24,24 +24,27 @@ const Container = styled.div`
   padding: 20px;
   border-width: 1px;
   border-radius: 2px;
-  border-color: ${props => getColor(props)};
+  border-color: ${props => props.disabled ? '#AAAAAA' : getColor(props)};
   border-style: dashed;
   background-color: #fafafa;
   color: #bdbdbd;
   transition: border .24s ease-in-out;
   outline: none;
   margin-bottom: .4rem;
-  color: ${props => getColor(props)};
+  color: ${props => props.disabled ? '#AAAAAA' : getColor(props)};
   cursor: pointer;
 `;
 
-export default function StyledDropzone({ accept, multiple, maxSize, text, setFileUploading }) {
+export default function StyledDropzone({ accept, multiple, maxFiles, maxSize, text, setFileUploading, disabled, setValue }) {
 
     const [fileNames, setFileNames] = useState([]);
     const onDrop = useCallback(acceptedFiles => {
         acceptedFiles.map(file => {
+            setValue('file', file, { shouldValidate: true })
             setFileNames(file.name);
             setFileUploading(file);
+            console.debug('FILE A SER INSERIDO NO SET VALUE', file)
+
         })
 
     })
@@ -55,13 +58,15 @@ export default function StyledDropzone({ accept, multiple, maxSize, text, setFil
     } = useDropzone({
         accept,
         multiple,
+        maxFiles,
         maxSize,
-        onDrop
+        onDrop,
+        disabled: disabled,
     });
 
     return (
         <div className="container">
-            <Container {...getRootProps({ isDragActive, isDragAccept, isDragReject })}>
+            <Container {...getRootProps({ isDragActive, isDragAccept, isDragReject, disabled })}>
                 <input {...getInputProps()} />
                 <p>{text}</p>
             </Container>

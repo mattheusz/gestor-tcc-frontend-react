@@ -22,27 +22,32 @@ import Select from '../../components/Select';
 
 function OrientacaoProfessorEditar(props) {
     const [errorMessage, setErrorMessage] = useState();
-    const [startDate, setStartDate] = useState(new Date());
+    const [orientation, setOrientation] = useState();
     const [orientationType, setOrientationType] = useState('');
-    console.debug('Data selecionada', startDate);
-    console.debug('Data atual', new Date());
+    const [orientationDate, setOrientationDate] = useState('');
 
-    const { register, handleSubmit, errors, formState: { isSubmitting }, watch } = useForm({ mode: 'onSubmit' });
-    const watchAddStudentTwo = watch('addStudendTwo');
-
-    /*
-    let id = useRef();
-    id.current = localStorage.getItem('reg')
-    */
+    const {
+        register,
+        handleSubmit,
+        errors,
+        formState: { isSubmitting },
+        watch,
+        setValue,
+    } = useForm({ mode: 'onSubmit' });
 
     const history = useHistory()
-    const { id } = useParams();
+    const { orientationId } = useParams();
 
     useEffect(() => {
-        api.get(`usuarios/listar_usuarios/aluno_sem_projeto/1`)
-            .then(response => {
-                console.log(response)
-
+        api.get(`AGUARDANDO ROTA`)
+            .then(({ data: { docs } }) => {
+                console.log('Orientação o', docs[0]);
+                // setting orientationDate state, that the value to display in input date-picker
+                setOrientationType(docs[0].type);
+                setOrientationDate(new Date(docs[0].dateOrientation));
+                // setting initial date to custom register customRegisterOrientationDate
+                setValue('customRegisterOrientationDate', new Date(docs[0].dateOrientation));
+                setOrientation(docs[0]);
             })
             .catch(error => {
                 if (error.response) {
@@ -55,18 +60,17 @@ function OrientacaoProfessorEditar(props) {
                     console.log('Error', error.message);
                 }
             });
-    }, [])
-
+    }, []);
 
     const onSubmit = ({ title, description, studentOne }) => {
 
-        api.post('/projeto/cadastrar_projeto', {
+        api.patch(`/orientacao/atualizar/${orientationId}/`, {
 
         })
             .then(response => {
                 console.log(response.data);
                 const notify = () =>
-                    toast.success("Atividade cadastrada com sucesso", {
+                    toast.success("Orientação atualizada com sucesso", {
                         autoClose: 2000,
                     }
                     );
@@ -80,7 +84,7 @@ function OrientacaoProfessorEditar(props) {
                 if (error.response) {
                     const msg = error.response.data;
                     console.log(msg);
-                    setErrorMessage('Erro ao cadastrar a atividade. Tente novamente.')
+                    setErrorMessage('Erro ao atualizar a orientação. Tente novamente.')
                 }
                 if (error.request) {
                     console.log(error.request);
@@ -98,6 +102,17 @@ function OrientacaoProfessorEditar(props) {
         });
     }
 
+    useEffect(() => {
+        // creating custom registers
+        register('customRegisterOrientationDate', { required: true })
+    }, [register]);
+
+    const handleChangeOrientationDate = date => {
+        console.log('e', date)
+        setValue('customRegisterOrientationDate', date, { shouldValidate: true }); // setting value in the custom register
+        setOrientationDate(date); // setting value in the state. necessary for update display of the input initialDate
+    }
+
     return (
         <DashboardUI screenName='Editar Orientação' itemActive="Meus Projetos">
 
@@ -113,6 +128,7 @@ function OrientacaoProfessorEditar(props) {
                         })}
                         placeholder='Título'
                         autoFocus
+                        defaultValue={orientation && orientation.title}
                         style={{ borderColor: errors.title && light.color.secondary }}
                     />
                 </IconTextField>
@@ -133,6 +149,7 @@ function OrientacaoProfessorEditar(props) {
                             required: true
                         })}
                         placeholder='Descrição'
+                        defaultValue={orientation && orientation.description}
                         style={{ borderColor: errors.description && light.color.secondary }}
                     />
                 </IconTextField>
@@ -176,17 +193,21 @@ function OrientacaoProfessorEditar(props) {
                     </Select>
                 </IconTextField>
 
-                <Label htmlFor='date'>Data</Label>
+                <Label htmlFor='orientationDate'>Data da orientação</Label>
                 <StyledDatePicker
-                    startDate={startDate}
-                    setStartDate={date => setStartDate(date)}
+                    value={orientationDate}
+                    onChange={value => handleChangeOrientationDate(value)}
                     locale='pt-BR'
                     timeIntervals={15}
+                    name="orientationDate"
+                    error={errors.customRegisterOrientationDate}
+                    placeholder="Data da orientação.."
+                    style={{ borderColor: errors.customRegisterOrientationDate && light.color.secondary }}
                 />
 
-                {errors.registration &&
+                {errors.customRegisterOrientationDate &&
                     <ErrorMessage left marginTop marginBottom>
-                        A matrícula  é obrigatória
+                        A data da orientação é obrigatória
                     </ErrorMessage>
                 }
 
@@ -198,7 +219,7 @@ function OrientacaoProfessorEditar(props) {
                 <Button new={true} type='submit' width='100px' disabled={isSubmitting}>
                     Salvar
                 </Button>
-                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${id}/orientacoes`)}>
+                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${orientationId}/orientacoes`)}>
                     Cancelar
                 </Button>
             </form>

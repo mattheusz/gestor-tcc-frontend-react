@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import Avatar from 'react-avatar';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import lightTheme from '../../themes/light'
@@ -7,30 +7,38 @@ import Button from '../../components/Button';
 import DashboardUI from '../../components/DashboardUI';
 import StyledDropzone from '../../components/StyledDropzone/StyledDropzone';
 import { device } from '../../device';
-import { Modal } from 'react-responsive-modal';
-import Avatar from 'react-avatar';
-import 'react-responsive-modal/styles.css';
+import Modal from 'react-responsive-modal';
 import { MdModeEdit, MdDelete } from 'react-icons/md';
-import '../../../src/index.css'
+import IconTextField, { Input } from '../../components/IconTextField'
+import { AiOutlineLink } from 'react-icons/ai';
+import { useHistory, useParams } from 'react-router-dom';
 import api from '../../api/api';
+import { toast } from 'react-toastify';
 import format from 'date-fns/format'
 import locale from "date-fns/locale/pt-BR"; // the locale you want
 import addHours from 'date-fns/addHours'
-import { toast, ToastContainer } from 'react-toastify';
-import ErrorMessage from '../../components/Error/ErrorMessage';
+import ErrorMessage from '../../components/Error';
 
-
-function TarefaProfessor(props) {
+function TarefaAluno(props) {
 
     const [task, setTask] = useState();
     const [fileUploading, setFileUploading] = useState();
-    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [modalSendActivityIsOpen, setModalSendActivityIsOpen] = useState(false);
     const [modalEditIsOpen, setModalEditIsOpen] = useState(false);
     const [modalDeleteIsOpen, setModalDeleteIsOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
     const [commentAddedOrDeleted, setCommentAddedOrDeleted] = useState(false);
-    const { register, handleSubmit, errors, formState: { isSubmitting } }
+
+    let commentHandled = useRef();
+    let commentTextToEdit = useRef();
+    let userId = useRef();
+    userId.current = localStorage.getItem('reg')
+    console.log('id', userId.current)
+
+    const { register, handleSubmit, errors, formState: { isSubmitting }, watch, setValue }
         = useForm({ mode: 'onSubmit' });
+
+
 
     const {
         register: registerEdit,
@@ -39,16 +47,26 @@ function TarefaProfessor(props) {
         formState: { isSubmitting: isSubmittingEdit } }
         = useForm({ mode: 'onSubmit' });
 
-    let modalMessage = useRef('')
+    const {
+        register: registerDeliver,
+        handleSubmit: handleSubmitDeliver,
+        errors: errorsDeliver,
+        watch: watchDeliver,
+        setValue: setValueDeliver,
+        formState: { isSubmitting: isSubmittingDeliver } }
+        = useForm({ mode: 'onSubmit' });
+
+    const watchFile = watchDeliver('file', false);
+    const watchLink = watchDeliver('link', false);
+    console.debug('WATCH FILE', watchFile)
 
     const history = useHistory();
     const { id, taskId } = useParams();
 
-    let commentHandled = useRef();
-    let commentTextToEdit = useRef();
-    let userId = useRef();
-    userId.current = localStorage.getItem('reg')
-    console.log('id', userId.current)
+    useEffect(() => {
+        registerDeliver("file", { required: watchLink ? false : true });
+        console.log("File sendo registrado")
+    }, [register, watchLink])
 
     useEffect(() => {
         api.get(`/tarefa/${taskId}/`)
@@ -176,22 +194,74 @@ function TarefaProfessor(props) {
         });
     }
 
-    return (
-        <DashboardUI screenName={task && task.title} itemActive="Meus Projetos" isProfessorActivity={true}>
-            <TaskHeader>
-                {task &&
-                    <>
-                        <TaskDescription>
-                            {task && task.description}
-                        </TaskDescription>
-                        <TaskDeadline>Prazo de entrega: {task && format(addHours(new Date(task.deadLine), 3), 'dd/MM/yyyy', { locale: locale })}</TaskDeadline>
-                        {console.log(task && addHours(new Date(task.deadLine), 3))}
-                        <TaskSituation>{task && task.situation}</TaskSituation>
-                        <Button type='button' width='150px'>
-                            Finalizar atividade
-                        </Button>
-                    </>
+    const onSubmitTask = ({ file, link }) => {
+
+
+        const formData = new FormData();
+        if (file) {
+            formData.append("file", file);
+        }
+
+        if (link)
+            formData.append("link", link);
+
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ', ' + pair[1]);
+        }
+
+        console.debug('INFORMAÇÃO A SER SUBMETIDA:', file, link)
+
+        api.patch(`tarefas/atualizar_tarefa/aluno/${taskId}`, formData, {
+            headers: {
+                "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
+            }
+        })
+            .then(response => {
+                console.log(response.data);
+                closeTaskDeliverModal(false)
+                const notify = () =>
+                    toast.success("Tarefa entregue com sucesso!", {
+                        autoClose: 2000,
+                    });
+                notify()
+            })
+            .catch(error => {
+                if (error.response) {
+                    setErrorMessage(error.response.data)
+                    toast.error(error.response.data, {
+                        autoClose: 2000,
+                    });
                 }
+                if (error.request) {
+                    console.log(error.request);
+                    toast.error(`Erro interno no servidor. Tente novamente mais tarde.`, {
+                        autoClose: 2000,
+                    });
+                }
+                else {
+                    console.log('Error', error.message);
+                }
+            });
+
+    }
+
+    const closeTaskDeliverModal = () => {
+        setModalSendActivityIsOpen(false);
+        setValueDeliver('file', false);
+    }
+
+    return (
+        <DashboardUI screenName={task && task.title} itemActive="Meu Projeto">
+            <TaskHeader>
+                <TaskDescription>
+                    {task && task.description}
+                </TaskDescription>
+                <TaskDeadline>Prazo de entrega: {task && format(addHours(new Date(task.deadLine), 3), 'dd/MM/yyyy', { locale: locale })}</TaskDeadline>
+                {console.log(task && addHours(new Date(task.deadLine), 3))}
+                <TaskSituation>{task && task.situation}</TaskSituation>
+                <Button type='button' width='150px' onClick={() => setModalSendActivityIsOpen(true)}>
+                    Entregar atividade
+                </Button>
 
             </TaskHeader>
             <TaskCommentBox>
@@ -268,49 +338,61 @@ function TarefaProfessor(props) {
                     : 'Comment not found'
                 }
             </TaskCommentList>
-            <Modal
-                isOpen={modalIsOpen}
-                onRequestClose={() => setModalIsOpen(false)}
-                style={{
-                    content: {
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -70%)',
-                        height: '270px', width: '500px', maxWidth: '90%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-between'
-                    },
-                    overlay: {
-                        zIndex: '15',
 
-                    }
+            {/* entregar atividade */}
+            <Modal
+                open={modalSendActivityIsOpen}
+                onClose={() => closeTaskDeliverModal()}
+                center
+                classNames={{
+                    overlay: 'customOverlay',
+                    modal: 'customEditCommentModal',
                 }}
             >
-                <ModalTitle>Entregar...</ModalTitle>
+                <h1>Entregar atividade</h1>
                 <TaskCommentBox >
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <textarea
-                            name='comment'
-                            ref={register({
-                                required: true,
-                            })}
-                            rows={2}
-                            placeholder='Digite o seu comentário...' />
+                    <form onSubmit={handleSubmitDeliver(onSubmitTask)}>
+
+                        <p>Arquivo:</p>
                         <StyledDropzone
                             accept='.pdf'
                             multiple={false}
                             maxSize={2097152}
+                            maxFiles={1}
                             text="Arraste ou clique para adicionar o arquivo desejado."
                             setFileUploading={setFileUploading}
+                            disabled={watchLink ? true : false}
+                            setValue={setValueDeliver}
                         />
+
+                        <p className='or'><span>ou</span></p>
+
+                        <p>Link:</p>
+                        <IconTextField>
+                            <AiOutlineLink />
+                            <Input
+                                name='link'
+                                disabled={watchFile ? true : false}
+                                ref={registerDeliver({
+                                    required: watchFile ? false : true,
+                                })}
+                            />
+                        </IconTextField>
+
+                        {errorsDeliver.file && errorsDeliver.link &&
+                            <ErrorMessage left marginTop marginBottom>
+                                Pelo menos um dos campos acima deve ser preenchido.
+                            </ErrorMessage>
+                        }
+
+                        <div style={{ display: 'grid', marginTop: '.5rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
+                            <Button type='submit'>Entregar</Button>
+                            <Button onClick={() => closeTaskDeliverModal()}>Cancelar</Button>
+                        </div>
                     </form>
 
                 </TaskCommentBox>
-                <div style={{ display: 'grid', marginTop: '-1.2rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
-                    <Button onClick={() => setModalIsOpen(false)}>Entregar</Button>
-                    <Button onClick={() => setModalIsOpen(false)}>Cancelar</Button>
-                </div>
+
             </Modal>
 
             {/* editar comentário */}
@@ -363,13 +445,13 @@ function TarefaProfessor(props) {
                     <Button onClick={() => setModalDeleteIsOpen(false)}>Cancelar</Button>
                 </div>
             </Modal>
-            <ToastContainer style={{ zIndex: '9999999' }} />
+
         </DashboardUI >
 
     );
 }
 
-export default TarefaProfessor;
+export default TarefaAluno;
 
 const TaskHeader = styled.div`
     border-bottom: 1px solid ${props => props.theme.color.grey}55;
@@ -385,7 +467,7 @@ const TaskDescription = styled.div`
 `;
 
 const TaskDeadline = styled.span`
-    display: inline; 
+    display: inline;
     align-self: flex-start;
     font-size: 1rem;
     font-weight: 400;
@@ -407,14 +489,14 @@ const TaskSituation = styled.span`
     align-self: flex-start;
 /*
     @media ${device.mobileL}{
-        margin-top: 0;
+                        margin - top: 0;
         position: absolute;
         top: 12px;
         right: 11px;
     }
 
     @media ${device.tablet}{
-        position: absolute;
+                        position: absolute;
         top: 15px;
         right: 20px;
         padding: 4px;
@@ -424,26 +506,30 @@ const TaskSituation = styled.span`
 `;
 
 const TaskCommentBox = styled.div`
-    border: 1px solid ${props => props.theme.color.grey}55;
-    background: ${props => props.theme.color.grey}55;
+    border: 1px solid ${props => props.theme.color.lightGrey};
+    background-color: ${props => props.theme.color.lightGrey};
     border-radius: 5px;
     margin-top: 1.2rem;
     padding: 1.2rem;
     display: flex;
     flex-direction: column;
 
-    textarea { 
-        resize: none;
+    textarea {
+                        resize: none;
         width: 100%;
         border: 1px solid ${props => props.theme.color.grey};
         color: ${props => props.theme.color.dark};
         padding: 5px;
         font-family: 'Roboto', sans-serif !important;
         outline: none;
-        
+
         &:focus{
-            border: 1px solid ${props => props.theme.color.primary};
+                        border: 1px solid ${props => props.theme.color.primary};
         }
+    }
+
+    p {
+        margin-bottom: .2rem;
     }
 `;
 
@@ -465,6 +551,7 @@ const TaskCommentHeader = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+
 `;
 
 const TaskCommentBody = styled.div`
@@ -484,10 +571,10 @@ const TaskCommentIcon = styled.span`
     cursor: pointer;
 
     &:hover:nth-child(1){
-        color: ${props => props.theme.color.primary};
+                        color: ${props => props.theme.color.primary};
     }
     &:hover:nth-child(2){
-        color: ${props => props.theme.color.secondary};
+                        color: ${props => props.theme.color.secondary};
     }
 `;
 
@@ -503,14 +590,13 @@ const TaskCommentText = styled.span`
     margin-top: 3px;
 `;
 
-const ActivityCommentAttachment = styled.span`
+const TaskCommentAttachment = styled.span`
     color: ${props => props.theme.color.dark};
     margin-top: 3px;
 `;
 
 const ModalTitle = styled.h2`
-    
+    margin-bottom: -22px;
     font-weight: 500;
     color: ${props => props.theme.color.dark};
-    text-align: center;
 `;

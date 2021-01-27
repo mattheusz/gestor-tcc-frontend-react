@@ -19,7 +19,7 @@ import Paginator from '../../components/Paginator/Paginator';
 import styled from 'styled-components';
 import { device } from '../../device';
 import format from 'date-fns/format'
-import { zonedTimeToUtc } from 'date-fns-tz';
+import { utcToZonedTime } from 'date-fns-tz';
 
 function ListarTarefasProfessor(props) {
 
@@ -80,11 +80,11 @@ function ListarTarefasProfessor(props) {
         setMountedPagination(false);
         api.get(`/tarefa/projeto_tarefas/${projectId}/1/1`)
             .then(({ data }) => {
-
+                console.debug('total pages', data.totalPages)
+                console.debug('registers', data)
                 currentPage.current = data.page;
                 totalPages.current = data.totalPages;
-                console.debug('tarefa vinda', data)
-                console.log(zonedTimeToUtc(new Date(data.docs[0].deadLine), 'Etc/GMT-6'), 'dd/MM/yyyy');
+                console.debug('Data zonedTimetoUtc sem format', format(utcToZonedTime(data.docs[0].deadLine), 'dd/MM/yyyy HH:MM:sszz'));
                 setListTasks(data.docs);
                 setSomeTaskFound(true);
                 setIsLoading(false);
@@ -142,17 +142,12 @@ function ListarTarefasProfessor(props) {
                         console.log('Error', error.message);
                     }
                 });
-
         }
 
-    }, [selectedValue, formIsSubmitted])
+    }, [selectedValue, formIsSubmitted]);
 
-    const addUser = () => {
+    const addTask = () => {
         history.push(`/professor/projetos/${projectId}/atividades/novo`);
-    }
-
-    const editInfoProject = () => {
-
     }
 
     const onSubmit = e => {
@@ -208,7 +203,7 @@ function ListarTarefasProfessor(props) {
                 }
             });
         buildPaginatorDesign();
-    }
+    };
 
     const openActivity = (e, idActivity) => {
         history.push(`/professor/projetos/${projectId}/tarefas/${idActivity}`)
@@ -221,7 +216,7 @@ function ListarTarefasProfessor(props) {
                     setSearchText={setSearchText}
                     selectedValue={selectedValue}
                     onChangeSelect={onChangeSelect}
-                    addUser={addUser}
+                    addUser={addTask}
                     selectItems={selectItems}
                 />
             </form>
@@ -233,8 +228,7 @@ function ListarTarefasProfessor(props) {
                                 <TaskItem key={_id} onClick={(e) => openActivity(e, _id)}>
                                     <TaskTitle>{title}</TaskTitle><br />
                                     <TaskDeadline>
-                                        Prazo de entrega: {format(zonedTimeToUtc(new Date(deadLine), 'America/Sao_Paulo'), 'dd/MM/yyyy')}
-                                        {console.log('deadline', deadLine)}
+                                        Prazo de entrega: {format(utcToZonedTime(deadLine, 'Europe/London'), 'dd/MM/yyyy')}
                                     </TaskDeadline>
                                     <TaskSituation>{situation}</TaskSituation>
                                 </TaskItem>

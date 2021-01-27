@@ -16,6 +16,7 @@ import light from '../../themes/light';
 import Label from '../../components/Label/Label';
 import StyledDatePicker from '../../components/StyledDatePicker';
 import format from 'date-fns/format'
+import Select from '../../components/Select';
 
 
 function TarefaProfessorEditar(props) {
@@ -24,6 +25,7 @@ function TarefaProfessorEditar(props) {
     const [task, setTask] = useState();
     const [initialDate, setInitialDate] = useState();
     const [deadline, setDeadline] = useState();
+    const [situation, setSituation] = useState();
 
     const { register, handleSubmit, errors, formState: { isSubmitting }, setValue } = useForm({
         mode: 'onSubmit',
@@ -35,6 +37,21 @@ function TarefaProfessorEditar(props) {
     id.current = localStorage.getItem('reg')
     */
 
+    const selectOptionItems = [
+        {
+            value: 'iniciado',
+            displayValue: 'Iniciado'
+        },
+        {
+            value: 'recusado',
+            displayValue: 'Recusado'
+        },
+        {
+            value: 'concluído',
+            displayValue: 'Concluído'
+        }
+    ];
+
     const history = useHistory();
     const { id, taskId } = useParams();
 
@@ -43,11 +60,12 @@ function TarefaProfessorEditar(props) {
             .then(({ data: { docs } }) => {
                 console.log('Tarefas do projeto', docs[0]);
                 // setting initial state, that the value to display in input date-picker
-                setInitialDate(new Date(docs[0].initialDate))
-                setDeadline(new Date(docs[0].deadLine))
+                setSituation(docs[0].situation);
+                setInitialDate(new Date(docs[0].initialDate));
+                setDeadline(new Date(docs[0].deadLine));
                 // setting initial date to custom register customRegisterInitialDate
-                setValue('customRegisterInitialDate', new Date(docs[0].initialDate))
-                setValue('customRegisterDeadline', new Date(docs[0].deadLine))
+                setValue('customRegisterInitialDate', new Date(docs[0].initialDate));
+                setValue('customRegisterDeadline', new Date(docs[0].deadLine));
                 setTask(docs[0]);
             })
             .catch(error => {
@@ -63,7 +81,7 @@ function TarefaProfessorEditar(props) {
             });
     }, []);
 
-    const onSubmit = ({ title, description, customRegisterInitialDate, customRegisterDeadline }) => {
+    const onSubmit = ({ title, description, customRegisterInitialDate, customRegisterDeadline, situation }) => {
 
         format(customRegisterInitialDate, 'dd/MM/yyyy');
         console.debug('initial date:', format(customRegisterInitialDate, 'dd/MM/yyyy'))
@@ -74,7 +92,7 @@ function TarefaProfessorEditar(props) {
             description,
             initialDate: format(customRegisterInitialDate, 'dd/MM/yyyy'),
             deadLine: format(customRegisterDeadline, 'dd/MM/yyyy'),
-            situation: 'iniciado'
+            situation
         })
             .then(response => {
                 console.log(response.data);
@@ -120,13 +138,17 @@ function TarefaProfessorEditar(props) {
     const handleChangeInitialDate = e => {
         console.log('e', e)
         setInitialDate(e); // setting value in the state. necessary for update display of the input initialDate
-        setValue('customRegisterInitialDate', e); // setting value in the custom register
+        setValue('customRegisterInitialDate', e, { shouldValidate: true }); // setting value in the custom register
+    }
+
+    const onChangeSelectSituation = e => {
+        setSituation(e.target.value)
     }
 
     const handleChangeDeadline = e => {
         console.log('e', e)
         setDeadline(e); // setting value in the state. necessary for update display of the input initialDate
-        setValue('customRegisterDeadline', e); // setting value in the custom register
+        setValue('customRegisterDeadline', e, { shouldValidate: true }); // setting value in the custom register
     }
 
     return (
@@ -175,6 +197,29 @@ function TarefaProfessorEditar(props) {
                         Uma descrição é obrigatória
                     </ErrorMessage>
                 }
+
+                <Label htmlFor='situation'>Situação</Label>
+                <Select
+                    formSelect={true}
+                    value={situation}
+                    ref={register}
+                    onChange={e => onChangeSelectSituation(e)}
+                    name='situation'
+                    id='situation'
+                >
+                    {
+                        selectOptionItems.map((item, index) => {
+                            return (
+                                <option
+                                    key={index}
+                                    value={item.value}
+                                    style={{ width: '100%' }}
+                                >
+                                    {item.displayValue}
+                                </option>)
+                        })
+                    }
+                </Select>
 
                 <Label htmlFor='initialDate'>Data de início</Label>
                 <StyledDatePicker

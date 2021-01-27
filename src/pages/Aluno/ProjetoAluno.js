@@ -35,7 +35,7 @@ function ProjetoAluno(props) {
     }, []);
 
     return (
-        <DashboardUI screenName={projectInfo && projectInfo.title} itemActive="Meus Projeto" >
+        <DashboardUI screenName={projectInfo && projectInfo.title} itemActive="Meu Projeto" >
             <ProjectInfo projectId={projectInfo && projectInfo._id} isStudent={true} projectInfos={projectInfo} />
             <ToastContainer />
         </DashboardUI>

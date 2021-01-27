@@ -20,7 +20,6 @@ function CustomDatePicker({ value, locale, onChange, style, error, placeholder, 
             <StyledDatePicker
                 selected={value}
                 onChange={onChange}
-                minDate={new Date()}
                 locale={locale}
                 dateFormat="dd/MM/yyyy"
                 borderColor={borderColor}

@@ -21,6 +21,7 @@ function ProjetoEditar(props) {
     const [checkedChangeStudents, setCheckedChangeStudents] = useState(false);
     const [checkedAddStudentTwo, setCheckedAddStudentTwo] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
+    const [situation, setSituation] = useState();
     const [studentsWithoutProject, setStudentsWithoutProject] = useState();
     const [selectedStudentOne, setSelectedStudentOne] = useState('Aluno 1');
     const [selectedStudentTwo, setSelectedStudentTwo] = useState('');
@@ -37,10 +38,29 @@ function ProjetoEditar(props) {
     const history = useHistory()
     const { id } = useParams();
 
+    const selectOptionItems = [
+        {
+            value: 'pré-tcc',
+            displayValue: 'Pré-TCC'
+        },
+        {
+            value: 'tcc1',
+            displayValue: 'TCC 1'
+        },
+        {
+            value: 'tcc2',
+            displayValue: 'TCC 2'
+        },
+        {
+            value: 'concluído',
+            displayValue: 'Concluído'
+        },
+    ];
     useEffect(() => {
         api.get(`/projeto/${id}`)
             .then(response => {
                 console.log(response)
+                setSituation(response.data.docs[0].situation)
                 setProject(response.data.docs[0])
             })
             .catch(error => {
@@ -88,7 +108,11 @@ function ProjetoEditar(props) {
         setCheckedAddStudentTwo(event.target.checked)
     }
 
-    const onSubmit = ({ title, description, studentOne, studentTwo }) => {
+    const onChangeSelectSituation = e => {
+        setSituation(e.target.value)
+    }
+
+    const onSubmit = ({ title, description, situation, studentOne, studentTwo }) => {
         console.log('title:', title)
         console.log('description', description)
         console.log('id', studentOne)
@@ -119,6 +143,7 @@ function ProjetoEditar(props) {
         api.patch(`/projeto/atualizar_projeto/${id}`, {
             title,
             description,
+            situation,
             studentOne: studentOne,
             studentTwo: studentTwo,
             advisor: idAdvisor.current,
@@ -213,6 +238,30 @@ function ProjetoEditar(props) {
                         Uma descrição é obrigatória
                     </ErrorMessage>
                 }
+
+                <Label htmlFor='situation'>Situação</Label>
+                <Select
+                    formSelect={true}
+                    value={situation}
+                    ref={register}
+                    onChange={e => onChangeSelectSituation(e)}
+                    name='situation'
+                    id='situation'
+                >
+                    {
+                        selectOptionItems.map((item, index) => {
+                            return (
+                                <option
+                                    key={index}
+                                    value={item.value}
+                                    style={{ width: '100%' }}
+                                >
+                                    {item.displayValue}
+                                </option>)
+                        })
+                    }
+
+                </Select>
 
                 <Label style={{ fontSize: '1.1rem' }}>
                     <Checkbox

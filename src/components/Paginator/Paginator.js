@@ -13,7 +13,7 @@ function Paginator({ totalPages, currentPage, paginationNumbers, choosePage }) {
                         <Table.Row>
                             <Table.HeaderCell colSpan='4'>
                                 <Menu floated='right' pagination>
-                                    {totalPages > 2 && currentPage !== 1 && <Menu.Item as='a' icon onClick={e => {
+                                    {totalPages > 3 && currentPage !== 1 && <Menu.Item as='a' icon onClick={e => {
                                         if (currentPage === 1)
                                             return;
                                         choosePage(e, 1)
@@ -58,7 +58,7 @@ function Paginator({ totalPages, currentPage, paginationNumbers, choosePage }) {
                                             <Icon name='chevron right' />
                                         </Menu.Item>
                                     }
-                                    {totalPages > 2 && currentPage !== totalPages &&
+                                    {totalPages > 3 && currentPage !== totalPages &&
                                         <Menu.Item as='a' icon onClick={e => {
                                             if (currentPage === totalPages)
                                                 return;

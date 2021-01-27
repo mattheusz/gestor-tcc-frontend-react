@@ -26,7 +26,7 @@ export function AuthProvider({ children }) {
             api.defaults.headers.Authorization = `${token}`;
 
             const decoded = jwt_decode(token);
-            console.log(decoded)
+            console.debug('TOKEN DECODED: ', decoded);
             const { userType, isCoordinator, available, id } = decoded;
             const userTypeDetected = detectUserType(userType, isCoordinator, available);
             console.log('Tipo de usuário detectado: ', userTypeDetected);
@@ -53,7 +53,7 @@ export function AuthProvider({ children }) {
                 api.defaults.headers.Authorization = `Bearer ${token}`;
 
                 const decoded = jwt_decode(token);
-                console.log(decoded)
+                console.debug('TOKEN DECODED: ', decoded);
                 const { userType, isCoordinator, available, id } = decoded;
                 const userTypeDetected = detectUserType(userType, isCoordinator, available);
                 console.log('Tipo de usuário detectado: ', userTypeDetected);

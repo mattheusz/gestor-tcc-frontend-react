@@ -7,28 +7,26 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import Button from '../../components/Button'
 import DashboardUI from '../../components/DashboardUI';
-import { FaUserAlt, FaGraduationCap, FaEnvelope, FaLock } from 'react-icons/fa';
 import { MdTitle } from 'react-icons/md';
 import { BiDetail } from 'react-icons/bi';
 
 import IconTextField, { Input } from '../../components/IconTextField/IconTextField';
-import Checkbox from '../../components/Checkbox';
 import ErrorMessage from '../../components/Error'
 import light from '../../themes/light';
 import Label from '../../components/Label/Label';
 import StyledDatePicker from '../../components/StyledDatePicker';
 import Select from '../../components/Select';
-
+import format from 'date-fns/format'
 
 function OrientacaoProfessorCadastrar(props) {
     const [errorMessage, setErrorMessage] = useState();
     const [startDate, setStartDate] = useState(new Date());
     const [orientationType, setOrientationType] = useState('');
+    const [orientationDate, setOrientationDate] = useState();
     console.debug('Data selecionada', startDate);
     console.debug('Data atual', new Date());
 
-    const { register, handleSubmit, errors, formState: { isSubmitting }, watch } = useForm({ mode: 'onSubmit' });
-    const watchAddStudentTwo = watch('addStudendTwo');
+    const { register, handleSubmit, errors, formState: { isSubmitting }, watch, setValue } = useForm({ mode: 'onSubmit' });
 
     /*
     let id = useRef();
@@ -36,43 +34,29 @@ function OrientacaoProfessorCadastrar(props) {
     */
 
     const history = useHistory()
-    const { id } = useParams();
+    const { projectId } = useParams();
 
-    useEffect(() => {
-        api.get(`usuarios/listar_usuarios/aluno_sem_projeto/1`)
-            .then(response => {
-                console.log(response)
+    const onSubmit = ({ title, description, customRegisterOrientationDate }) => {
 
-            })
-            .catch(error => {
-                if (error.response) {
-                    console.log(error.response);
-                }
-                if (error.request) {
-                    console.log(error.request);
-                }
-                else {
-                    console.log('Error', error.message);
-                }
-            });
-    }, [])
+        format(customRegisterOrientationDate, 'dd/MM/yyyy');
 
-
-    const onSubmit = ({ title, description, studentOne }) => {
-
-        api.post('/projeto/cadastrar_projeto', {
-
+        api.post(`/orientacao/cadastrar_orientacao`, {
+            title,
+            description,
+            type: 'reunião',
+            projectId,
+            dateOrientation: format(customRegisterOrientationDate, 'dd/MM/yyyy'),
         })
             .then(response => {
                 console.log(response.data);
                 const notify = () =>
-                    toast.success("Atividade cadastrada com sucesso", {
+                    toast.success("Orientação registrada com sucesso", {
                         autoClose: 2000,
                     }
                     );
                 notify()
                 setTimeout(() => {
-                    history.push('/professor')
+                    history.push(`/professor/projetos/${projectId}/orientacoes`)
                 }, 2000);
 
             })
@@ -80,7 +64,7 @@ function OrientacaoProfessorCadastrar(props) {
                 if (error.response) {
                     const msg = error.response.data;
                     console.log(msg);
-                    setErrorMessage('Erro ao cadastrar a atividade. Tente novamente.')
+                    setErrorMessage('Erro ao registrar a orientação. Tente novamente.')
                 }
                 if (error.request) {
                     console.log(error.request);
@@ -96,6 +80,17 @@ function OrientacaoProfessorCadastrar(props) {
         return new Promise((resolve) => {
             setTimeout(() => resolve(), 1500);
         });
+    }
+
+    useEffect(() => {
+        // creating custom registers
+        register('customRegisterOrientationDate', { required: true })
+    }, [register]);
+
+    const handleChangeOrientationDate = date => {
+        console.log('e', date)
+        setValue('customRegisterOrientationDate', date, { shouldValidate: true }); // setting value in the custom register
+        setOrientationDate(date); // setting value in the state. necessary for update display of the input initialDate
     }
 
     return (
@@ -157,36 +152,26 @@ function OrientacaoProfessorCadastrar(props) {
                             value={1}
                             style={{ width: '100%' }}
                         >
-                            Tipo 1
-                        </option>
-                        <option
-                            key={1}
-                            value={1}
-                            style={{ width: '100%' }}
-                        >
-                            Tipo 1
-                        </option>
-                        <option
-                            key={1}
-                            value={1}
-                            style={{ width: '100%' }}
-                        >
-                            Tipo 1
+                            Reunião
                         </option>
                     </Select>
                 </IconTextField>
 
-                <Label htmlFor='date'>Data</Label>
+                <Label htmlFor='orientationDate'>Data da orientação</Label>
                 <StyledDatePicker
-                    startDate={startDate}
-                    setStartDate={date => setStartDate(date)}
+                    value={orientationDate}
+                    onChange={value => handleChangeOrientationDate(value)}
                     locale='pt-BR'
                     timeIntervals={15}
+                    name="orientationDate"
+                    error={errors.customRegisterOrientationDate}
+                    placeholder="Data da orientação.."
+                    style={{ borderColor: errors.customRegisterOrientationDate && light.color.secondary }}
                 />
 
-                {errors.registration &&
+                {errors.customRegisterOrientationDate &&
                     <ErrorMessage left marginTop marginBottom>
-                        A matrícula  é obrigatória
+                        A data da orientação é obrigatória
                     </ErrorMessage>
                 }
 
@@ -198,7 +183,7 @@ function OrientacaoProfessorCadastrar(props) {
                 <Button new={true} type='submit' width='100px' disabled={isSubmitting}>
                     Salvar
                 </Button>
-                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${id}/orientacoes`)}>
+                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${projectId}/orientacoes`)}>
                     Cancelar
                 </Button>
             </form>
