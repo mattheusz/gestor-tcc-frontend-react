@@ -189,7 +189,7 @@ function AlunoCadastrar(props) {
                 <Button new={true} type='submit' width='100px' disabled={isSubmitting}>
                     Salvar
                 </Button>
-                &nbsp;
+
                 <Button new={true} type='button' width='100px' onClick={() => history.replace('/alunos')}>
                     Cancelar
                 </Button>

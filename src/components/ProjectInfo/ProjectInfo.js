@@ -168,7 +168,6 @@ const TaskCard = styled.div`
     flex-direction: column;
     border: 1px solid ${props => props.theme.color.grey}55;
     border-radius: 5px;
-    cursor: pointer;
 
     @media ${device.tablet}{
         border-radius: 5px;
@@ -261,7 +260,7 @@ const CardBody = styled.div`
     font-size: 1.2rem;
     font-weight: 300;
     padding: .8rem;
-    
+    cursor: pointer;
 `
 
 const CardFooter = styled(Link)`

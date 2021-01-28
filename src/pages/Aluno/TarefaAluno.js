@@ -28,6 +28,7 @@ function TarefaAluno(props) {
     const [modalDeleteIsOpen, setModalDeleteIsOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
     const [commentAddedOrDeleted, setCommentAddedOrDeleted] = useState(false);
+    const [taskDelivered, setTaskDelivered] = useState(false);
 
     let commentHandled = useRef();
     let commentTextToEdit = useRef();
@@ -85,7 +86,7 @@ function TarefaAluno(props) {
                     console.log('Error', error.message);
                 }
             });
-    }, [commentAddedOrDeleted]);
+    }, [commentAddedOrDeleted, taskDelivered]);
 
     const onSubmit = async ({ comment }, e) => {
         api.post('comentario/criar_comentario', {
@@ -218,7 +219,8 @@ function TarefaAluno(props) {
         })
             .then(response => {
                 console.log(response.data);
-                closeTaskDeliverModal(false)
+                closeTaskDeliverModal(false);
+                setTaskDelivered(!taskDelivered)
                 const notify = () =>
                     toast.success("Tarefa entregue com sucesso!", {
                         autoClose: 2000,

@@ -164,7 +164,6 @@ function ProfessoresEditar(props) {
                 <Button new={true} type='submit' width='100px'>
                     Salvar
                 </Button>
-                &nbsp;
                 <Button new={true} type='button' width='100px' onClick={() => history.replace('/professores')}>
                     Cancelar
                 </Button>

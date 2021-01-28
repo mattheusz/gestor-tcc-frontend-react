@@ -10,23 +10,26 @@ import { Table } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 import { ToastContainer, toast } from 'react-toastify';
-import Switch from 'react-input-switch';
-import Modal from 'react-modal';
 import { AiOutlineEdit, AiFillDelete } from 'react-icons/ai';
 import { UserRegistrationContext } from '../../context/UserRegistrationContext';
 import usePaginatorNumbers from '../../hooks/usePaginator';
-import ActionModal from '../../components/ActionModal';
+import { Modal } from 'react-responsive-modal';
 import Paginator from '../../components/Paginator/Paginator';
+import Button from '../../components/Button';
 
 function Documentos(props) {
+    const [errorMessage, setErrorMessage] = useState();
     const [searchText, setSearchText] = useState('');
     const [user, setUser] = useState([]);
-
+    const [modalDeleteIsOpen, setModalDeleteIsOpen] = useState(false);
     const [noUserFound, setNoUserFound] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [mountedPagination, setMountedPagination] = useState(false);
     const [formIsSubmitted, setFormIsSubmitted] = useState(true);
+    const [reloadDocuments, setReloadDocuments] = useState(false);
+
+    const documentIdToDeleting = useRef();
 
     const { setUserRegistration } = useContext(UserRegistrationContext);
 
@@ -56,8 +59,6 @@ function Documentos(props) {
     let paginationNumbers = useRef([]);
     const { getReadyPaginator, getTotalPages, populatePaginator } = usePaginatorNumbers()
 
-    Modal.setAppElement('#root');
-
     const history = useHistory();
 
     // carregando todos os tec administrativos ao montar componente
@@ -85,7 +86,7 @@ function Documentos(props) {
                     console.log('Error', error.message);
                 }
             });
-    }, [currentPage]);
+    }, [currentPage, reloadDocuments]);
 
     // filtrando professor por todos, ativo e inativo
     const [selectedValue, setSelectedValue] = useState('ativo');
@@ -143,59 +144,43 @@ function Documentos(props) {
         history.push('/documentos/novo');
     }
 
-    const editDocument = (_id, registration, name) => {
-
-        history.push(`/coordenador/alunos/editar/${_id}`);
+    const editDocument = (_id, title) => {
+        history.push(`/documentos/editar/${_id}/${title}`);
     }
 
-    const activeAndInactive = (id, name, status) => {
-        userId.current = id;
-        userName.current = name;
-        userStatus.current = status;
-        setMountedPagination(false);
-
-        if (status === 'ativo')
-            modalMessage.current = `Deseja desativar o aluno ${userName.current}?`
-        else
-            modalMessage.current = `Deseja ativar o aluno ${userName.current}?`
-
-        setModalIsOpen(true)
-    }
-
-    // remover doccumentos (falta o back)
-    const removeDocument = () => {
-
-        api.put('usuarios/atualizar_status', {
-            id: userId.current,
-        })
+    const deleteDocument = () => {
+        api.delete(`documentos/deletar_documento/${documentIdToDeleting.current}`)
             .then(response => {
-                setStatusUserChanged(!statusUserChanged)
-                setModalIsOpen(false);
-                if (userStatus.current === 'ativo') {
-                    toast.success('Aluno desativado com sucesso', {
-                        autoClose: 3000,
+                console.log(response.data);
+                setReloadDocuments(!reloadDocuments)
+                setModalDeleteIsOpen(false)
+                const notify = () =>
+                    toast.success("Documento excluído com sucesso", {
+                        autoClose: 2000,
                     });
-                } else {
-                    toast.success('Aluno ativado com sucesso', {
-                        autoClose: 3000,
-                    });
-                }
-                setStatusUserChanged(!statusUserChanged)
+                notify()
             })
             .catch(error => {
                 if (error.response) {
-                    setModalIsOpen(false)
-                    toast.error("A ação não foi executada. Tente novamente", {
-                        autoClose: 4000,
+                    setErrorMessage(error.response.data)
+                    toast.error(error.response.data, {
+                        autoClose: 2000,
                     });
                 }
                 if (error.request) {
                     console.log(error.request);
+                    toast.error(`Erro interno no servidor. Tente novamente mais tarde.`, {
+                        autoClose: 2000,
+                    });
                 }
                 else {
                     console.log('Error', error.message);
                 }
             });
+
+        return new Promise((resolve) => {
+            setTimeout(() => resolve(), 3000);
+        });
     }
 
     const buildPaginatorDesign = () => {
@@ -271,7 +256,7 @@ function Documentos(props) {
 
                     <Table.Body>
                         {
-                            user.map(({ _id, title, name, email, status, documentIformation: { nameDocumentation, url } }) => (
+                            user.map(({ _id, title, name, documentIformation: { nameDocumentation, url } }) => (
                                 <Table.Row key={_id}>
                                     <Table.Cell>{title}</Table.Cell>
                                     <Table.Cell>
@@ -281,19 +266,22 @@ function Documentos(props) {
                                     </Table.Cell>
                                     <Table.Cell style={{ display: 'flex !important', alignItems: 'center', position: 'relative' }}>
                                         <AiOutlineEdit
+                                            title='Editar'
                                             cursor='pointer'
-                                            onClick={() => { editDocument(_id, name) }}
+                                            onClick={() => { editDocument(_id, title) }}
                                             color={light.color.primary}
-                                            size='2rem' />
+                                            size='1.7rem' />
                                         &nbsp;&nbsp;
                                         <AiFillDelete
+                                            title='Excluir'
                                             cursor='pointer'
-                                            onClick={() => { delete (_id, name) }}
+                                            onClick={() => {
+                                                documentIdToDeleting.current = _id;
+                                                setModalDeleteIsOpen(true)
+                                            }}
                                             color={light.color.secondary}
-                                            size='2rem'
+                                            size='1.7rem'
                                         />
-
-
                                     </Table.Cell>
                                 </Table.Row>
                             ))
@@ -307,12 +295,26 @@ function Documentos(props) {
                     />
                 </Table>
             }
-            <ActionModal
-                modalIsOpen={modalIsOpen}
-                setModalIsOpen={setModalIsOpen}
-                modalMessage={modalMessage.current}
-                handleConfirmAction={removeDocument}
-            />
+
+            {/* excluir documento */}
+            <Modal
+                open={modalDeleteIsOpen}
+                onClose={() => setModalDeleteIsOpen(false)}
+                center
+                classNames={{
+                    overlay: 'customOverlay',
+                    modal: 'customModal',
+                }}
+
+            >
+                <h1>Deseja excluir este documento?</h1>
+                <p>Esta ação é irreversível.</p>
+
+                <div style={{ display: 'grid', marginTop: '.1rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
+                    <Button onClick={() => deleteDocument()}>Sim</Button>
+                    <Button onClick={() => setModalDeleteIsOpen(false)}>Cancelar</Button>
+                </div>
+            </Modal>
             <ToastContainer />
         </DashboardUI>
 

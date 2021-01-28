@@ -18,6 +18,7 @@ import Label from '../../components/Label/Label';
 function ProfessoresCadastrar(props) {
     const [checked, setChecked] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
+    const [submitedWithSucess, setSubmitedWithSucess] = useState(false);
 
     const { register, handleSubmit, errors, formState: { isSubmitting }, watch } = useForm({ mode: 'onSubmit' });
     const watchPassword = watch('password');
@@ -45,6 +46,7 @@ function ProfessoresCadastrar(props) {
         })
             .then(response => {
                 console.log(response.data);
+                setSubmitedWithSucess(true);
                 const notify = () =>
                     toast.success("Professor cadastrado com sucesso", {
                         autoClose: 2000,
@@ -203,10 +205,9 @@ function ProfessoresCadastrar(props) {
                         {errorMessage}
                     </ErrorMessage>
                 }
-                <Button new={true} type='submit' width='100px' disabled={isSubmitting}>
+                <Button new={true} type='submit' width='100px' disabled={isSubmitting || submitedWithSucess || false}>
                     Salvar
                 </Button>
-                &nbsp;
                 <Button new={true} type='button' width='100px' onClick={() => history.replace('/professores')}>
                     Cancelar
                 </Button>

@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import api from '../../api/api'
 import 'semantic-ui-css/semantic.min.css';
 import { ToastContainer, toast } from 'react-toastify';
@@ -15,51 +15,53 @@ import light from '../../themes/light';
 import Label from '../../components/Label/Label';
 import { useDropzone } from 'react-dropzone';
 import StyledDropzone from '../../components/StyledDropzone/StyledDropzone';
+import Checkbox from '../../components/Checkbox';
 
 
-function DocumentosCadastrar() {
+function DocumentosEditar() {
     const [errorMessage, setErrorMessage] = useState();
     const [fileUploading, setFileUploading] = useState();
+    const [checkedUpdateDocument, setCheckedUpdateDocument] = useState();
+    const [submitedWithSucess, setSubmitedWithSucess] = useState(false);
+
     const { register, handleSubmit, errors, formState: { isSubmitting }, watch, setValue }
         = useForm({ mode: 'onSubmit' });
 
-    const watchFile = watch('file');
+    const watchUpdateDocumentFileCheck = watch('updateDocumentFileCheck');
 
     const onDrop = useCallback(acceptedFiles => {
         console.log(acceptedFiles[0]);
         //setFileUploading(acceptedFiles[0].name)
     }, []);
 
+
     const history = useHistory()
+    const { documentId, documentTitle } = useParams();
 
     useEffect(() => {
-        register("file", { required: true });
-    }, [register])
+        register("file", { required: checkedUpdateDocument ? true : false });
+    }, [register, checkedUpdateDocument])
 
-    const onChangeFile = (e) => {
-        console.log(e.target.files[0])
-        setFileUploading(e.target.files[0]);
-    }
 
     const onSubmit = async ({ title, file }) => {
         console.log(title)
-        console.debug('file', file)
-        //console.log(fileUploading)
 
         const formData = new FormData();
 
         formData.append("title", title);
-        formData.append("file", file);
+        file && formData.append("file", file);
+        console.debug('BOUNDARY', formData._boundary)
 
-        api.post('documentos/cadastrar_documento', formData, {
+        api.patch(`documentos/atualizar_documento/${documentId}`, formData, {
             headers: {
                 "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
             }
         })
             .then(response => {
                 console.log(response.data);
+                setSubmitedWithSucess(true);
                 const notify = () =>
-                    toast.success("Documento cadastrado com sucesso", {
+                    toast.success("Documento atualizado com sucesso", {
                         autoClose: 2000,
                     }
                     );
@@ -88,8 +90,13 @@ function DocumentosCadastrar() {
         });
     }
 
+    const handleUpdateDocumentCheckbox = (e) => {
+        setCheckedUpdateDocument(e.target.checked)
+        if (!e.target.checked) setValue('file', '')
+    }
+
     return (
-        <DashboardUI screenName='Cadastrar Documento' itemActive="Documentos">
+        <DashboardUI screenName='Editar Documento' itemActive="Documentos">
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='title'>Título</Label>
                 <IconTextField>
@@ -97,6 +104,7 @@ function DocumentosCadastrar() {
                     <Input
                         id='title'
                         name='title'
+                        defaultValue={documentTitle}
                         ref={register({
                             required: true
                         })}
@@ -111,30 +119,38 @@ function DocumentosCadastrar() {
                     </ErrorMessage>
                 }
 
-                <StyledDropzone
-                    accept='.pdf'
-                    multiple={false}
-                    maxSize={2097152}
-                    text="Arraste ou clique para adicionar o documento desejado."
-                    setFileUploading={setFileUploading}
-                    setValue={setValue}
-                />
+                <Label style={{ fontSize: '1.1rem', display: 'block' }}>
+                    <Checkbox
+                        marked={watchUpdateDocumentFileCheck}
+                        name='updateDocumentFileCheck'
+                        register={register}
+                    />
+                    <span style={{ marginLeft: 8, cursor: 'pointer' }}>Inserir novo documento</span>
+                </Label>
 
-                {errors.file &&
-                    <ErrorMessage left marginTop marginBottom style={{ marginTop: '-4px', marginBottom: '7px' }}>
-                        Um documento em PDF é obrigatório.
-                    </ErrorMessage>
+                {watchUpdateDocumentFileCheck &&
+                    <>
+                        <StyledDropzone
+                            accept='.pdf'
+                            multiple={false}
+                            maxSize={2097152}
+                            text="Arraste ou clique para adicionar o documento desejado."
+                            setFileUploading={setFileUploading}
+                            setValue={setValue}
+                        />
+
+                        {errors.file &&
+                            <ErrorMessage left marginTop marginBottom style={{ marginTop: '-4px', marginBottom: '7px' }}>
+                                Um documento em PDF é obrigatório.
+                            </ErrorMessage>
+                        }
+                    </>
                 }
 
-                {errorMessage &&
-                    <ErrorMessage left style={{ marginTop: '4px', marginBottom: '7px' }}>
-                        {errorMessage.data}
-                    </ErrorMessage>
-                }
-                <Button new={true} type='submit' width='100px' disabled={isSubmitting}>
+
+                <Button new={true} type='submit' width='100px' disabled={isSubmitting || submitedWithSucess || false}>
                     Salvar
                 </Button>
-                &nbsp;
                 <Button
                     new={true}
                     type='button'
@@ -148,4 +164,4 @@ function DocumentosCadastrar() {
     );
 }
 
-export default DocumentosCadastrar;
+export default DocumentosEditar;
