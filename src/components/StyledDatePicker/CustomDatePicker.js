@@ -11,9 +11,10 @@ import light from '../../themes/light';
 registerLocale("pt-BR", ptBR); // register it with the name you want
 
 
-function CustomDatePicker({ value, locale, onChange, style, error, placeholder, startDate, dateIsLoaded }) {
+function CustomDatePicker({ value, locale, onChange, style, error, placeholder, startDate, dateIsLoaded, minDate }) {
 
     const borderColor = error && light.color.secondary;
+    console.debug('minDate', minDate)
     return (
         <IconTextField >
             <FiCalendar />
@@ -25,6 +26,7 @@ function CustomDatePicker({ value, locale, onChange, style, error, placeholder, 
                 borderColor={borderColor}
                 placeholderText={placeholder}
                 startDate={startDate}
+                minDate={minDate}
 
             />
         </IconTextField>

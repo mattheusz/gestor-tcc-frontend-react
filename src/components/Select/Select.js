@@ -26,13 +26,13 @@ const Select = styled.select`
     }
 
     @media ${device.tablet}{
-        width: ${props => props.formSelect ? '100%' : '100px'};
+        width: ${props => props.formSelect ? '100%' : '120px'};
         margin-left: ${props => props.formSelect ? 0 : '.5rem'};
         margin-top: 0;
     }
     
     @media ${device.laptop}{
-        width: ${props => props.formSelect ? '100%' : '100px'};
+        width: ${props => props.formSelect ? '100%' : '120px'};
         margin-left: ${props => props.formSelect ? 0 : '.5rem'};
     }
 

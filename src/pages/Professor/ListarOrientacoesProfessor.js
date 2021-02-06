@@ -218,7 +218,7 @@ function ListarOrientacoesProfessor(props) {
                     isLoading ? <Spinner type='spin' color={light.color.primaryShadow} height={20} width={20} /> :
                         someOrientationFound ?
                             listOrientations.map(({ _id, title, dateOrientation, situation }) =>
-                                <OrientationItem key={_id} onClick={(e) => openModal(title)}>
+                                <OrientationItem key={_id} onClick={(e) => openOrientation(title)}>
                                     <OrientationTitle>{title}</OrientationTitle><br />
                                     <OrientationDate>
                                         {format(utcToZonedTime(dateOrientation, 'Europe/London'), 'dd/MM/yyyy')}

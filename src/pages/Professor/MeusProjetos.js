@@ -31,6 +31,10 @@ function Projetos(props) {
 
     const selectItems = [
         {
+            value: 'em andamento',
+            displayValue: 'Em andamento'
+        },
+        {
             value: 'todos',
             displayValue: 'Todos'
         },
@@ -81,7 +85,7 @@ function Projetos(props) {
         setMountedPagination(false);
 
         // pegando todos os projetos de um professor
-        api.get(`/projeto/professor_projetos/${id.current}/1`)
+        api.get(`/projeto/professor_projeto/em_andamento/${id.current}/1`)
             .then(({ data }) => {
                 console.log('Projeto', data);
                 currentPage.current = data.page;
@@ -107,7 +111,7 @@ function Projetos(props) {
     }, []);
 
     // filtrando projeto por todos, ativo e inativo
-    const [selectedValue, setSelectedValue] = useState('todos');
+    const [selectedValue, setSelectedValue] = useState('Em andamento');
     const [statusUserChanged, setStatusUserChanged] = useState(false);
     useEffect(() => {
         if (isInitialMount.current) {

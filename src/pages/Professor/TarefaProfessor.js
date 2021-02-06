@@ -11,6 +11,8 @@ import { Modal } from 'react-responsive-modal';
 import Avatar from 'react-avatar';
 import 'react-responsive-modal/styles.css';
 import { MdModeEdit, MdDelete } from 'react-icons/md';
+import { HiOutlineLink } from 'react-icons/hi';
+import StyledDatePicker from '../../components/StyledDatePicker';
 import '../../../src/index.css'
 import api from '../../api/api';
 import format from 'date-fns/format'
@@ -18,17 +20,23 @@ import locale from "date-fns/locale/pt-BR"; // the locale you want
 import addHours from 'date-fns/addHours'
 import { toast, ToastContainer } from 'react-toastify';
 import ErrorMessage from '../../components/Error/ErrorMessage';
+import Checkbox from '../../components/Checkbox';
+import Label from '../../components/Label/Label';
+import light from '../../themes/light';
 
 
 function TarefaProfessor(props) {
 
     const [task, setTask] = useState();
     const [fileUploading, setFileUploading] = useState();
+    const [deadline, setDeadline] = useState();
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [modalEditIsOpen, setModalEditIsOpen] = useState(false);
     const [modalDeleteIsOpen, setModalDeleteIsOpen] = useState(false);
+    const [modalTaskDelivered, setModalTaskDelivered] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
     const [commentAddedOrDeleted, setCommentAddedOrDeleted] = useState(false);
+    const [checked, setChecked] = useState(false);
     const { register, handleSubmit, errors, formState: { isSubmitting } }
         = useForm({ mode: 'onSubmit' });
 
@@ -36,8 +44,16 @@ function TarefaProfessor(props) {
         register: registerEdit,
         handleSubmit: handleSubmitEdit,
         errors: errorsEdit,
-        formState: { isSubmitting: isSubmittingEdit } }
-        = useForm({ mode: 'onSubmit' });
+        formState: { isSubmitting: isSubmittingEdit }
+    } = useForm({ mode: 'onSubmit' });
+
+    const {
+        register: registerReview,
+        handleSubmit: handleSubmitReview,
+        errors: errorsReview,
+        formState: { isSubmitting: isSubmittingReview },
+        setValue: setValueReview,
+    } = useForm({ mode: 'onSubmit' });
 
     let modalMessage = useRef('')
 
@@ -54,6 +70,7 @@ function TarefaProfessor(props) {
         api.get(`/tarefa/${taskId}/`)
             .then(({ data: { docs } }) => {
                 console.log('Task info', docs[0]);
+                setDeadline(new Date(docs[0].deadLine));
                 setTask(docs[0]);
             })
             .catch(error => {
@@ -176,6 +193,25 @@ function TarefaProfessor(props) {
         });
     }
 
+    const handleCheckboxChange = event => {
+        console.debug('CHECKED', checked)
+        console.debug('TARGET CHECKED', event.target.checked)
+        setChecked(event.target.checked)
+    }
+
+    useEffect(() => {
+        // creating custom registers
+        register('customRegisterInitialDate', { required: true })
+        register('customRegisterDeadline', { required: true })
+    }, [register]);
+
+    const handleChangeInitialDate = e => {
+        console.log('e', e)
+        setDeadline(e); // setting value in the state. necessary for update display of the input initialDate
+        setValueReview('customRegisterInitialDate', e, { shouldValidate: true }); // setting value in the custom register
+    }
+
+
     return (
         <DashboardUI screenName={task && task.title} itemActive="Meus Projetos" isProfessorActivity={true}>
             <TaskHeader>
@@ -187,9 +223,14 @@ function TarefaProfessor(props) {
                         <TaskDeadline>Prazo de entrega: {task && format(addHours(new Date(task.deadLine), 3), 'dd/MM/yyyy', { locale: locale })}</TaskDeadline>
                         {console.log(task && addHours(new Date(task.deadLine), 3))}
                         <TaskSituation>{task && task.situation}</TaskSituation>
-                        <Button type='button' width='150px'>
-                            Finalizar atividade
-                        </Button>
+                        {task && (task.finalFile.url || task.link) &&
+                            <Button type='button'
+                                width='150px'
+                                onClick={() => setModalTaskDelivered(true)}>
+                                Ver entrega
+                            </Button>
+                        }
+
                     </>
                 }
 
@@ -363,6 +404,86 @@ function TarefaProfessor(props) {
                     <Button onClick={() => setModalDeleteIsOpen(false)}>Cancelar</Button>
                 </div>
             </Modal>
+            <Modal
+                open={modalTaskDelivered}
+                onClose={() => setModalTaskDelivered(false)}
+                center
+                classNames={{
+                    overlay: 'customOverlay',
+                    modal: 'customModal',
+                }}
+            >
+                <h1>Ver entrega</h1>
+                <AttachmentRow
+                    href={task && ((task.finalFile.url && task.finalFile.url) || (task.link && task.link))}
+                    target="_blank"
+                    rel="noopener"
+                >
+                    <TaskAttachmentIcon>
+                        <HiOutlineLink />
+                    </TaskAttachmentIcon>
+                    Link da tarefa
+                </AttachmentRow>
+                {task && task.situation !== 'concluído' &&
+                    <>
+                        <Label style={{ fontSize: '1.1rem' }}>
+                            <Checkbox
+                                name='requestCorrection'
+                                checked={checked}
+                                onChange={e => handleCheckboxChange(e)}
+
+                            />
+                            <span style={{ marginLeft: 8, cursor: 'pointer' }}>Pedir revisão</span>
+                        </Label>
+                        {checked &&
+                            <>
+                                <Label style={{ display: 'block', marginTop: '7px' }} htmlFor='deadline'>Alterar data de entrega</Label>
+                                <StyledDatePicker
+                                    value={deadline}
+                                    onChange={value => handleChangeInitialDate(value)}
+                                    locale='pt-BR'
+                                    timeIntervals={15}
+                                    minDate={new Date(task.deadLine)}
+                                    name="deadline"
+                                    error={errors.customRegisterInitialDate}
+                                    placeholder="Nova data de entrega"
+                                    style={{ borderColor: errors.customRegisterInitialDate && light.color.secondary }}
+                                />
+                                <Label style={{ display: 'block', marginBottom: '0' }} htmlFor='deadline'>Comentário</Label>
+                                <TaskCommentBox style={{ marginTop: '0' }}>
+                                    <form onSubmit={handleSubmitReview(onSubmit)}>
+                                        <textarea
+                                            name='comment'
+                                            ref={register({
+                                                required: true,
+                                            })}
+                                            rows={4}
+                                            placeholder='Digite o seu comentário...'
+                                            style={errors.comment && { borderColor: lightTheme.color.secondary }}
+
+                                        />
+                                        {errors.comment && errors.comment.type === 'required' && <ErrorMessage left>Um texto é obrigatório para efetuar um comentário</ErrorMessage>}
+                                        <div style={{ display: 'grid', marginTop: '.1rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
+                                            <Button type='submit' disabled={isSubmitting}>
+                                                Pedir revisão
+                                        </Button>
+                                            <Button onClick={() => setModalTaskDelivered(false)}>Cancelar</Button>
+                                        </div>
+                                    </form>
+                                </TaskCommentBox>
+                            </>
+                        }
+
+
+                        {!checked &&
+                            <div style={{ display: 'grid', marginTop: '.1rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
+                                <Button onClick={() => deleteComment()}>Aceitar</Button>
+                                <Button onClick={() => setModalTaskDelivered(false)}>Recusar</Button>
+                            </div>
+                        }
+                    </>
+                }
+            </Modal>
             <ToastContainer style={{ zIndex: '9999999' }} />
         </DashboardUI >
 
@@ -501,6 +622,32 @@ const TaskCommentAuthor = styled.span`
 const TaskCommentText = styled.span`
     color: ${props => props.theme.color.dark};
     margin-top: 3px;
+`;
+
+const AttachmentRow = styled.a`
+    display: flex;
+    align-items: center;
+    color: ${props => props.theme.color.primary};
+    cursor: pointer;
+    border: 1px solid ${props => props.theme.color.primary};
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 7px;
+
+    &:hover {
+        color: ${props => props.theme.color.secondary};
+        background-color: ${props => props.theme.color.secondary}01;
+        border: 1px solid ${props => props.theme.color.secondary};
+    }
+`;
+
+const TaskAttachmentIcon = styled.span`
+    font-size: 20px;
+    transform: translateY(1.5px);
+    margin-right: 5px;
+
+    &:hover {
+    }
 `;
 
 const ActivityCommentAttachment = styled.span`
