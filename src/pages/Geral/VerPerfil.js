@@ -286,6 +286,7 @@ function VerPerfil() {
                         <CropButtonsContainer>
                             <CropButton
                                 onClick={() => onSubmit()}
+                                onMouseUp={() => onSubmit()}
                             >
                                 Salvar</CropButton>
                             <CropButton
