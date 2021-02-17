@@ -87,6 +87,7 @@ function VerPerfil() {
 
         const formData = new FormData();
         let file;
+        let teste;
 
         const response = await fetch(`${croppedImage}`)/*
             .then(response => {
