@@ -44,7 +44,6 @@ export default function StyledDropzone({ accept, multiple, maxFiles, maxSize, te
             setFileNames(file.name);
             setFileUploading(file);
             console.debug('FILE A SER INSERIDO NO SET VALUE', file)
-
         })
 
     })

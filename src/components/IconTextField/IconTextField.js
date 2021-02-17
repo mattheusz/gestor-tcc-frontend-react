@@ -13,6 +13,16 @@ const IconTextField = styled.div`
         color: #595959;
         z-index: 1;
     }
+    img{
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-45%);
+        color: #595959;
+        z-index: 1;
+        width: 15px;
+        height: 15px;
+    }
 `
 
 export const Input = styled.input`

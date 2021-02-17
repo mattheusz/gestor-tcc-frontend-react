@@ -39,6 +39,7 @@ import ListarTarefasAluno from '../pages/Aluno/ListarTarefasAluno';
 import TarefaAluno from '../pages/Aluno/TarefaAluno';
 import ListarOrientacoesAluno from '../pages/Aluno/ListarOrientacoesAluno';
 import DocumentosEditar from '../pages/Coordenador/DocumentosEditar';
+import EditarPerfil from '../pages/Geral/EditarPerfil';
 
 
 
@@ -117,6 +118,7 @@ export default function Routes() {
 
                         {/* Geral */}
                         <CustomRoute exact isPrivate roles={['coordenador', 'administrativo', 'professor', 'aluno-orientando', 'aluno-pre']} path='/perfil' component={VerPerfil} />
+                        <CustomRoute exact isPrivate roles={['coordenador', 'administrativo', 'professor', 'aluno-orientando', 'aluno-pre']} path='/perfil/:userId/editar' component={EditarPerfil} />
 
                         {/* Coordenador */}
                         <CustomRoute exact isPrivate path='/coordenador/projetos' roles={['coordenador']} component={Projetos} />

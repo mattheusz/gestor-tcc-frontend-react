@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { device } from '../../device';
 import format from 'date-fns/format'
 import { Fragment } from 'react';
+import { utcToZonedTime } from 'date-fns-tz';
 
 function ProjectInfo({ projectId, isStudent, projectInfos }) {
 
@@ -20,15 +21,15 @@ function ProjectInfo({ projectId, isStudent, projectInfos }) {
 
     // fazer depois a listagem da última atividade registrada
 
-    const openTask = (e, idActivity) => {
-        let path = `/professor/projetos/${projectId}/tarefas/${idActivity}`
+    const openTask = (e, taskId) => {
+        let path = `/professor/projetos/${projectId}/tarefas/${taskId}`
         if (isStudent)
-            path = `/aluno-orientando/projeto/${projectId}/tarefas/${idActivity}`
+            path = `/aluno-orientando/projeto/${projectId}/tarefas/${taskId}`
         history.push(path)
     }
 
-    const openOrientation = (e, idActivity) => {
-        history.push(`/professor/projetos/${projectId}/tarefas/${idActivity}`)
+    const openOrientation = (e, orientationId) => {
+        history.push(`/professor/projetos/${projectId}/orientacoes/${orientationId}`)
     }
 
     return (
@@ -55,7 +56,7 @@ function ProjectInfo({ projectId, isStudent, projectInfos }) {
                         {tasks && tasks.length > 0 ?
                             <CardBody onClick={(e) => openTask(e, tasks && tasks.length > 0 && tasks[0]._id)}>
                                 <CardBodyTitle>{tasks && tasks.length > 0 && tasks[0].title}</CardBodyTitle>
-                                <CardBodyDate>Data de entrega: {tasks && tasks.length > 0 && format(new Date(tasks[0].deadLine), 'dd/MM/yyyy')}</CardBodyDate>
+                                <CardBodyDate>Prazo de entrega: {tasks && tasks.length > 0 && format(utcToZonedTime(new Date(tasks[0].deadLine)), 'dd/MM/yyyy')}</CardBodyDate>
                                 <CardBodySituation>{tasks && tasks.length > 0 && tasks[0].situation}</CardBodySituation>
                             </CardBody> : tasks &&
                             <NoTaskInTaskCard>Nenhuma tarefa registrada. Clique em "Ver Mais" para registrar.</NoTaskInTaskCard>
@@ -75,9 +76,9 @@ function ProjectInfo({ projectId, isStudent, projectInfos }) {
 
                     <CardBody>
                         {orientation && orientation.length > 0 ?
-                            <CardBody>
+                            <CardBody onClick={(e) => openOrientation(e, orientation && orientation.length > 0 && orientation[0]._id)}>
                                 <CardBodyTitle>{orientation && orientation.length > 0 && orientation[0].title}</CardBodyTitle>
-                                <CardBodyDate>Data da orientação: {orientation && orientation.length > 0 && format(new Date(orientation[0].dateOrientation), 'dd/MM/yyyy')}</CardBodyDate>
+                                <CardBodyDate>Data da orientação: {orientation && orientation.length > 0 && format(utcToZonedTime(new Date(orientation[0].dateOrientation)), 'dd/MM/yyyy')}</CardBodyDate>
 
                             </CardBody> : orientation &&
                             <NoTaskInTaskCard>Nenhuma orientação registrada. Clique em "Ver Mais" para registrar.</NoTaskInTaskCard>

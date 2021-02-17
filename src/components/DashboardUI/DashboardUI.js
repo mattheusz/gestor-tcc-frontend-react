@@ -130,7 +130,7 @@ function DashboardUI({ screenName, itemActive, children, isProfessorActivity, is
                 }}
             >
                 <h1>
-                    Deseja realmente excluir esta atividade?
+                    Deseja realmente excluir esta tarefa?
                 </h1>
                 <p>
                     Esta ação é irreversível
@@ -169,7 +169,6 @@ function DashboardUI({ screenName, itemActive, children, isProfessorActivity, is
 export default DashboardUI;
 
 const Wrapper = styled.div`
-    display: fixed;
     width: 100%;
     height: 100vh;
     background-color: white;

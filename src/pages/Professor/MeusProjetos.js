@@ -111,7 +111,7 @@ function Projetos(props) {
     }, []);
 
     // filtrando projeto por todos, ativo e inativo
-    const [selectedValue, setSelectedValue] = useState('Em andamento');
+    const [selectedValue, setSelectedValue] = useState('em andamento');
     const [statusUserChanged, setStatusUserChanged] = useState(false);
     useEffect(() => {
         if (isInitialMount.current) {
@@ -123,11 +123,15 @@ function Projetos(props) {
                 path = `projeto/professor_projetos/situacao/${id.current}/${selectedValue}/1`;
                 if (selectedValue === 'todos')
                     path = `projeto/professor_projetos/${id.current}/1`
+                if (selectedValue === 'em andamento')
+                    path = `projeto/professor_projeto/em_andamento/${id.current}/1`
             }
             else {
                 path = `projeto/professor_projetos/titulo/situacao/${id.current}/${searchText}/${selectedValue}/1`;
                 if (selectedValue === 'todos')
                     path = `projeto/professor_projetos/titulo/${id.current}/${searchText}/1`
+                if (selectedValue === 'em andamento')
+                    path = `projeto/professor_projeto/em_andamento/${id.current}/${searchText}/1`
             }
             api.get(path)
                 .then(({ data }) => {
@@ -229,6 +233,7 @@ function Projetos(props) {
     }
 
     const choosePage = (e, page) => {
+        console.debug('FILTRO SELECIONADO?', selectedValue)
 
         e.preventDefault();
         let path;
@@ -237,11 +242,15 @@ function Projetos(props) {
             path = `projeto/professor_projetos/situacao/${id.current}/${selectedValue}/${page}`
             if (selectedValue === 'todos')
                 path = `projeto/professor_projetos/${id.current}/${page}`
+            if (selectedValue === 'em andamento')
+                path = `projeto/professor_projeto/em_andamento/${id.current}/${page}`
         }
         else {
             path = `projeto/professor_projetos/titulo/situacao/${id.current}/${selectedValue}/${searchText}/${page}`
             if (selectedValue === 'todos')
                 path = `projeto/professor_projetos/titulo/${id.current}/${searchText}/${page}`
+            if (selectedValue === 'em andamento')
+                path = `projeto/professor_projeto/em_andamento/${id.current}/${searchText}/${page}`
         }
         currentPage.current = page;
 

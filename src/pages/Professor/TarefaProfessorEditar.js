@@ -16,6 +16,7 @@ import light from '../../themes/light';
 import Label from '../../components/Label/Label';
 import StyledDatePicker from '../../components/StyledDatePicker';
 import format from 'date-fns/format'
+import { utcToZonedTime } from 'date-fns-tz';
 import Select from '../../components/Select';
 
 
@@ -61,8 +62,8 @@ function TarefaProfessorEditar(props) {
                 console.log('Tarefas do projeto', docs[0]);
                 // setting initial state, that the value to display in input date-picker
                 setSituation(docs[0].situation);
-                setInitialDate(new Date(docs[0].initialDate));
-                setDeadline(new Date(docs[0].deadLine));
+                setInitialDate(utcToZonedTime(new Date(docs[0].initialDate)));
+                setDeadline(utcToZonedTime(new Date(docs[0].deadLine)));
                 // setting initial date to custom register customRegisterInitialDate
                 setValue('customRegisterInitialDate', new Date(docs[0].initialDate));
                 setValue('customRegisterDeadline', new Date(docs[0].deadLine));

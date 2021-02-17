@@ -17,6 +17,7 @@ import '../../../src/index.css'
 import api from '../../api/api';
 import format from 'date-fns/format'
 import locale from "date-fns/locale/pt-BR"; // the locale you want
+import { utcToZonedTime } from 'date-fns-tz';
 import addHours from 'date-fns/addHours'
 import { toast, ToastContainer } from 'react-toastify';
 import ErrorMessage from '../../components/Error/ErrorMessage';
@@ -379,7 +380,7 @@ function TarefaProfessor(props) {
 
                     </TaskCommentBox>
                     <div style={{ display: 'grid', marginTop: '.5rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
-                        <Button onClick={() => setModalEditIsOpen(false)}>Editar</Button>
+                        <Button>Editar</Button>
                         <Button onClick={() => setModalEditIsOpen(false)}>Cancelar</Button>
                     </div>
                 </form>
