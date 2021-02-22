@@ -20,6 +20,7 @@ import styled from 'styled-components';
 import { device } from '../../device';
 import format from 'date-fns/format'
 import { utcToZonedTime } from 'date-fns-tz';
+import { verifyTaskSituation } from '../../utils/taskUtils';
 
 function ListarTarefasProfessor(props) {
 
@@ -32,25 +33,28 @@ function ListarTarefasProfessor(props) {
     const [formIsSubmitted, setFormIsSubmitted] = useState(true);
     const [listTasks, setListTasks] = useState();
 
-
     const selectItems = [
         {
-            value: 'iniciado',
-            displayValue: 'Iniciado'
+            value: 'em andamento',
+            displayValue: 'Em andamento'
         },
         {
-            value: 'concluído',
-            displayValue: 'Concluído'
+            value: 'iniciada',
+            displayValue: 'Iniciada'
         },
         {
-            value: 'recusado',
-            displayValue: 'Recusado'
+            value: 'concluída',
+            displayValue: 'Concluída'
         },
         {
-            value: 'todos',
-            displayValue: 'Todos'
+            value: 'recusada',
+            displayValue: 'Recusada'
+        },
+        {
+            value: 'todas',
+            displayValue: 'Todas'
         }
-    ]
+    ];
 
     const isInitialMount = useRef(true);
 
@@ -112,12 +116,12 @@ function ListarTarefasProfessor(props) {
             let path;
             if (searchText === '') {
                 path = `/tarefa/projeto_tarefas/situacao/${projectId}/${selectedValue}/1/1`; //
-                if (selectedValue === 'todos')
+                if (selectedValue === 'todas')
                     path = `/tarefa/projeto_tarefas/${projectId}/1/1`;
             }
             else {
                 path = `/tarefa/projeto_tarefas/situacao_titulo/${projectId}/${searchText}/${selectedValue}/1/1`; //
-                if (selectedValue === 'todos')
+                if (selectedValue === 'todas')
                     path = `/tarefa/projeto_tarefas/${projectId}/${searchText}/1/1`; //
             }
             setMountedPagination(false);
@@ -173,12 +177,12 @@ function ListarTarefasProfessor(props) {
         let path;
         if (searchText === '') {
             path = `/tarefa/projeto_tarefas/situacao/${projectId}/${selectedValue}/1/${page}`; //
-            if (selectedValue === 'todos')
+            if (selectedValue === 'todas')
                 path = `/tarefa/projeto_tarefas/${projectId}/1/${page}`;
         }
         else {
             path = `/tarefa/projeto_tarefas/situacao_titulo/${projectId}/${searchText}/${selectedValue}/1/${page}`; //
-            if (selectedValue === 'todos')
+            if (selectedValue === 'todas')
                 path = `/tarefa/projeto_tarefas/${projectId}/${searchText}/1/${page}`; //
         }
         currentPage.current = page;
@@ -208,6 +212,9 @@ function ListarTarefasProfessor(props) {
     const openActivity = (e, idActivity) => {
         history.push(`/professor/projetos/${projectId}/tarefas/${idActivity}`)
     }
+
+
+
     return (
         <DashboardUI screenName='Tarefas' itemActive="Meus Projetos">
             <form onSubmit={(e) => onSubmit(e)}>
@@ -230,7 +237,7 @@ function ListarTarefasProfessor(props) {
                                     <TaskDeadline>
                                         Prazo de entrega: {format(utcToZonedTime(deadLine, 'Europe/London'), 'dd/MM/yyyy')}
                                     </TaskDeadline>
-                                    <TaskSituation>{situation}</TaskSituation>
+                                    <TaskSituation>{verifyTaskSituation(situation, deadLine)}</TaskSituation>
                                 </TaskItem>
                             ) :
                             'Nenhuma tarefa cadastrada'

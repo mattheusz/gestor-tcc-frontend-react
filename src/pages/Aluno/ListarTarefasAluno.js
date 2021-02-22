@@ -15,6 +15,7 @@ import light from '../../themes/light';
 import format from 'date-fns/format'
 import ReactLoading from 'react-loading';
 import { utcToZonedTime } from 'date-fns-tz';
+import { verifyTaskSituation } from '../../utils/taskUtils';
 
 function ListarTarefasAluno(props) {
 
@@ -29,26 +30,26 @@ function ListarTarefasAluno(props) {
 
     const selectItems = [
         {
-            value: 'pré-tcc',
-            displayValue: 'Pré-TCC'
+            value: 'em andamento',
+            displayValue: 'Em andamento'
         },
         {
-            value: 'tcc1',
-            displayValue: 'TCC 1'
+            value: 'iniciada',
+            displayValue: 'Iniciada'
         },
         {
-            value: 'tcc2',
-            displayValue: 'TCC 2'
+            value: 'concluída',
+            displayValue: 'Concluída'
         },
         {
-            value: 'concluído',
-            displayValue: 'Concluídos'
+            value: 'recusada',
+            displayValue: 'Recusada'
         },
         {
-            value: 'todos',
-            displayValue: 'Todos'
+            value: 'todas',
+            displayValue: 'Todas'
         }
-    ]
+    ];
 
     const isInitialMount = useRef(true);
 
@@ -104,12 +105,12 @@ function ListarTarefasAluno(props) {
             let path;
             if (searchText === '') {
                 path = `/tarefa/projeto_tarefas/situacao/${projectId}/${selectedValue}/1/1`; //
-                if (selectedValue === 'todos')
+                if (selectedValue === 'todas')
                     path = `/tarefa/projeto_tarefas/${projectId}/1/1`;
             }
             else {
                 path = `/tarefa/projeto_tarefas/situacao_titulo/${projectId}/${searchText}/${selectedValue}/1/1`; //
-                if (selectedValue === 'todos')
+                if (selectedValue === 'todas')
                     path = `/tarefa/projeto_tarefas/${projectId}/${searchText}/1/1`; //
             }
             setMountedPagination(false);
@@ -170,12 +171,12 @@ function ListarTarefasAluno(props) {
         let path;
         if (searchText === '') {
             path = `/tarefa/projeto_tarefas/situacao/${projectId}/${selectedValue}/1/${page}`; //
-            if (selectedValue === 'todos')
+            if (selectedValue === 'todas')
                 path = `/tarefa/projeto_tarefas/${projectId}/1/${page}`;
         }
         else {
             path = `/tarefa/projeto_tarefas/situacao_titulo/${projectId}/${searchText}/${selectedValue}/1/${page}`; //
-            if (selectedValue === 'todos')
+            if (selectedValue === 'todas')
                 path = `/tarefa/projeto_tarefas/${projectId}/${searchText}/1/${page}`; //
         }
         currentPage.current = page;
@@ -229,7 +230,7 @@ function ListarTarefasAluno(props) {
                                         Prazo de entrega: {format(new Date(deadLine), 'dd/MM/yyyy')}
                                         {console.log('deadline', deadLine)}
                                     </TaskDeadline>
-                                    <TaskSituation>{situation}</TaskSituation>
+                                    <TaskSituation>{verifyTaskSituation(situation, deadLine)}</TaskSituation>
                                 </TaskItem>
                             ) :
                             'Nenhuma tarefa cadastrada'

@@ -34,26 +34,26 @@ function ListarOrientacoesAluno(props) {
 
     const selectItems = [
         {
-            value: 'pré-tcc',
-            displayValue: 'Pré-TCC'
+            value: 'em andamento',
+            displayValue: 'Em andamento'
         },
         {
-            value: 'tcc1',
-            displayValue: 'TCC 1'
+            value: 'iniciada',
+            displayValue: 'Iniciada'
         },
         {
-            value: 'tcc2',
-            displayValue: 'TCC 2'
+            value: 'concluída',
+            displayValue: 'Concluída'
         },
         {
-            value: 'concluído',
-            displayValue: 'Concluídos'
+            value: 'recusada',
+            displayValue: 'Recusada'
         },
         {
-            value: 'todos',
-            displayValue: 'Todos'
+            value: 'todas',
+            displayValue: 'Todas'
         }
-    ]
+    ];
 
     const isInitialMount = useRef(true);
 

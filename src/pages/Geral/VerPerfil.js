@@ -11,7 +11,7 @@ import { device } from '../../device';
 import lightTheme from '../../themes/light'
 import { toast } from 'react-toastify';
 import getCroppedImg from '../../utils/cropImage'
-import { dataURLtoFile } from '../../utils/dataURLtoFile'
+import { dataURLtoFile } from '../../utils/blobToFile'
 
 function VerPerfil() {
     // crop image states
@@ -89,6 +89,7 @@ function VerPerfil() {
         let file;
         let teste;
 
+
         const response = await fetch(`${croppedImage}`)/*
             .then(response => {
                 console.log('file', response.blob());
@@ -98,6 +99,7 @@ function VerPerfil() {
 */
         //console.log('BLOB DO FETCH', response.blob())
 
+        // a resposta só pode ser chamada uma vez
         file = blobToFile(await response.blob(), 'fileName');
         console.log('file', file)
         formData.append("file", file)
@@ -168,11 +170,6 @@ function VerPerfil() {
                             onClick={triggerFileSelectPopup}
                         >
                             Editar foto
-                        </ProfileButton>
-                        <ProfileButton
-
-                        >
-                            Remover foto
                         </ProfileButton>
                     </ProfileButtonContainer>
                 </AvatarContainer>
@@ -326,10 +323,6 @@ const Container = styled.div`
         padding: 1.5rem;
         border: 1px solid rgba(0, 0, 0, 0.1);
     }
-
-    h2{
-        margin-left: 10px;
-    }
 `
 const ProfileTitle = styled.h2`
     text-align: center;
@@ -348,7 +341,6 @@ const ProfileButton = styled.button`
     width: auto;
     padding: .2rem .5rem;
     margin-top: .5rem;
-    margin-right: .5rem;
     outline: none;
     border: none;
     border-radius: 5px;

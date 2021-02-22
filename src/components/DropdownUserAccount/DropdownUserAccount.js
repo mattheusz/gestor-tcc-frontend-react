@@ -92,12 +92,13 @@ const ListItemDropdownLi = styled.li`
 `;
 
 
-function DropdownUserAccount({ showDropdown }) {
+function DropdownUserAccount({ showDropdown, dropdownRef }) {
 
     const { logout } = useContext(AuthContext);
 
+
     return (
-        <StyledDropdownUserAccount showDropdown={showDropdown}>
+        <StyledDropdownUserAccount showDropdown={showDropdown} ref={dropdownRef}>
             <ListItemDropdown to='/perfil'>
                 <BiUserCircle />
                 <span>Perfil</span>

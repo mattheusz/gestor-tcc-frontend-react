@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import lightTheme from '../../themes/light'
 import Header from '../Header';
@@ -14,6 +14,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import Button from '../Button';
 import api from '../../api/api';
 import { toast, ToastContainer } from 'react-toastify';
+import useDetectOutsideClick from "../../hooks/useDetectOusideClick"
 
 function DashboardUI({ screenName, itemActive, children, isProfessorActivity, isProfessorProject, deleteProject, isProfessorOrientation }) {
 
@@ -26,11 +27,15 @@ function DashboardUI({ screenName, itemActive, children, isProfessorActivity, is
     const history = useHistory();
     const { id, taskId, orientation } = useParams();
 
-    const toggle = useCallback(() => {
+    const dropdownRef = useRef(null);
+    useDetectOutsideClick(dropdownRef, showDropdown, setShowDropdown);
+    console.debug('REF', dropdownRef.current);
+
+    const toggleToShowSidebar = useCallback(() => {
         setShowSidebar(!showSidebar)
     }, [showSidebar])
 
-    const toggleDropdown = useCallback(() => {
+    const toggleToShowDropdown = useCallback(() => {
         setShowDropdown(!showDropdown);
         console.log('toggle dropdown', showDropdown)
     }, [showDropdown])
@@ -61,8 +66,8 @@ function DashboardUI({ screenName, itemActive, children, isProfessorActivity, is
         <ThemeProvider theme={lightTheme}>
             <Wrapper>
                 <Header
-                    setShowSidebar={toggle}
-                    setShowDropdown={toggleDropdown}
+                    setShowSidebar={toggleToShowSidebar}
+                    setShowDropdown={toggleToShowDropdown}
                 />
                 <Sidebar showSidebar={showSidebar} itemActive={itemActive} />
                 <Content showSidebar={showSidebar}>
@@ -98,6 +103,8 @@ function DashboardUI({ screenName, itemActive, children, isProfessorActivity, is
                 </Content>
                 <DropdownUserAccount
                     showDropdown={showDropdown}
+                    dropdownRef={dropdownRef}
+                    setShowDropdown={setShowDropdown}
                 />
             </Wrapper>
             <Modal

@@ -40,16 +40,16 @@ function TarefaProfessorEditar(props) {
 
     const selectOptionItems = [
         {
-            value: 'iniciado',
-            displayValue: 'Iniciado'
+            value: 'iniciada',
+            displayValue: 'Iniciada'
         },
         {
-            value: 'recusado',
-            displayValue: 'Recusado'
+            value: 'recusada',
+            displayValue: 'Recusada'
         },
         {
-            value: 'concluído',
-            displayValue: 'Concluído'
+            value: 'concluída',
+            displayValue: 'Concluída'
         }
     ];
 

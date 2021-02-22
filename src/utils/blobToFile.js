@@ -10,3 +10,10 @@ export const dataURLtoFile = (dataurl, filename) => {
 
 	return new File([u8arr], filename, { type: mime });
 };
+
+export function blobToFile(theBlob, fileName) {
+	//A Blob() is almost a File() - it's just missing the two properties below which we will add
+	theBlob.lastModifiedDate = new Date();
+	theBlob.name = fileName;
+	return theBlob;
+}

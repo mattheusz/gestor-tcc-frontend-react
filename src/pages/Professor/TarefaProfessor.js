@@ -24,6 +24,7 @@ import ErrorMessage from '../../components/Error/ErrorMessage';
 import Checkbox from '../../components/Checkbox';
 import Label from '../../components/Label/Label';
 import light from '../../themes/light';
+import { verifyTaskSituation } from '../../utils/taskUtils';
 
 
 function TarefaProfessor(props) {
@@ -38,8 +39,11 @@ function TarefaProfessor(props) {
     const [errorMessage, setErrorMessage] = useState();
     const [commentAddedOrDeleted, setCommentAddedOrDeleted] = useState(false);
     const [checked, setChecked] = useState(false);
-    const { register, handleSubmit, errors, formState: { isSubmitting } }
-        = useForm({ mode: 'onSubmit' });
+    const {
+        register,
+        handleSubmit,
+        errors, formState: { isSubmitting }
+    } = useForm({ mode: 'onSubmit' });
 
     const {
         register: registerEdit,
@@ -54,6 +58,14 @@ function TarefaProfessor(props) {
         errors: errorsReview,
         formState: { isSubmitting: isSubmittingReview },
         setValue: setValueReview,
+    } = useForm({ mode: 'onSubmit' });
+
+    const {
+        register: registerSendComment,
+        handleSubmit: handleSubmitSendComment,
+        errors: errorsSendComment,
+        formState: { isSubmitting: isSubmittingSendComment },
+        setValue: setValueSendComment,
     } = useForm({ mode: 'onSubmit' });
 
     let modalMessage = useRef('')
@@ -87,10 +99,11 @@ function TarefaProfessor(props) {
             });
     }, [commentAddedOrDeleted]);
 
-    const onSubmit = async ({ comment }, e) => {
-        api.post('comentario/criar_comentario', {
+    const onSubmit = ({ comment }, e) => {
+
+        api.post('/comentario/criar_comentario', {
             taskId,
-            comment
+            comment,
         })
             .then(response => {
                 e.target[0].value = '';
@@ -212,6 +225,9 @@ function TarefaProfessor(props) {
         setValueReview('customRegisterInitialDate', e, { shouldValidate: true }); // setting value in the custom register
     }
 
+    const testSubmit = (data) => {
+        console.debug('DADOS', data)
+    }
 
     return (
         <DashboardUI screenName={task && task.title} itemActive="Meus Projetos" isProfessorActivity={true}>
@@ -223,7 +239,7 @@ function TarefaProfessor(props) {
                         </TaskDescription>
                         <TaskDeadline>Prazo de entrega: {task && format(addHours(new Date(task.deadLine), 3), 'dd/MM/yyyy', { locale: locale })}</TaskDeadline>
                         {console.log(task && addHours(new Date(task.deadLine), 3))}
-                        <TaskSituation>{task && task.situation}</TaskSituation>
+                        <TaskSituation>{task && verifyTaskSituation(task.situation, task.deadLine)}</TaskSituation>
                         {task && (task.finalFile.url || task.link) &&
                             <Button type='button'
                                 width='150px'
@@ -237,10 +253,10 @@ function TarefaProfessor(props) {
 
             </TaskHeader>
             <TaskCommentBox>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmitSendComment(onSubmit)}>
                     <textarea
                         name='comment'
-                        ref={register({
+                        ref={registerSendComment({
                             required: true,
                         })}
                         rows={4}
@@ -307,53 +323,12 @@ function TarefaProfessor(props) {
                             </TaskCommentText>
                         </TaskCommentListItem>
                     )
-                    : 'Comment not found'
+                    : <TaskCommentsNotFound>
+                        Ainda não há nenhum comentário. 🙁
+                    </TaskCommentsNotFound>
                 }
             </TaskCommentList>
-            <Modal
-                isOpen={modalIsOpen}
-                onRequestClose={() => setModalIsOpen(false)}
-                style={{
-                    content: {
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -70%)',
-                        height: '270px', width: '500px', maxWidth: '90%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-between'
-                    },
-                    overlay: {
-                        zIndex: '15',
 
-                    }
-                }}
-            >
-                <ModalTitle>Entregar...</ModalTitle>
-                <TaskCommentBox >
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <textarea
-                            name='comment'
-                            ref={register({
-                                required: true,
-                            })}
-                            rows={2}
-                            placeholder='Digite o seu comentário...' />
-                        <StyledDropzone
-                            accept='.pdf'
-                            multiple={false}
-                            maxSize={2097152}
-                            text="Arraste ou clique para adicionar o arquivo desejado."
-                            setFileUploading={setFileUploading}
-                        />
-                    </form>
-
-                </TaskCommentBox>
-                <div style={{ display: 'grid', marginTop: '-1.2rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
-                    <Button onClick={() => setModalIsOpen(false)}>Entregar</Button>
-                    <Button onClick={() => setModalIsOpen(false)}>Cancelar</Button>
-                </div>
-            </Modal>
 
             {/* editar comentário */}
             <Modal
@@ -425,6 +400,7 @@ function TarefaProfessor(props) {
                     </TaskAttachmentIcon>
                     Link da tarefa
                 </AttachmentRow>
+                {/* ver entrega */}
                 {task && task.situation !== 'concluído' &&
                     <>
                         <Label style={{ fontSize: '1.1rem' }}>
@@ -452,7 +428,7 @@ function TarefaProfessor(props) {
                                 />
                                 <Label style={{ display: 'block', marginBottom: '0' }} htmlFor='deadline'>Comentário</Label>
                                 <TaskCommentBox style={{ marginTop: '0' }}>
-                                    <form onSubmit={handleSubmitReview(onSubmit)}>
+                                    <form>
                                         <textarea
                                             name='comment'
                                             ref={register({
@@ -623,6 +599,12 @@ const TaskCommentAuthor = styled.span`
 const TaskCommentText = styled.span`
     color: ${props => props.theme.color.dark};
     margin-top: 3px;
+`;
+
+const TaskCommentsNotFound = styled.div`
+    color: black;;
+    text-align: center;
+    padding: 10px;
 `;
 
 const AttachmentRow = styled.a`

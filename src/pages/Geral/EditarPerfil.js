@@ -43,8 +43,9 @@ function EditarPerfil(props) {
             });
     }, []);
 
-    const onSubmit = ({ aboutProfile, lattes, linkedin, youtube, facebook, instagram, phoneNumber }) => {
+    const onSubmit = ({ email, aboutProfile, lattes, linkedin, youtube, facebook, instagram, phoneNumber }) => {
         api.patch(`usuarios/atualizar_perfil/${userId}`, {
+            email,
             aboutProfile,
             lattes,
             linkedin,
@@ -56,7 +57,7 @@ function EditarPerfil(props) {
             .then(response => {
                 console.log(response.data);
                 const notify = () =>
-                    toast.success("O seu perfil atualizado com sucesso", {
+                    toast.success("O seu perfil foi atualizado com sucesso", {
                         autoClose: 2000,
                     }
                     );
