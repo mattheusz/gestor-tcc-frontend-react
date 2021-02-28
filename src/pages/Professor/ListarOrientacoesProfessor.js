@@ -28,8 +28,6 @@ import { utcToZonedTime } from 'date-fns-tz';
 function ListarOrientacoesProfessor(props) {
 
     const [searchText, setSearchText] = useState('');
-    const [projects, setProjets] = useState([]);
-
     const [noProjectFound, setNoProjectFound] = useState(false);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [mountedPagination, setMountedPagination] = useState(false);
@@ -83,10 +81,14 @@ function ListarOrientacoesProfessor(props) {
         // pegar projeto por id
         api.get(`/orientacao/orientacoes_projeto/${projectId}/1/1`)
             .then(({ data }) => {
-                console.debug('orientações:', data);
+                console.debug('ORIENTAÇÕES:', data);
                 setListOrientations(data.docs)
+                totalPages.current = data.totalPages;
+                currentPage.current = data.page;
+                buildPaginatorDesign();
                 setSomeOrientationFound(true);
                 setIsLoading(false);
+                console.debug('PAGINATOR MONTADO:');
             })
             .catch(error => {
                 if (error.response) {
@@ -159,14 +161,11 @@ function ListarOrientacoesProfessor(props) {
         let path;
         // tratando buscar por texto + status
         if (searchText === '') {
-            path = `usuarios/todos_usuarios/aluno/${selectedValue}/${page}`
-            if (selectedValue === 'todos')
-                path = `usuarios/todos_usuarios/aluno/${page}`
+            path = `/orientacao/orientacoes_projeto/${projectId}/1/${page}`
         }
         else {
-            path = `usuarios/listar_usuarios/aluno/${selectedValue}/${searchText}/${page}`
-            if (selectedValue === 'todos')
-                path = `usuarios/listar_usuarios/aluno/${searchText}/${page}`
+            path = `/orientacao/orientacoes_projeto/titulo/${projectId}/${searchText}/1/${page}`
+
         }
         currentPage.current = page;
 
@@ -174,8 +173,7 @@ function ListarOrientacoesProfessor(props) {
             .then(response => {
                 console.log(response.data);
                 setNoProjectFound(false);
-                setProjets(response.data.docs);
-
+                setListOrientations(response.data.docs);
             })
             .catch(error => {
                 if (error.response) {
@@ -193,8 +191,9 @@ function ListarOrientacoesProfessor(props) {
         buildPaginatorDesign();
     }
 
-    const openOrientation = (e, idOrientation) => {
-        history.push(`/professor/projetos/${projectId}/orientacoes/${idOrientation}`)
+    const openOrientation = (orientationId) => {
+        console.log('ID ORIENTATION', orientationId)
+        history.push(`/professor/projetos/${projectId}/orientacoes/${orientationId}`)
     }
 
     const openModal = (value) => {
@@ -202,7 +201,7 @@ function ListarOrientacoesProfessor(props) {
         setModalIsOpen(true);
     }
     return (
-        <DashboardUI screenName='Orientação 1' itemActive="Meus Projetos">
+        <DashboardUI screenName='Orientações' itemActive="Meus Projetos">
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}
@@ -211,6 +210,7 @@ function ListarOrientacoesProfessor(props) {
                     onChangeSelect={onChangeSelect}
                     addUser={addUser}
                     selectItems={selectItems}
+                    noShowSelect={true}
                 />
             </form>
             <OrientationList>
@@ -218,7 +218,7 @@ function ListarOrientacoesProfessor(props) {
                     isLoading ? <Spinner type='spin' color={light.color.primaryShadow} height={20} width={20} /> :
                         someOrientationFound ?
                             listOrientations.map(({ _id, title, dateOrientation, situation }) =>
-                                <OrientationItem key={_id} onClick={(e) => openOrientation(title)}>
+                                <OrientationItem key={_id} onClick={(e) => openOrientation(_id)}>
                                     <OrientationTitle>{title}</OrientationTitle><br />
                                     <OrientationDate>
                                         {format(utcToZonedTime(dateOrientation, 'Europe/London'), 'dd/MM/yyyy')}

@@ -40,6 +40,7 @@ import TarefaAluno from '../pages/Aluno/TarefaAluno';
 import ListarOrientacoesAluno from '../pages/Aluno/ListarOrientacoesAluno';
 import DocumentosEditar from '../pages/Coordenador/DocumentosEditar';
 import EditarPerfil from '../pages/Geral/EditarPerfil';
+import OrientacaoAluno from '../pages/Aluno/OrientacaoAluno';
 
 
 
@@ -146,16 +147,16 @@ export default function Routes() {
 
                         <CustomRoute exact isPrivate path='/professor/projetos' roles={['professor']} component={MeusProjetos} />
                         <CustomRoute exact isPrivate path='/professor/projetos/novo' roles={['professor']} component={ProjetoCadastrar} />
-                        <CustomRoute exact isPrivate path='/professor/projetos/editar/:id' roles={['professor']} component={ProjetoEditar} />
+                        <CustomRoute exact isPrivate path='/professor/projetos/editar/:projectId' roles={['professor']} component={ProjetoEditar} />
                         <CustomRoute exact isPrivate path='/professor/projetos/:id' roles={['professor']} component={ProjetoProfessor} />
                         <CustomRoute exact isPrivate path='/professor/projetos/:projectId/atividades' roles={['professor']} component={ListarTarefasProfessor} />
                         <CustomRoute exact isPrivate path='/professor/projetos/:id/atividades/novo' roles={['professor']} component={TarefaProfessorCadastrar} />
-                        <CustomRoute exact isPrivate path='/professor/projetos/:id/tarefas/editar/:taskId' roles={['professor']} component={TarefaProfessorEditar} />
+                        <CustomRoute exact isPrivate path='/professor/projetos/:projectId/tarefas/editar/:taskId' roles={['professor']} component={TarefaProfessorEditar} />
                         <CustomRoute exact isPrivate path='/professor/projetos/:id/tarefas/:taskId' roles={['professor']} component={TarefaProfessor} />
                         <CustomRoute exact isPrivate path='/professor/projetos/:projectId/orientacoes' roles={['professor']} component={ListarOrientacoesProfessor} />
                         <CustomRoute exact isPrivate path='/professor/projetos/:projectId/orientacoes/novo' roles={['professor']} component={OrientacaoProfessorCadastrar} />
-                        <CustomRoute exact isPrivate path='/professor/projetos/:id/orientacoes/:orientation' roles={['professor']} component={OrientacaoProfessor} />
-                        <CustomRoute exact isPrivate path='/professor/projetos/:id/orientacoes/editar/:orientationId' roles={['professor']} component={OrientacaoProfessorEditar} />
+                        <CustomRoute exact isPrivate path='/professor/projetos/:projectId/orientacoes/:orientationId' roles={['professor']} component={OrientacaoProfessor} />
+                        <CustomRoute exact isPrivate path='/professor/projetos/:projectId/orientacoes/editar/:orientationId' roles={['professor']} component={OrientacaoProfessorEditar} />
 
 
                         {/* Aluno pre-projeto */}
@@ -166,8 +167,8 @@ export default function Routes() {
                         <CustomRoute exact isPrivate path='/aluno-orientando/projeto/:id/' roles={['aluno-orientando']} component={ProjetoAluno} />
                         <CustomRoute exact isPrivate path='/aluno-orientando/projeto/:id/tarefas' roles={['aluno-orientando']} component={ListarTarefasAluno} />
                         <CustomRoute exact isPrivate path='/aluno-orientando/projeto/:id/tarefas/:taskId' roles={['aluno-orientando']} component={TarefaAluno} />
-                        <CustomRoute exact isPrivate path='/aluno-orientando/projeto/:id/orientacoes' roles={['aluno-orientando']} component={ListarOrientacoesAluno} />
-                        <CustomRoute exact isPrivate path='/aluno-orientando/projeto/:id/orientacoes/:orientation' roles={['aluno-orientando']} component={TarefaAluno} />
+                        <CustomRoute exact isPrivate path='/aluno-orientando/projeto/:projectId/orientacoes' roles={['aluno-orientando']} component={ListarOrientacoesAluno} />
+                        <CustomRoute exact isPrivate path='/aluno-orientando/projeto/:projectId/orientacoes/:orientationId' roles={['aluno-orientando']} component={OrientacaoAluno} />
 
                         <CustomRoute exact isPrivate path='/documentos/visualizar' roles={['professor', 'aluno-pre', 'aluno-orientando']} component={DocumentosAlunoProfessor} />
 

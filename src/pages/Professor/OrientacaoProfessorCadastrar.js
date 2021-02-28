@@ -43,7 +43,6 @@ function OrientacaoProfessorCadastrar(props) {
         api.post(`/orientacao/cadastrar_orientacao`, {
             title,
             description,
-            type: 'reunião',
             projectId,
             dateOrientation: format(customRegisterOrientationDate, 'dd/MM/yyyy'),
         })
@@ -136,26 +135,6 @@ function OrientacaoProfessorCadastrar(props) {
                         Uma descrição é obrigatória
                     </ErrorMessage>
                 }
-                <Label htmlFor='orientationType'>Tipo de orientação</Label>
-
-                <IconTextField>
-                    {/*<BiDetail />*/}
-                    <Select
-                        formSelect={true}
-                        value={orientationType}
-                        onChange={e => setOrientationType(e.target.value)}
-                        name='orientationType'
-                        id='orientationType'
-                    >
-                        <option
-                            key={1}
-                            value={1}
-                            style={{ width: '100%' }}
-                        >
-                            Reunião
-                        </option>
-                    </Select>
-                </IconTextField>
 
                 <Label htmlFor='orientationDate'>Data da orientação</Label>
                 <StyledDatePicker

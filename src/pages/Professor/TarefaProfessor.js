@@ -25,6 +25,8 @@ import Checkbox from '../../components/Checkbox';
 import Label from '../../components/Label/Label';
 import light from '../../themes/light';
 import { verifyTaskSituation } from '../../utils/taskUtils';
+import { convertUTCToZonedTime, convertZonedTimeToUTC } from '../../utils/convertDate';
+import { parseISO } from 'date-fns';
 
 
 function TarefaProfessor(props) {
@@ -68,6 +70,14 @@ function TarefaProfessor(props) {
         setValue: setValueSendComment,
     } = useForm({ mode: 'onSubmit' });
 
+    const {
+        register: registerAskForReviewOfATask,
+        handleSubmit: handleSubmitAskForReviewOfATask,
+        errors: errorsAskForReviewOfATask,
+        formState: { isSubmitting: isSubmittingAskForReviewOfATask },
+        setValue: setValueAskForReviewOfATask,
+    } = useForm({ mode: 'onSubmit' });
+
     let modalMessage = useRef('')
 
     const history = useHistory();
@@ -84,6 +94,7 @@ function TarefaProfessor(props) {
             .then(({ data: { docs } }) => {
                 console.log('Task info', docs[0]);
                 setDeadline(new Date(docs[0].deadLine));
+                setValueAskForReviewOfATask('customRegisterDeadline', utcToZonedTime(new Date(docs[0].deadLine)), { shouldValidate: true });
                 setTask(docs[0]);
             })
             .catch(error => {
@@ -97,7 +108,7 @@ function TarefaProfessor(props) {
                     console.log('Error', error.message);
                 }
             });
-    }, [commentAddedOrDeleted]);
+    }, [commentAddedOrDeleted, modalTaskDelivered]);
 
     const onSubmit = ({ comment }, e) => {
 
@@ -215,18 +226,98 @@ function TarefaProfessor(props) {
 
     useEffect(() => {
         // creating custom registers
-        register('customRegisterInitialDate', { required: true })
-        register('customRegisterDeadline', { required: true })
-    }, [register]);
+        registerAskForReviewOfATask('customRegisterDeadline', { required: true })
+    }, [registerAskForReviewOfATask]);
 
-    const handleChangeInitialDate = e => {
+    const handleChangeDeadline = e => {
         console.log('e', e)
         setDeadline(e); // setting value in the state. necessary for update display of the input initialDate
-        setValueReview('customRegisterInitialDate', e, { shouldValidate: true }); // setting value in the custom register
+        setValueAskForReviewOfATask('customRegisterDeadline', e, { shouldValidate: true }); // setting value in the custom register
     }
 
-    const testSubmit = (data) => {
-        console.debug('DADOS', data)
+    const evaluateTask = (situation, deadline) => {
+        console.debug('data', format(new Date(deadline), 'dd/MM/yyyy'));
+        api.patch(`/tarefas/revisar_tarefa/professor/${taskId}`, {
+            situation,
+            deadLine: format(new Date(deadline), 'dd/MM/yyyy'),
+        })
+            .then(response => {
+                console.log(response.data);
+                const notify = () =>
+                    toast.success("Tarefa avaliada com sucesso", {
+                        autoClose: 2000,
+                    }
+                    );
+                notify();
+                setModalTaskDelivered(false);
+                setTimeout(() => {
+                    history.push(`/professor/projetos/${id}/tarefas/${taskId}`)
+                }, 2000);
+
+            })
+            .catch(error => {
+                if (error.response) {
+                    const msg = error.response.data;
+                    console.log(msg);
+                    setErrorMessage('Erro ao avaliar tarefa. Tente novamente.')
+                }
+                if (error.request) {
+                    console.log(error.request);
+                }
+                else {
+                    console.log('Error', error.message);
+                }
+                return new Promise((resolve) => {
+                    setTimeout(() => resolve(), 2000);
+                });
+
+            });
+        return new Promise((resolve) => {
+            setTimeout(() => resolve(), 1500);
+        });
+    }
+
+    const onSubmitAskForReviewOfATask = ({ comment, customRegisterDeadline }) => {
+        console.debug("DEADLINE", customRegisterDeadline);
+        api.patch(`/tarefas/revisar_tarefa/professor/${taskId}`, {
+            situation: 'em revisão',
+            comment,
+            deadLine: convertZonedTimeToUTC(customRegisterDeadline),
+        })
+            .then(response => {
+                console.log(response.data);
+                const notify = () =>
+                    toast.success("Tarefa avaliada com sucesso", {
+                        autoClose: 2000,
+                    }
+                    );
+                notify();
+                setModalTaskDelivered(false);
+                setTimeout(() => {
+                    history.push(`/professor/projetos/${id}/tarefas/${taskId}`)
+                }, 2000);
+
+            })
+            .catch(error => {
+                if (error.response) {
+                    const msg = error.response.data;
+                    console.log(msg);
+                    setErrorMessage('Erro ao avaliar tarefa. Tente novamente.')
+                }
+                if (error.request) {
+                    console.log(error.request);
+                }
+                else {
+                    console.log('Error', error.message);
+                }
+                return new Promise((resolve) => {
+                    setTimeout(() => resolve(), 2000);
+                });
+
+            });
+        return new Promise((resolve) => {
+            setTimeout(() => resolve(), 1500);
+        });
     }
 
     return (
@@ -237,7 +328,7 @@ function TarefaProfessor(props) {
                         <TaskDescription>
                             {task && task.description}
                         </TaskDescription>
-                        <TaskDeadline>Prazo de entrega: {task && format(addHours(new Date(task.deadLine), 3), 'dd/MM/yyyy', { locale: locale })}</TaskDeadline>
+                        <TaskDeadline>Prazo de entrega: {task && convertUTCToZonedTime(task.deadLine)}</TaskDeadline>
                         {console.log(task && addHours(new Date(task.deadLine), 3))}
                         <TaskSituation>{task && verifyTaskSituation(task.situation, task.deadLine)}</TaskSituation>
                         {task && (task.finalFile.url || task.link) &&
@@ -414,48 +505,56 @@ function TarefaProfessor(props) {
                         </Label>
                         {checked &&
                             <>
-                                <Label style={{ display: 'block', marginTop: '7px' }} htmlFor='deadline'>Alterar data de entrega</Label>
-                                <StyledDatePicker
-                                    value={deadline}
-                                    onChange={value => handleChangeInitialDate(value)}
-                                    locale='pt-BR'
-                                    timeIntervals={15}
-                                    minDate={new Date(task.deadLine)}
-                                    name="deadline"
-                                    error={errors.customRegisterInitialDate}
-                                    placeholder="Nova data de entrega"
-                                    style={{ borderColor: errors.customRegisterInitialDate && light.color.secondary }}
-                                />
-                                <Label style={{ display: 'block', marginBottom: '0' }} htmlFor='deadline'>Comentário</Label>
-                                <TaskCommentBox style={{ marginTop: '0' }}>
-                                    <form>
+                                <form onSubmit={handleSubmitAskForReviewOfATask(onSubmitAskForReviewOfATask)}>
+                                    <Label style={{ display: 'block', marginTop: '7px' }} htmlFor='deadline'>Alterar data de entrega</Label>
+                                    <StyledDatePicker
+                                        value={deadline}
+                                        onChange={value => handleChangeDeadline(value)}
+                                        locale='pt-BR'
+                                        timeIntervals={15}
+                                        error={errorsAskForReviewOfATask.customRegisterDeadline}
+                                        placeholder="Nova data de entrega"
+                                        style={{ borderColor: errorsAskForReviewOfATask.customRegisterDeadline && light.color.secondary }}
+                                    />
+
+                                    {errorsAskForReviewOfATask.customRegisterDeadline &&
+                                        <ErrorMessage left marginTop marginBottom>
+                                            O prazo de entrega é obrigatório
+                                        </ErrorMessage>
+                                    }
+
+
+                                    <Label style={{ display: 'block', marginBottom: '0' }} htmlFor='deadline'>Comentário</Label>
+                                    <TaskCommentBox style={{ marginTop: '0' }}>
+
                                         <textarea
                                             name='comment'
-                                            ref={register({
+                                            ref={registerAskForReviewOfATask({
                                                 required: true,
                                             })}
                                             rows={4}
                                             placeholder='Digite o seu comentário...'
-                                            style={errors.comment && { borderColor: lightTheme.color.secondary }}
+                                            style={errorsAskForReviewOfATask.comment && { borderColor: lightTheme.color.secondary }}
 
                                         />
-                                        {errors.comment && errors.comment.type === 'required' && <ErrorMessage left>Um texto é obrigatório para efetuar um comentário</ErrorMessage>}
+                                        {errorsAskForReviewOfATask.comment && errorsAskForReviewOfATask.comment.type === 'required' && <ErrorMessage left>Um texto é obrigatório para efetuar um comentário</ErrorMessage>}
                                         <div style={{ display: 'grid', marginTop: '.1rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
                                             <Button type='submit' disabled={isSubmitting}>
                                                 Pedir revisão
                                         </Button>
                                             <Button onClick={() => setModalTaskDelivered(false)}>Cancelar</Button>
                                         </div>
-                                    </form>
-                                </TaskCommentBox>
+
+                                    </TaskCommentBox>
+                                </form>
                             </>
                         }
 
 
                         {!checked &&
                             <div style={{ display: 'grid', marginTop: '.1rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
-                                <Button onClick={() => deleteComment()}>Aceitar</Button>
-                                <Button onClick={() => setModalTaskDelivered(false)}>Recusar</Button>
+                                <Button onClick={() => evaluateTask('concluída', task && task.deadLine)}>Aceitar</Button>
+                                <Button onClick={() => setModalTaskDelivered(false)}>Cancelar</Button>
                             </div>
                         }
                     </>

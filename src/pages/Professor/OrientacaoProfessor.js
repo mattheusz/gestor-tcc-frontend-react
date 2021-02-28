@@ -1,65 +1,42 @@
-import React, { useRef, useState } from 'react';
-import Avatar from 'react-avatar';
-import { useForm } from 'react-hook-form';
+import React, { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import lightTheme from '../../themes/light'
-import Button from '../../components/Button';
+import api from '../../api/api';
 import DashboardUI from '../../components/DashboardUI';
-import StyledDropzone from '../../components/StyledDropzone/StyledDropzone';
 import { device } from '../../device';
-import Modal from 'react-modal';
-import { MdModeEdit, MdDelete } from 'react-icons/md';
+import { convertUTCToZonedTime } from '../../utils/convertDate';
 
 function OrientacaoProfessor(props) {
+    const [orientation, setOrientation] = useState();
 
-    const [fileUploading, setFileUploading] = useState();
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [modalEditIsOpen, setModalEditIsOpen] = useState(false);
-    const [modalDeleteIsOpen, setModalDeleteIsOpen] = useState(false);
-    const { register, handleSubmit, errors, formState: { isSubmitting } }
-        = useForm({ mode: 'onSubmit' });
-
-    let modalHeight = 0;
-
-    Modal.setAppElement('#root');
-
-    let modalMessage = useRef('')
-
-
-    if (window.innerWidth <= 437) {
-        modalHeight = '150px';
-    } else {
-        modalHeight = '120px';
-    }
-
-    console.debug('LARGURA DA TELA: ', window.innerWidth)
-    console.debug('ALTURA DO MODAL: ', modalHeight)
-
-    const onSubmit = async ({ title: comment }) => {
-        console.log(comment)
-        console.log(fileUploading)
-
-        return;
-
-        const formData = new FormData();
-
-        formData.append("title", comment);
-        formData.append("file", fileUploading);
-
-
-    }
-
+    const { orientationId } = useParams();
+    useEffect(() => {
+        api.get(`/orientacao/${orientationId}`)
+            .then(({ data }) => {
+                console.debug('User Info', data.docs[0]);
+                setOrientation(data.docs[0]);
+            })
+            .catch(error => {
+                if (error.response) {
+                    console.log(error.response);
+                }
+                if (error.request) {
+                    console.log(error.request);
+                }
+                else {
+                    console.log('Error', error.message);
+                }
+            });
+    }, []);
 
     return (
-        <DashboardUI screenName='Orientação 1' itemActive="Meus Projetos" isProfessorOrientation={true}>
-            <ActivityHeader>
-                <ActivityDescription>
-                    Auxílio online relativo a parte escrita.
-                </ActivityDescription>
-                <Deadline>14/02/2021</Deadline>
-                <ActivitySituation>tipo</ActivitySituation>
-
-            </ActivityHeader>
+        <DashboardUI screenName={orientation && orientation.title} itemActive="Meus Projetos" isProfessorOrientation={true}>
+            <OrientationHeader>
+                <OrientationDescription>
+                    {orientation && orientation.description}
+                </OrientationDescription>
+                <OrientationDate>{orientation && convertUTCToZonedTime(orientation.dateOrientation)}</OrientationDate>
+            </OrientationHeader>
 
         </DashboardUI >
 
@@ -68,20 +45,20 @@ function OrientacaoProfessor(props) {
 
 export default OrientacaoProfessor;
 
-const ActivityHeader = styled.div`
+const OrientationHeader = styled.div`
     border-bottom: 1px solid ${props => props.theme.color.grey}55;
     padding-bottom: 1rem;
     display: flex;
     flex-direction: column;
 `;
 
-const ActivityDescription = styled.div`
+const OrientationDescription = styled.div`
     padding: 1rem 0 .7rem;
     border-top: 1px solid ${props => props.theme.color.grey}55;
     color: ${props => props.theme.color.dark};
 `;
 
-const Deadline = styled.span`
+const OrientationDate = styled.span`
     display: inline; 
     align-self: flex-start;
     font-size: 1rem;
@@ -93,7 +70,7 @@ const Deadline = styled.span`
     box-shadow: 3px 3px 3px ${props => props.theme.color.primary}15;
 `
 
-const ActivitySituation = styled.span`
+const OrientationSituation = styled.span`
     display: inline-block;
     border-radius: 5px;
     border: 1px solid ${props => props.theme.color.primary};

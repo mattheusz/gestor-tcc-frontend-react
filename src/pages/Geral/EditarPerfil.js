@@ -43,9 +43,10 @@ function EditarPerfil(props) {
             });
     }, []);
 
-    const onSubmit = ({ email, aboutProfile, lattes, linkedin, youtube, facebook, instagram, phoneNumber }) => {
+    const onSubmit = ({ email, secondaryEmail, aboutProfile, lattes, linkedin, youtube, facebook, instagram, phoneNumber }) => {
         api.patch(`usuarios/atualizar_perfil/${userId}`, {
             email,
+            secondaryEmail,
             aboutProfile,
             lattes,
             linkedin,
@@ -101,6 +102,27 @@ function EditarPerfil(props) {
                     />
                 </IconTextField>
                 {errors.email &&
+                    <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>
+                        O e-mail é obrigatório
+                    </ErrorMessage>
+                }
+
+                <Label htmlFor='secondaryEmail'>E-mail secundário</Label>
+                <IconTextField>
+                    <FaEnvelope />
+                    <Input
+                        id='secondaryEmail'
+                        name='secondaryEmail'
+                        type='secondaryEmail'
+                        defaultValue={userInfo && userInfo.secondaryEmail && userInfo.secondaryEmail}
+                        ref={register({
+                            required: true
+                        })}
+                        placeholder='E-mail secundário'
+                        style={{ borderColor: errors.secondaryEmail && light.color.secondary }}
+                    />
+                </IconTextField>
+                {errors.secondaryEmail &&
                     <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>
                         O e-mail é obrigatório
                     </ErrorMessage>
@@ -186,27 +208,10 @@ function EditarPerfil(props) {
                     />
                 </IconTextField>
 
-                <Label htmlFor='password'>Nova Senha</Label>
-                <IconTextField>
-                    <FaLock />
-                    <Input
-                        type='password'
-                        name='password'
-                        autoComplete='new-password'
-                        ref={register({
-                        })}
-                        placeholder='Senha'
-                        style={errors.password && { borderColor: light.color.secondary }}
-                    />
-                </IconTextField>
-                {/*}
-                {errors.password && errors.password.type === 'required' && <ErrorMessage left>A senha é obrigatória</ErrorMessage>}
-                {errors.password && errors.password.type === 'minLength' && <ErrorMessage left>A senha deve conter no mínimo 8 caracteres</ErrorMessage>}
-                */}
                 <Button new={true} type='submit' width='100px'>
                     Salvar
                 </Button>
-                <Button new={true} type='button' width='100px' onClick={() => history.replace('/alunos')}>
+                <Button new={true} type='button' width='100px' onClick={() => history.replace('/perfil')}>
                     Cancelar
                 </Button>
             </form>

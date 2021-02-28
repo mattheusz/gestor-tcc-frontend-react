@@ -19,6 +19,7 @@ import locale from "date-fns/locale/pt-BR"; // the locale you want
 import addHours from 'date-fns/addHours'
 import ErrorMessage from '../../components/Error';
 import { verifyTaskSituation } from '../../utils/taskUtils';
+import { convertUTCToZonedTime } from '../../utils/convertDate';
 
 function TarefaAluno(props) {
 
@@ -259,7 +260,7 @@ function TarefaAluno(props) {
                 <TaskDescription>
                     {task && task.description}
                 </TaskDescription>
-                <TaskDeadline>Prazo de entrega: {task && format(addHours(new Date(task.deadLine), 3), 'dd/MM/yyyy', { locale: locale })}</TaskDeadline>
+                <TaskDeadline>Prazo de entrega: {task && convertUTCToZonedTime(task.deadLine)}</TaskDeadline>
                 {console.log(task && addHours(new Date(task.deadLine), 3))}
                 <TaskSituation>{task && verifyTaskSituation(task.situation, task.deadLine)}</TaskSituation>
                 <Button type='button' width='150px' onClick={() => setModalSendActivityIsOpen(true)}>
@@ -338,7 +339,9 @@ function TarefaAluno(props) {
                             </TaskCommentText>
                         </TaskCommentListItem>
                     )
-                    : 'Comment not found'
+                    : <TaskCommentsNotFound>
+                        Ainda não há nenhum comentário. 🙁
+                    </TaskCommentsNotFound>
                 }
             </TaskCommentList>
 
@@ -591,6 +594,12 @@ const TaskCommentAuthor = styled.span`
 const TaskCommentText = styled.span`
     color: ${props => props.theme.color.dark};
     margin-top: 3px;
+`;
+
+const TaskCommentsNotFound = styled.div`
+    color: black;;
+    text-align: center;
+    padding: 10px;
 `;
 
 const TaskCommentAttachment = styled.span`

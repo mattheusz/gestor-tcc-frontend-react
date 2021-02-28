@@ -10,6 +10,7 @@ import { Table } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 import { ToastContainer, toast } from 'react-toastify';
+import ReactLoading from 'react-loading';
 import Switch from 'react-input-switch';
 import Modal from 'react-modal';
 import { AiOutlineEdit } from 'react-icons/ai';
@@ -21,45 +22,21 @@ import ProfessorProjectList from '../../components/ProfessorProjectList/Professo
 import ProjectInfo from '../../components/ProjectInfo/ProjectInfo';
 import styled from 'styled-components';
 import { device } from '../../device';
+import { convertUTCToZonedTime } from '../../utils/convertDate';
 
 function ListarOrientacoesAluno(props) {
 
     const [searchText, setSearchText] = useState('');
-    const [projects, setProjets] = useState([]);
-
     const [noProjectFound, setNoProjectFound] = useState(false);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [mountedPagination, setMountedPagination] = useState(false);
     const [formIsSubmitted, setFormIsSubmitted] = useState(true);
-
-    const selectItems = [
-        {
-            value: 'em andamento',
-            displayValue: 'Em andamento'
-        },
-        {
-            value: 'iniciada',
-            displayValue: 'Iniciada'
-        },
-        {
-            value: 'concluída',
-            displayValue: 'Concluída'
-        },
-        {
-            value: 'recusada',
-            displayValue: 'Recusada'
-        },
-        {
-            value: 'todas',
-            displayValue: 'Todas'
-        }
-    ];
+    const [listOrientations, setListOrientations] = useState();
+    const [isLoading, setIsLoading] = useState(true);
+    const [someOrientationFound, setSomeOrientationFound] = useState(false);
+    const [modalOrientationInfo, setModalOrientationInfo] = useState();
 
     const isInitialMount = useRef(true);
-
-    let userName = useRef('');
-    let userId = useRef('');
-    let userStatus = useRef('');
 
     let modalMessage = useRef('');
 
@@ -72,25 +49,31 @@ function ListarOrientacoesAluno(props) {
     professorId.current = localStorage.getItem('reg')
     console.log('id', professorId.current)
 
-    Modal.setAppElement('#root');
-
     const history = useHistory();
-    const { id } = useParams();
+    const { projectId } = useParams();
 
-    // carregando informações do projeto aberto
+    // carregando todas orientações
     useEffect(() => {
-
         // pegar projeto por id
-        api.get(``)
+        api.get(`/orientacao/orientacoes_projeto/${projectId}/1/1`)
             .then(({ data }) => {
-
+                console.debug('ORIENTAÇÕES:', data);
+                setListOrientations(data.docs)
+                totalPages.current = data.totalPages;
+                currentPage.current = data.page;
+                buildPaginatorDesign();
+                setSomeOrientationFound(true);
+                setIsLoading(false);
+                console.debug('PAGINATOR MONTADO:');
             })
             .catch(error => {
                 if (error.response) {
                     console.log(error.response);
+                    setIsLoading(false);
                 }
                 if (error.request) {
                     console.log(error.request);
+                    setIsLoading(false);
                 }
                 else {
                     console.log('Error', error.message);
@@ -123,7 +106,7 @@ function ListarOrientacoesAluno(props) {
     }, [])
 
     const addUser = () => {
-        history.push(`/professor/projetos/${id}/orientacoes/novo`);
+        history.push(`/professor/projetos/${projectId}/orientacoes/novo`);
     }
 
     const editInfoProject = () => {
@@ -154,14 +137,11 @@ function ListarOrientacoesAluno(props) {
         let path;
         // tratando buscar por texto + status
         if (searchText === '') {
-            path = `usuarios/todos_usuarios/aluno/${selectedValue}/${page}`
-            if (selectedValue === 'todos')
-                path = `usuarios/todos_usuarios/aluno/${page}`
+            path = `/orientacao/orientacoes_projeto/${projectId}/1/${page}`
         }
         else {
-            path = `usuarios/listar_usuarios/aluno/${selectedValue}/${searchText}/${page}`
-            if (selectedValue === 'todos')
-                path = `usuarios/listar_usuarios/aluno/${searchText}/${page}`
+            path = `/orientacao/orientacoes_projeto/titulo/${projectId}/${searchText}/1/${page}`
+
         }
         currentPage.current = page;
 
@@ -169,8 +149,7 @@ function ListarOrientacoesAluno(props) {
             .then(response => {
                 console.log(response.data);
                 setNoProjectFound(false);
-                setProjets(response.data.docs);
-
+                setListOrientations(response.data.docs);
             })
             .catch(error => {
                 if (error.response) {
@@ -188,11 +167,12 @@ function ListarOrientacoesAluno(props) {
         buildPaginatorDesign();
     }
 
-    const openOrientation = (e, idOrientation) => {
-        history.push(`/professor/projetos/${id}/orientacoes/${idOrientation}`)
+    const openOrientation = (orientationId) => {
+        history.push(`/aluno-orientando/projeto/${projectId}/orientacoes/${orientationId}`)
     }
+
     return (
-        <DashboardUI screenName='Orientação 1' itemActive="Meus Projetos">
+        <DashboardUI screenName='Orientações' itemActive="Meus Projetos">
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}
@@ -200,46 +180,46 @@ function ListarOrientacoesAluno(props) {
                     selectedValue={selectedValue}
                     onChangeSelect={onChangeSelect}
                     addUser={addUser}
-                    selectItems={selectItems}
                     showAddButton={true}
+                    noShowSelect={true}
                 />
             </form>
-            <ActivityList>
-                <ActivityItem onClick={(e) => openOrientation(e, 1)}>
-                    <ActivityTitle>Introdução</ActivityTitle><br />
-                    <Deadline>
-                        20/01/2020
-                    </Deadline>
-                    <ActivitySituation>tipo</ActivitySituation>
-                </ActivityItem>
-                <ActivityItem>
-                    <ActivityTitle>Referencial teórico</ActivityTitle><br />
-                    <Deadline>
-                        20/01/2020
-                    </Deadline>
-                    <ActivitySituation>tipo</ActivitySituation>
-                </ActivityItem>
-                <ActivityItem>
-                    <ActivityTitle>Desenvolvimento</ActivityTitle><br />
-                    <Deadline>
-                        20/01/2020
-                    </Deadline>
-                    <ActivitySituation>tipo</ActivitySituation>
-                </ActivityItem>
-            </ActivityList>
+            <OrientationList>
+                {
+                    isLoading ? <Spinner type='spin' color={light.color.primaryShadow} height={20} width={20} /> :
+                        someOrientationFound ?
+                            listOrientations.map(({ _id, title, dateOrientation, situation }) =>
+                                <OrientationItem key={_id} onClick={(e) => openOrientation(_id)}>
+                                    <OrientationTitle>{title}</OrientationTitle><br />
+                                    <OrientationDate>
+                                        {convertUTCToZonedTime(dateOrientation)}
+                                    </OrientationDate>
+                                </OrientationItem>
+                            ) :
+                            'Nenhuma orientação cadastrada'
+                }
+
+                <Paginator
+                    totalPages={totalPages.current}
+                    currentPage={currentPage.current}
+                    paginationNumbers={paginationNumbers.current}
+                    choosePage={choosePage}
+                />
+
+            </OrientationList>
             <ToastContainer />
         </DashboardUI>
 
     );
 }
 
-const ActivityList = styled.div`
+const OrientationList = styled.div`
     display: flex;
     flex-direction: column;
     margin-top: 1rem;
 `
 
-const ActivityItem = styled.div`
+const OrientationItem = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -266,11 +246,11 @@ const ActivityItem = styled.div`
     }
 `
 
-const ActivityTitle = styled.span`
+const OrientationTitle = styled.span`
     font-size: 1.5rem;
     font-weight: 400;
 `
-const Deadline = styled.span`
+const OrientationDate = styled.span`
     font-size: 1rem;
     font-weight: 400;
     padding: 3px;
@@ -307,5 +287,10 @@ const ActivitySituation = styled.span`
         box-shadow: 1px 1px 1px ${props => props.theme.color.grey}55;
     }
 `;
+
+const Spinner = styled(ReactLoading)`
+    margin: 7rem auto 7rem;
+`;
+
 
 export default ListarOrientacoesAluno;

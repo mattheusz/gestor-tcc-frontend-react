@@ -24,18 +24,15 @@ function TarefaProfessorCadastrar(props) {
     const { register, handleSubmit, errors, formState: { isSubmitting }, watch, control } = useForm({ mode: 'onSubmit' });
 
     let idAdvisor = useRef();
-    idAdvisor.current = localStorage.getItem('reg')
+    idAdvisor.current = localStorage.getItem('reg');
 
-    const history = useHistory()
+    const history = useHistory();
     const { id } = useParams();
 
     const onSubmit = ({ title, description, initialDate, deadline }) => {
-        console.debug('Deadline antes de formatar:', deadline);
-        initialDate = format(initialDate, 'dd/MM/yyyy')
-        deadline = format(deadline, 'dd/MM/yyyy')
-        console.debug('Deadline convertido:', deadline);
-        var result = parse('01/21/2020', 'MM/dd/yyyy', new Date())
-        console.debug('data atual parseada', result);
+        initialDate = format(initialDate, 'dd/MM/yyyy');
+        deadline = format(deadline, 'dd/MM/yyyy');
+        console.log('DEADLINE', deadline)
 
         api.post('/tarefas/cadastrar_tarefas', {
             title,

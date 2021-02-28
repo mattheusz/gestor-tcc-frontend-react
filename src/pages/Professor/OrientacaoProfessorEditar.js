@@ -18,6 +18,9 @@ import light from '../../themes/light';
 import Label from '../../components/Label/Label';
 import StyledDatePicker from '../../components/StyledDatePicker';
 import Select from '../../components/Select';
+import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
+import { convertUTCToZonedTime, convertZonedTimeToUTC } from '../../utils/convertDate';
+import { format } from 'date-fns';
 
 
 function OrientacaoProfessorEditar(props) {
@@ -36,17 +39,17 @@ function OrientacaoProfessorEditar(props) {
     } = useForm({ mode: 'onSubmit' });
 
     const history = useHistory()
-    const { orientationId } = useParams();
+    const { orientationId, projectId } = useParams();
 
     useEffect(() => {
-        api.get(`AGUARDANDO ROTA`)
+        api.get(`/orientacao/${orientationId}`)
             .then(({ data: { docs } }) => {
                 console.log('Orientação o', docs[0]);
                 // setting orientationDate state, that the value to display in input date-picker
                 setOrientationType(docs[0].type);
-                setOrientationDate(new Date(docs[0].dateOrientation));
+                setOrientationDate(utcToZonedTime(new Date(docs[0].dateOrientation)));
                 // setting initial date to custom register customRegisterOrientationDate
-                setValue('customRegisterOrientationDate', new Date(docs[0].dateOrientation));
+                setValue('customRegisterOrientationDate', utcToZonedTime((new Date(docs[0].dateOrientation))), { shouldValidate: true });
                 setOrientation(docs[0]);
             })
             .catch(error => {
@@ -62,10 +65,12 @@ function OrientacaoProfessorEditar(props) {
             });
     }, []);
 
-    const onSubmit = ({ title, description, studentOne }) => {
-
-        api.patch(`/orientacao/atualizar/${orientationId}/`, {
-
+    const onSubmit = ({ title, description, customRegisterOrientationDate }) => {
+        console.debug('ORIENTATION DATE', format(customRegisterOrientationDate, 'dd/MM/yyyy'));
+        api.patch(`/orientacao/atualizar_orientacao/${orientationId}`, {
+            title,
+            description,
+            dateOrientation: convertZonedTimeToUTC(customRegisterOrientationDate),
         })
             .then(response => {
                 console.log(response.data);
@@ -76,7 +81,7 @@ function OrientacaoProfessorEditar(props) {
                     );
                 notify()
                 setTimeout(() => {
-                    history.push('/professor')
+                    history.push(`/professor/projetos/${projectId}/orientacoes/${orientationId}`)
                 }, 2000);
 
             })
@@ -158,40 +163,6 @@ function OrientacaoProfessorEditar(props) {
                         Uma descrição é obrigatória
                     </ErrorMessage>
                 }
-                <Label htmlFor='orientationType'>Tipo de orientação</Label>
-
-                <IconTextField>
-                    {/*<BiDetail />*/}
-                    <Select
-                        formSelect={true}
-                        value={orientationType}
-                        onChange={e => setOrientationType(e.target.value)}
-                        name='orientationType'
-                        id='orientationType'
-                    >
-                        <option
-                            key={1}
-                            value={1}
-                            style={{ width: '100%' }}
-                        >
-                            Tipo 1
-                        </option>
-                        <option
-                            key={1}
-                            value={1}
-                            style={{ width: '100%' }}
-                        >
-                            Tipo 1
-                        </option>
-                        <option
-                            key={1}
-                            value={1}
-                            style={{ width: '100%' }}
-                        >
-                            Tipo 1
-                        </option>
-                    </Select>
-                </IconTextField>
 
                 <Label htmlFor='orientationDate'>Data da orientação</Label>
                 <StyledDatePicker
@@ -219,7 +190,7 @@ function OrientacaoProfessorEditar(props) {
                 <Button new={true} type='submit' width='100px' disabled={isSubmitting}>
                     Salvar
                 </Button>
-                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${orientationId}/orientacoes`)}>
+                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${projectId}/orientacoes/${orientationId}`)}>
                     Cancelar
                 </Button>
             </form>

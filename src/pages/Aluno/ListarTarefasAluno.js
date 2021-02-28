@@ -16,6 +16,7 @@ import format from 'date-fns/format'
 import ReactLoading from 'react-loading';
 import { utcToZonedTime } from 'date-fns-tz';
 import { verifyTaskSituation } from '../../utils/taskUtils';
+import { convertUTCToZonedTime } from '../../utils/convertDate';
 
 function ListarTarefasAluno(props) {
 
@@ -74,10 +75,8 @@ function ListarTarefasAluno(props) {
         setMountedPagination(false);
         api.get(`/tarefa/projeto_tarefas/${projectId}/1/1`)
             .then(({ data }) => {
-
                 currentPage.current = data.page;
                 totalPages.current = data.totalPages;
-                console.debug('Data zonedTimetoUtc sem format', format(utcToZonedTime(data.docs[0].deadLine), 'dd/MM/yyyy HH:MM:sszz'));
                 setListTasks(data.docs);
                 setSomeTaskFound(true);
                 setIsLoading(false);
@@ -227,7 +226,7 @@ function ListarTarefasAluno(props) {
                                 <TaskItem key={_id} onClick={(e) => openActivity(e, _id)}>
                                     <TaskTitle>{title}</TaskTitle><br />
                                     <TaskDeadline>
-                                        Prazo de entrega: {format(new Date(deadLine), 'dd/MM/yyyy')}
+                                        Prazo de entrega: {convertUTCToZonedTime(deadLine)}
                                         {console.log('deadline', deadLine)}
                                     </TaskDeadline>
                                     <TaskSituation>{verifyTaskSituation(situation, deadLine)}</TaskSituation>

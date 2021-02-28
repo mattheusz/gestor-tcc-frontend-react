@@ -16,8 +16,10 @@ import light from '../../themes/light';
 import Label from '../../components/Label/Label';
 import StyledDatePicker from '../../components/StyledDatePicker';
 import format from 'date-fns/format'
-import { utcToZonedTime } from 'date-fns-tz';
+import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
 import Select from '../../components/Select';
+import { convertZonedTimeToUTC } from '../../utils/convertDate';
+import { addHours } from 'date-fns';
 
 
 function TarefaProfessorEditar(props) {
@@ -62,11 +64,16 @@ function TarefaProfessorEditar(props) {
                 console.log('Tarefas do projeto', docs[0]);
                 // setting initial state, that the value to display in input date-picker
                 setSituation(docs[0].situation);
+                console.log(docs[0].deadLine)
+                console.log(zonedTimeToUtc(new Date(docs[0].deadLine)))
+                console.log(utcToZonedTime(new Date(docs[0].deadLine)))
+                console.log((new Date(docs[0].deadLine)))
+
                 setInitialDate(utcToZonedTime(new Date(docs[0].initialDate)));
                 setDeadline(utcToZonedTime(new Date(docs[0].deadLine)));
                 // setting initial date to custom register customRegisterInitialDate
                 setValue('customRegisterInitialDate', new Date(docs[0].initialDate));
-                setValue('customRegisterDeadline', new Date(docs[0].deadLine));
+                setValue('customRegisterDeadline', utcToZonedTime(new Date(docs[0].deadLine)), { shouldValidate: true });
                 setTask(docs[0]);
             })
             .catch(error => {
@@ -83,16 +90,13 @@ function TarefaProfessorEditar(props) {
     }, []);
 
     const onSubmit = ({ title, description, customRegisterInitialDate, customRegisterDeadline, situation }) => {
-
-        format(customRegisterInitialDate, 'dd/MM/yyyy');
-        console.debug('initial date:', format(customRegisterInitialDate, 'dd/MM/yyyy'))
-        format(customRegisterDeadline, 'dd/MM/yyyy');
-
+        console.debug('ZONEDTIMETOUTC', format(zonedTimeToUtc(new Date(customRegisterDeadline)), 'dd/MM/yyyy hh:mm:ss', Intl.DateTimeFormat().resolvedOptions().timeZone))
+        console.debug('ZONEDTIMETOUTC', format(new Date(customRegisterDeadline), 'dd/MM/yyyy hh:mm:ss'));
         api.patch(`/tarefas/atualizar_tarefa/professor/${taskId}`, {
             title,
             description,
-            initialDate: format(customRegisterInitialDate, 'dd/MM/yyyy'),
-            deadLine: format(customRegisterDeadline, 'dd/MM/yyyy'),
+            initialDate: convertZonedTimeToUTC(customRegisterInitialDate),
+            deadLine: convertZonedTimeToUTC(customRegisterDeadline),
             situation
         })
             .then(response => {
@@ -112,7 +116,7 @@ function TarefaProfessorEditar(props) {
                 if (error.response) {
                     const msg = error.response.data;
                     console.log(msg);
-                    setErrorMessage('Erro ao cadastrar a atividade. Tente novamente.')
+                    setErrorMessage('Erro ao editar tarefa. Tente novamente.')
                 }
                 if (error.request) {
                     console.log(error.request);

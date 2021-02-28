@@ -25,7 +25,9 @@ function DashboardUI({ screenName, itemActive, children, isProfessorActivity, is
     const [openDeleteOrientationModal, setOpenDeleteOrientationModal] = useState(false);
 
     const history = useHistory();
-    const { id, taskId, orientation } = useParams();
+    const { taskId, orientationId, projectId } = useParams();
+
+    const redirectToOrientationList = `/professor/projetos/${projectId}/orientacoes`
 
     const dropdownRef = useRef(null);
     useDetectOutsideClick(dropdownRef, showDropdown, setShowDropdown);
@@ -47,7 +49,29 @@ function DashboardUI({ screenName, itemActive, children, isProfessorActivity, is
                 toast.success("Tarefa excluída com sucesso", {
                     autoClose: 2000,
                 });
-                history.push(`/professor/projetos/${id}/atividades`)
+                history.push(`/professor/projetos/${projectId}/atividades`)
+            })
+            .catch(error => {
+                if (error.response) {
+                    console.log(error.response);
+                }
+                if (error.request) {
+                    console.log(error.request);
+                }
+                else {
+                    console.log('Error', error.message);
+                }
+            });
+    }
+
+    const deleteOrientation = () => {
+        api.delete(`/orientacao/deletar_orientacao/${orientationId}`)
+            .then(response => {
+                console.log(response.data);
+                toast.success("Tarefa excluída com sucesso", {
+                    autoClose: 2000,
+                });
+                history.push(redirectToOrientationList)
             })
             .catch(error => {
                 if (error.response) {
@@ -77,20 +101,20 @@ function DashboardUI({ screenName, itemActive, children, isProfessorActivity, is
                                 <ViewTitle>{screenName}</ViewTitle>
                                 {isProfessorActivity &&
                                     <HeaderButtons>
-                                        <MdModeEdit onClick={() => history.push(`/professor/projetos/${id}/tarefas/editar/${taskId}`)} />
+                                        <MdModeEdit onClick={() => history.push(`/professor/projetos/${projectId}/tarefas/editar/${taskId}`)} />
                                         <MdDelete onClick={() => setOpenDeleteActivityModal(true)} />
                                     </HeaderButtons>
                                 }
                                 {isProfessorProject &&
                                     <HeaderButtons>
-                                        <MdModeEdit onClick={() => history.push(`/professor/projetos/editar/${id}`)} />
+                                        <MdModeEdit onClick={() => history.push(`/professor/projetos/editar/${projectId}`)} />
                                         <MdDelete onClick={() => setOpenDeleteProjectModal(true)} />
                                     </HeaderButtons>
                                 }
 
                                 {isProfessorOrientation &&
                                     <HeaderButtons>
-                                        <MdModeEdit onClick={() => history.push(`/professor/projetos/${id}/orientacoes/editar/${orientation}`)} />
+                                        <MdModeEdit onClick={() => history.push(`/professor/projetos/${projectId}/orientacoes/editar/${orientationId}`)} />
                                         <MdDelete onClick={() => setOpenDeleteOrientationModal(true)} />
                                     </HeaderButtons>
                                 }
@@ -163,7 +187,7 @@ function DashboardUI({ screenName, itemActive, children, isProfessorActivity, is
                     Esta ação é irreversível.
                 </p>
                 <div style={{ display: 'grid', marginTop: '.4rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
-                    <Button onClick={() => setOpenDeleteOrientationModal(false)}>Excluir</Button>
+                    <Button onClick={() => deleteOrientation()}>Excluir</Button>
                     <Button onClick={() => setOpenDeleteOrientationModal(false)}>Cancelar</Button>
                 </div>
             </Modal>

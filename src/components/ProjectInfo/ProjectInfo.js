@@ -6,12 +6,14 @@ import { device } from '../../device';
 import format from 'date-fns/format'
 import { Fragment } from 'react';
 import { utcToZonedTime } from 'date-fns-tz';
+import { verifyTaskSituation } from '../../utils/taskUtils';
+import { convertUTCToZonedTime } from '../../utils/convertDate';
 
 function ProjectInfo({ projectId, isStudent, projectInfos }) {
 
     const redirectToTask = isStudent ? `/aluno-orientando/projeto/${projectId}/tarefas` : `/professor/projetos/${projectId}/atividades`
     const redirectToOrientation = isStudent ? `/aluno-orientando/projeto/${projectId}/orientacoes` : `/professor/projetos/${projectId}/orientacoes`
-    const { students, description, situation, tasks, orientation, advisor } = projectInfos;
+    const { students, description, situation, tasks, orientation, advisor, deadLine } = projectInfos;
     const history = useHistory();
     console.debug('STUDENTS', students);
     console.debug('TASKS', tasks);
@@ -22,14 +24,19 @@ function ProjectInfo({ projectId, isStudent, projectInfos }) {
     // fazer depois a listagem da última atividade registrada
 
     const openTask = (e, taskId) => {
-        let path = `/professor/projetos/${projectId}/tarefas/${taskId}`
+        let path = `/professor/projetos/${projectId}/tarefas/${taskId}`;
         if (isStudent)
-            path = `/aluno-orientando/projeto/${projectId}/tarefas/${taskId}`
+            path = `/aluno-orientando/projeto/${projectId}/tarefas/${taskId}`;
         history.push(path)
     }
 
+
     const openOrientation = (e, orientationId) => {
-        history.push(`/professor/projetos/${projectId}/orientacoes/${orientationId}`)
+        let path = `/professor/projetos/${projectId}/orientacoes/${orientationId}`;
+        if (isStudent)
+            path = `/aluno-orientando/projeto/${projectId}/orientacoes/${orientationId}`;
+
+        history.push(path);
     }
 
     return (
@@ -44,7 +51,7 @@ function ProjectInfo({ projectId, isStudent, projectInfos }) {
                     {description && description}
                 </p>
 
-                <Situation>{situation && situation}</Situation>
+                <Situation>{situation && verifyTaskSituation(situation, deadLine)}</Situation>
             </HeaderContainer>
             <CardContainer isStudent={isStudent}>
                 <TaskCard >
@@ -56,7 +63,7 @@ function ProjectInfo({ projectId, isStudent, projectInfos }) {
                         {tasks && tasks.length > 0 ?
                             <CardBody onClick={(e) => openTask(e, tasks && tasks.length > 0 && tasks[0]._id)}>
                                 <CardBodyTitle>{tasks && tasks.length > 0 && tasks[0].title}</CardBodyTitle>
-                                <CardBodyDate>Prazo de entrega: {tasks && tasks.length > 0 && format(utcToZonedTime(new Date(tasks[0].deadLine)), 'dd/MM/yyyy')}</CardBodyDate>
+                                <CardBodyDate>Prazo de entrega: {tasks && tasks.length > 0 && convertUTCToZonedTime(tasks[0].deadLine)}</CardBodyDate>
                                 <CardBodySituation>{tasks && tasks.length > 0 && tasks[0].situation}</CardBodySituation>
                             </CardBody> : tasks &&
                             <NoTaskInTaskCard>Nenhuma tarefa registrada. Clique em "Ver Mais" para registrar.</NoTaskInTaskCard>
@@ -78,7 +85,7 @@ function ProjectInfo({ projectId, isStudent, projectInfos }) {
                         {orientation && orientation.length > 0 ?
                             <CardBody onClick={(e) => openOrientation(e, orientation && orientation.length > 0 && orientation[0]._id)}>
                                 <CardBodyTitle>{orientation && orientation.length > 0 && orientation[0].title}</CardBodyTitle>
-                                <CardBodyDate>Data da orientação: {orientation && orientation.length > 0 && format(utcToZonedTime(new Date(orientation[0].dateOrientation)), 'dd/MM/yyyy')}</CardBodyDate>
+                                <CardBodyDate>Data da orientação: {orientation && orientation.length > 0 && convertUTCToZonedTime(orientation[0].dateOrientation)}</CardBodyDate>
 
                             </CardBody> : orientation &&
                             <NoTaskInTaskCard>Nenhuma orientação registrada. Clique em "Ver Mais" para registrar.</NoTaskInTaskCard>

@@ -4,6 +4,7 @@ import parseISO from 'date-fns/parseISO'
 export const verifyTaskSituation = (situation, deadline) => {
     let taskSituation;
     let TaskDeadline = parseISO(deadline);
+    console.debug('SITUAÇÃO VINDA DO BANCO', situation)
 
     console.log('Situation, deadline and current date', situation, deadline, new Date())
 

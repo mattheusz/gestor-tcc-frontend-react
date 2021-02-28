@@ -21,6 +21,7 @@ import { device } from '../../device';
 import format from 'date-fns/format'
 import { utcToZonedTime } from 'date-fns-tz';
 import { verifyTaskSituation } from '../../utils/taskUtils';
+import { convertUTCToZonedTime } from '../../utils/convertDate';
 
 function ListarTarefasProfessor(props) {
 
@@ -82,7 +83,7 @@ function ListarTarefasProfessor(props) {
         if (mountedPagination)
             return;
         setMountedPagination(false);
-        api.get(`/tarefa/projeto_tarefas/${projectId}/1/1`)
+        api.get(`/tarefa/projeto_tarefa/nao_concluidas/${projectId}/1/1`)
             .then(({ data }) => {
                 console.debug('total pages', data.totalPages)
                 console.debug('registers', data)
@@ -235,7 +236,7 @@ function ListarTarefasProfessor(props) {
                                 <TaskItem key={_id} onClick={(e) => openActivity(e, _id)}>
                                     <TaskTitle>{title}</TaskTitle><br />
                                     <TaskDeadline>
-                                        Prazo de entrega: {format(utcToZonedTime(deadLine, 'Europe/London'), 'dd/MM/yyyy')}
+                                        Prazo de entrega: {convertUTCToZonedTime(deadLine)}
                                     </TaskDeadline>
                                     <TaskSituation>{verifyTaskSituation(situation, deadLine)}</TaskSituation>
                                 </TaskItem>

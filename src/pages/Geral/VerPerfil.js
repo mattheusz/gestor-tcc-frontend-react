@@ -198,6 +198,13 @@ function VerPerfil() {
                                 </>
                             }
                             {
+                                userInfo.secondaryEmail &&
+                                <>
+                                    <GridItem>E-mail secundário</GridItem>
+                                    <GridItem>{userInfo.secondaryEmail}</GridItem>
+                                </>
+                            }
+                            {
                                 userInfo.aboutProfile &&
                                 <>
                                     <GridItem>Sobre</GridItem>
