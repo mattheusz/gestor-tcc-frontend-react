@@ -232,7 +232,9 @@ function ListarTarefasAluno(props) {
                                     <TaskSituation>{verifyTaskSituation(situation, deadLine)}</TaskSituation>
                                 </TaskItem>
                             ) :
-                            'Nenhuma tarefa cadastrada'
+                            <TaskNotFound>
+                                Nenhuma tarefa foi encontrada
+                            </TaskNotFound>
                 }
             </TaskList>
             <Paginator
@@ -325,5 +327,12 @@ const TaskSituation = styled.span`
 const Spinner = styled(ReactLoading)`
     margin: 7rem auto 7rem;
 `
+
+const TaskNotFound = styled.div`
+    color: black;
+    font-family: Roboto;
+    text-align: center;
+    padding: 10px;
+`;
 
 export default ListarTarefasAluno;

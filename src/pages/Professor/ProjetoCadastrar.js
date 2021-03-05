@@ -7,7 +7,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import Button from '../../components/Button'
 import DashboardUI from '../../components/DashboardUI';
-import { FaUserAlt, FaGraduationCap, FaEnvelope, FaLock } from 'react-icons/fa';
 import { MdTitle } from 'react-icons/md';
 import { BiDetail } from 'react-icons/bi';
 
@@ -66,7 +65,7 @@ function ProjetoCadastrar(props) {
         console.log('description', description)
         console.log('id', studentOne)
         console.log(selectedStudentOne)
-        if (selectedStudentOne == '-' || selectedStudentTwo == '-') {
+        if (selectedStudentOne === '-' || selectedStudentTwo === '-') {
             console.log('Deu ruim')
             setErrorMessage('Não há alunos disponíveis para orientação.');
             return;
@@ -186,16 +185,15 @@ function ProjetoCadastrar(props) {
                     {
                         studentsWithoutProject ?
                             studentsWithoutProject.map(({ _id, name }) => {
-                                //console.log('student 1 id', _id);
-                                //if (_id === selectedStudentTwo._id) return;
                                 if (_id === selectedStudentTwo) return;
-                                return (<option
-                                    key={_id}
-                                    value={_id}
-                                    style={{ width: '100%' }}
-                                >
-                                    {name}
-                                </option>);
+                                return (
+                                    <option
+                                        key={_id}
+                                        value={_id}
+                                        style={{ width: '100%' }}
+                                    >
+                                        {name}
+                                    </option>);
                             }) :
                             <option
                                 key={1}

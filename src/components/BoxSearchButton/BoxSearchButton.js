@@ -15,6 +15,7 @@ export default BoxSearchButton
 
 export const SearchInput = styled.input`
     display: inline-block;
+    font-family: Roboto;
     border: 1px solid #a9a9a9;
     border-right: 0;
     outline: none;

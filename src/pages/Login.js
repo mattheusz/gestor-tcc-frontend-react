@@ -22,7 +22,7 @@ function Login(props) {
         mode: "onSubmit"
     });
 
-    const { handleLogin, errorMessage, setErrorMessage } = useContext(AuthContext)
+    const { handleLogin, errorMessage, setErrorMessage } = useContext(AuthContext);
 
     useEffect(() => {
         setErrorMessage('')
@@ -31,9 +31,6 @@ function Login(props) {
     const onSubmit = async ({ registration, password }) => {
         await handleLogin(registration, password);
     }
-
-    console.debug(Login, 'Login sendo chamado')
-
 
     return (
         <ThemeProvider theme={lightTheme}>
@@ -77,7 +74,7 @@ function Login(props) {
 
                     <Button type='submit' disabled={formState.isSubmitting}>Entrar</Button>
                     {formState.isSubmitting && <Spinner type='spin' color={lightTheme.color.primaryShadow} height={20} width={20} />}
-                    {errorMessage && !formState.isSubmitting && <ErrorMessage>{JSON.stringify(errorMessage)}</ErrorMessage>}
+                    {errorMessage && !formState.isSubmitting && <ErrorMessage>{errorMessage}</ErrorMessage>}
                     <SimpleLink to='/forgot_password'>Esqueceu a senha?</SimpleLink>
 
                 </CenterForm>

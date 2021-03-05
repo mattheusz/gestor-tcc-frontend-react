@@ -14,15 +14,21 @@ import { IoMdSchool } from 'react-icons/io';
 import { GiTeacher } from 'react-icons/gi';
 import { BsCalendar } from 'react-icons/bs';
 import { CgFileDocument } from 'react-icons/cg';
-import { RiGitRepositoryLine } from 'react-icons/ri';
+import { RiGitRepositoryLine, RiExchangeBoxLine } from 'react-icons/ri';
 import { BiUserCircle } from 'react-icons/bi';
 
 export const coordenador = [
+    {
+        icon: <RiExchangeBoxLine />,
+        description: 'Visão Professor',
+        to: '/professor'
+    },
     {
         icon: <AiOutlineHome />,
         description: 'Página Inicial',
         to: '/coordenador'
     },
+
     {
         icon: <VscProject />,
         description: 'Projetos',
@@ -150,6 +156,35 @@ export const alunoOrientando = [
 
 export const professor = [
 
+    {
+        icon: <VscProject />,
+        description: 'Meus Projetos',
+        to: '/professor'
+    },
+
+    {
+        icon: <BsCalendar />,
+        description: 'Datas Importantes*',
+        to: '/datas_importantes'
+    },
+    {
+        icon: <CgFileDocument />,
+        description: 'Documentos',
+        to: '/documentos/visualizar'
+    },
+    {
+        icon: <RiGitRepositoryLine />,
+        description: 'Repositório*',
+        to: '/trabalhos_anteriores'
+    },
+];
+
+export const coordenadorProfessor = [
+    {
+        icon: <RiExchangeBoxLine />,
+        description: 'Visão Coordenador',
+        to: '/coordenador'
+    },
     {
         icon: <VscProject />,
         description: 'Meus Projetos',

@@ -13,7 +13,20 @@ import IconTextField, { Input } from '../../components/IconTextField';
 import Label from '../../components/Label/Label';
 import light from '../../themes/light';
 import Lattes from '../../assets/lattes_gray.svg';
-import StyledDropzone from '../../components/StyledDropzone/StyledDropzone';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
+
+const perfilSchema = yup.object().shape({
+    email: yup.string().email().required(),
+    secondaryEmail: yup.string().email().notRequired(),
+    aboutProfile: yup.string(),
+    lattes: yup.string(),
+    linkedin: yup.string(),
+    youtube: yup.string(),
+    facebook: yup.string(),
+    instagram: yup.string(),
+});
+
 
 function EditarPerfil(props) {
 
@@ -22,7 +35,10 @@ function EditarPerfil(props) {
 
     const history = useHistory();
     const { userId } = useParams();
-    const { register, handleSubmit, errors, setValue } = useForm();
+    const { register, handleSubmit, errors, setValue } = useForm({
+        resolver: yupResolver(perfilSchema),
+    });
+
 
     useEffect(() => {
         api.get(`usuarios/perfil/${userId}`)
@@ -94,19 +110,21 @@ function EditarPerfil(props) {
                         name='email'
                         type='email'
                         defaultValue={userInfo && userInfo.email && userInfo.email}
-                        ref={register({
-                            required: true
-                        })}
+                        ref={register}
                         placeholder='E-mail'
                         style={{ borderColor: errors.email && light.color.secondary }}
                     />
                 </IconTextField>
-                {errors.email &&
+                {errors.email?.type === 'required' &&
                     <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>
                         O e-mail é obrigatório
                     </ErrorMessage>
                 }
-
+                {errors.email?.type === 'email' &&
+                    <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>
+                        Digite um e-mail válido
+                    </ErrorMessage>
+                }
                 <Label htmlFor='secondaryEmail'>E-mail secundário</Label>
                 <IconTextField>
                     <FaEnvelope />
@@ -122,12 +140,11 @@ function EditarPerfil(props) {
                         style={{ borderColor: errors.secondaryEmail && light.color.secondary }}
                     />
                 </IconTextField>
-                {errors.secondaryEmail &&
+                {errors.secondaryEmail?.type === 'email' &&
                     <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>
-                        O e-mail é obrigatório
+                        Digite um e-mail válido
                     </ErrorMessage>
                 }
-
                 <Label htmlFor='sobre'>Sobre</Label>
                 <TextArea
                     name='aboutProfile'

@@ -4,6 +4,7 @@ import { device } from '../../device';
 const Select = styled.select`
     height: 2.5rem;
     display: block;
+    font-family: Roboto;
     outline: none;
     border: 1px solid ${props => props.theme.color.grey};
     cursor: pointer;

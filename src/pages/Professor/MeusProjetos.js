@@ -168,27 +168,8 @@ function Projetos(props) {
         setSelectedValue(e.target.value)
     }
 
-    const addUser = () => {
+    const addProject = () => {
         history.push('/professor/projetos/novo');
-    }
-
-    const editUser = (_id, registration, name, email, status) => {
-        //setProject({ _id, registration, name, email, status })
-        history.push(`/projetos/editar/${_id}`);
-    }
-
-    const activeAndInactive = (id, name, status) => {
-        userId.current = id;
-        userName.current = name;
-        userStatus.current = status;
-        setMountedPagination(false);
-
-        if (status === 'ativo')
-            modalMessage.current = `Deseja desativar o aluno ${userName.current}?`
-        else
-            modalMessage.current = `Deseja ativar o aluno ${userName.current}?`
-
-        setModalIsOpen(true)
     }
 
     const changeStatusUser = () => {
@@ -285,7 +266,7 @@ function Projetos(props) {
                     setSearchText={setSearchText}
                     selectedValue={selectedValue}
                     onChangeSelect={onChangeSelect}
-                    addUser={addUser}
+                    addUser={addProject}
                     selectItems={selectItems}
                 />
             </form>

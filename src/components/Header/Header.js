@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { headerStyle } from './styles'
 import { device } from '../../device';
 
+
 function Header({ setShowSidebar, setShowDropdown }) {
 
     return (
@@ -19,18 +20,23 @@ function Header({ setShowSidebar, setShowDropdown }) {
                 </Brand>
             </Link>
 
-            <Hamburguer onClick={() => setShowSidebar()} />
-            <StyledAvatar
-                round
-                color={lightTheme.color.primary}
-                size='2.5rem'
-                textSizeRatio={1.5}
-                name='Matheus Justino'
-                style={{
-                    cursor: 'pointer',
-                }}
-                onClick={() => { setShowDropdown() }}
-            />
+            <HeaderSideRight>
+                <ChangeVision>
+
+                </ChangeVision>
+                <Hamburguer onClick={() => setShowSidebar()} />
+                <StyledAvatar
+                    round
+                    color={lightTheme.color.primary}
+                    size='2.5rem'
+                    textSizeRatio={1.5}
+                    name='Matheus Justino'
+                    style={{
+                        cursor: 'pointer',
+                    }}
+                    onClick={() => { setShowDropdown() }}
+                />
+            </HeaderSideRight>
         </header >
     );
 }
@@ -51,3 +57,20 @@ const StyledAvatar = memo(styled(Avatar)`
     }
 `)
 
+const HeaderSideRight = styled.div`
+    display: flex;
+    align-items: center;
+    font-size: 15.4px;
+`;
+
+const ChangeVision = styled.div`
+    margin-right: 15px;
+    color: ${props => props.theme.color.dark};
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid transparent;  
+
+    &:hover{
+        border-radius: 5px;
+    }
+`;

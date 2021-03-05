@@ -4,6 +4,7 @@ import Cropper from 'react-easy-crop';
 import { useHistory } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components';
 import { Modal } from 'react-responsive-modal';
+import { FaLock } from "react-icons/fa";
 import api from '../../api/api';
 import Button from '../../components/Button';
 import DashboardUI from '../../components/DashboardUI';
@@ -12,6 +13,12 @@ import lightTheme from '../../themes/light'
 import { toast } from 'react-toastify';
 import getCroppedImg from '../../utils/cropImage'
 import { dataURLtoFile } from '../../utils/blobToFile'
+import IconTextField, { Input } from '../../components/IconTextField';
+import { RiLockPasswordFill } from 'react-icons/ri'
+import { useForm } from 'react-hook-form';
+import ErrorMessage from '../../components/Error/ErrorMessage';
+import Label from '../../components/Label/Label';
+import { InputGroup } from '../../styled';
 
 function VerPerfil() {
     // crop image states
@@ -20,6 +27,8 @@ function VerPerfil() {
     const [croppedArea, setCroppedArea] = useState(null);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
+    const [updateImage, setUpdateImage] = useState(false);
+    const [modalChangePasswordIsOpen, setModalChangePasswordIsOpen] = useState(false);
 
     const [userInfo, setUserInfo] = useState();
     const history = useHistory();
@@ -28,6 +37,10 @@ function VerPerfil() {
     const triggerFileSelectPopup = () => inputRef.current.click();
     let userId = useRef();
     userId.current = localStorage.getItem('reg');
+
+    const { register, handleSubmit, errors, watch } = useForm({ mode: 'onSubmit' });
+
+    const watchPassword = watch('newPassword')
 
     useEffect(() => {
         api.get(`usuarios/perfil/${userId.current}`)
@@ -46,7 +59,7 @@ function VerPerfil() {
                     console.log('Error', error.message);
                 }
             });
-    }, []);
+    }, [updateImage]);
 
     const onCropComplete = (croppedAreaPercentage, croppedAreaPixels) => {
         setCroppedArea(croppedAreaPixels);
@@ -112,12 +125,11 @@ function VerPerfil() {
         })
             .then(response => {
                 console.log(response.data);
-                const notify = () =>
-                    toast.success("O seu perfil atualizado com sucesso", {
-                        autoClose: 2000,
-                    }
-                    );
-                notify()
+                toast.success("O seu perfil atualizado com sucesso", {
+                    autoClose: 2000,
+                });
+                clearInputFile();
+                setUpdateImage(!updateImage);
                 setTimeout(() => {
                     history.push('/perfil')
                 }, 2000);
@@ -138,6 +150,33 @@ function VerPerfil() {
             });
     }
 
+    const onSubmitChangePassword = ({ currentPassword, newPassword, confirmPassword }) => {
+        console.debug(currentPassword, newPassword, confirmPassword);
+        api.patch(`/usuario/trocar_senha/${userId.current}`, {
+            currentPassword,
+            newPassword,
+            confirmPassword,
+        })
+            .then(response => {
+                console.log(response);
+                toast.success("A sua senha foi alterada com sucesso", {
+                    autoClose: 2000,
+                });
+                setModalChangePasswordIsOpen(false);
+
+            })
+            .catch(error => {
+                if (error.response) {
+                    console.log(error.response);
+                }
+                if (error.request) {
+                    console.log(error.request);
+                }
+                else {
+                    console.log('Error', error.message);
+                }
+            });
+    }
 
     const openEditPerfil = () => {
         history.push(`/perfil/${userId.current}/editar`)
@@ -153,7 +192,7 @@ function VerPerfil() {
                         color={lightTheme.color.primary}
                         size='5.5rem'
                         textSizeRatio={1.5}
-                        name='Matheus Justino'
+                        name={localStorage.getItem('username')}
                         src={userInfo && userInfo.profilePicture && userInfo.profilePicture.url}
                         style={{
                             cursor: 'pointer',
@@ -261,7 +300,10 @@ function VerPerfil() {
 
                 </ProfileGrid>
 
-                <Button onClick={() => openEditPerfil()} width='205px' new> Editar perfil</Button>
+                <ButtonContainer >
+                    <Button onClick={() => openEditPerfil()} width='205px' new> Editar perfil</Button>
+                    <Button onClick={() => setModalChangePasswordIsOpen(true)} width='205px' new> Mudar senha</Button>
+                </ButtonContainer>
             </Container>
             {image ? (
                 <ContainerCropper>
@@ -291,7 +333,6 @@ function VerPerfil() {
                         <CropButtonsContainer>
                             <CropButton
                                 onClick={() => onSubmit()}
-                                onMouseUp={() => onSubmit()}
                             >
                                 Salvar</CropButton>
                             <CropButton
@@ -305,6 +346,79 @@ function VerPerfil() {
                 </ContainerCropper>
 
             ) : null}
+            {/* change password */}
+            <Modal
+                open={modalChangePasswordIsOpen}
+                onClose={() => setModalChangePasswordIsOpen(false)}
+                center
+                classNames={{
+                    overlay: 'customOverlay',
+                    modal: 'customModal',
+                }}
+
+            >
+                <form onSubmit={handleSubmit(onSubmitChangePassword)}>
+                    <h1>Mudança de senha</h1>
+                    <Label htmlFor='currentPassword'>Senha atual</Label>
+                    <IconTextField>
+                        <FaLock />
+                        <Input
+                            type='password'
+                            name='currentPassword'
+                            ref={register({
+                                required: true,
+                                minLength: 8
+                            })}
+                            placeholder='Senha atual'
+                            style={errors.currentPassword && { borderColor: lightTheme.color.secondary }}
+                        />
+                    </IconTextField>
+                    {errors.currentPassword && errors.currentPassword.type === 'required' && <ErrorMessage left>A senha atual é obrigatória</ErrorMessage>}
+                    {errors.currentPassword && errors.currentPassword.type === 'minLength' && <ErrorMessage left>A senha atual deve conter no mínimo 8 caracteres</ErrorMessage>}
+
+                    <Label htmlFor='newPassword'>Nova senha</Label>
+                    <IconTextField>
+                        <FaLock />
+                        <Input
+                            type='password'
+                            name='newPassword'
+                            ref={register({
+                                required: true,
+                                minLength: 8
+                            })}
+                            placeholder='Nova senha'
+                            style={errors.newPassword && { borderColor: lightTheme.color.secondary }}
+                        />
+                    </IconTextField>
+                    {errors.newPassword && errors.newPassword.type === 'required' && <ErrorMessage left>A nova senha é obrigatória</ErrorMessage>}
+                    {errors.newPassword && errors.newPassword.type === 'minLength' && <ErrorMessage left>A nova senha deve conter no mínimo 8 caracteres</ErrorMessage>}
+
+                    <Label htmlFor='confirmPassword'>Confirmar nova senha</Label>
+                    <InputGroup>
+                        <RiLockPasswordFill />
+                        <Input
+                            name='confirmPassword'
+                            id='password'
+                            type='password'
+                            placeholder='Confirmar Nova Senha'
+                            ref={register({
+                                required: true,
+                                validate: (value) => value === watchPassword
+                            })}
+                            style={errors.confirmPassword && { borderColor: lightTheme.color.secondary }}
+
+                        />
+                    </InputGroup>
+                    {errors.confirmPassword && errors.confirmPassword.type === 'required' && <ErrorMessage left>A confirmação de senha deve preenchida</ErrorMessage>}
+                    {errors.confirmPassword && errors.confirmPassword.type === 'validate' && <ErrorMessage left>As senhas digitadas não conferem </ErrorMessage>}
+
+
+                    <div style={{ display: 'grid', marginTop: '.1rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
+                        <Button >Salvar</Button>
+                        <Button onClick={() => setModalChangePasswordIsOpen(false)}>Cancelar</Button>
+                    </div>
+                </form>
+            </Modal>
         </DashboardUI>
     );
 }
@@ -391,8 +505,6 @@ const GridItem = styled.div`
     @media ${device.tablet}{
         padding: 1rem;
         border-bottom: 1px solid #cccd;
-
-
     }    
 `;
 
@@ -431,3 +543,16 @@ const CropButton = styled.div`
     font-family: "Roboto";
     cursor: pointer
 `;
+
+const ButtonContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+    @media ${device.tablet}{
+        padding: 1rem;
+        border-bottom: 1px solid #cccd;
+        flex-direction: row;
+    }    
+
+`

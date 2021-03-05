@@ -66,13 +66,12 @@ function ResetPassword(props) {
                             placeholder='Confirmar Nova Senha'
                             ref={register({
                                 required: true,
-                                minLength: 8,
                                 validate: (value) => value === watchPassword
                             })}
 
                         />
                     </InputGroup>
-                    {errors.confirmPassword && errors.confirmPassword.type === 'required' && <ErrorMessage left>A confirmação senha deve preenchida</ErrorMessage>}
+                    {errors.confirmPassword && errors.confirmPassword.type === 'required' && <ErrorMessage left>A confirmação de senha deve preenchida</ErrorMessage>}
                     {/*errors.confirmPassword && errors.confirmPassword.type === 'minLength' && <ErrorMessage left>A confirmação senha deve ter no mínimo 8 caracteres </ErrorMessage>*/}
                     {errors.confirmPassword && errors.confirmPassword.type === 'validate' && <ErrorMessage left>As senhas digitadas não conferem </ErrorMessage>}
 

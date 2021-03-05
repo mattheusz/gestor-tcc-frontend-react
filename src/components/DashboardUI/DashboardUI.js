@@ -204,6 +204,7 @@ const Wrapper = styled.div`
     height: 100vh;
     background-color: white;
     position: relative;
+    z-index: 1;
 `
 
 

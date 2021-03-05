@@ -1,35 +1,45 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import lightTheme from '../../themes/light'
-import { coordenador, professor, alunoPreProjeto, alunoOrientando, administrativo } from "../../userType";
+import { coordenador, professor, alunoPreProjeto, alunoOrientando, administrativo, coordenadorProfessor } from "../../userType";
 import Menu from './Menu/Menu';
 import MenuItem from './MenuItem/MenuItem';
 import LinkMenuItem from './LinkMenuItem';
 import { Nav } from './styles';
 import Avatar from 'react-avatar';
+import { AuthContext } from '../../context/AuthContext';
+
+const userType = localStorage.getItem('userType');
 
 function menuToBeDisplayed() {
     const userType = localStorage.getItem('userType');
+    const mode = localStorage.getItem('professorMode');
+
+    console.debug('USER TYPE', userType, 'MODE', mode);
     if (userType === 'professor') {
         // corrigir aqui depois que for alterado na API
         return professor;
     }
-    if (userType === 'coordenador') {
+    else if (userType === 'coordenador' && (mode === 'true')) {
+        return coordenadorProfessor;
+    }
+    else if (userType === 'coordenador') {
         return coordenador;
     }
-    if (userType === 'aluno-pre') {
+    else if (userType === 'aluno-pre') {
         return alunoPreProjeto;
     }
-    if (userType === 'aluno-orientando') {
+    else if (userType === 'aluno-orientando') {
         return alunoOrientando;
     }
-
-    if (userType === 'administrativo') {
+    else if (userType === 'administrativo') {
         return administrativo;
     }
 }
 
 function Sidebar({ showSidebar, itemActive }) {
+
+    const { professorMode, updateProfessorModeLocalAndState } = useContext(AuthContext);
 
     const menu = menuToBeDisplayed();
 
@@ -38,7 +48,19 @@ function Sidebar({ showSidebar, itemActive }) {
         <Nav showSidebar={showSidebar}>
             <Menu>
                 {menu.map(({ icon, description, to }, index) => {
-                    if (description === itemActive)
+                    if (description === "Visão Professor" || description === "Visão Coordenador") {
+                        if (userType === 'coordenador') {
+                            return description === "Visão Professor" ?
+                                <MenuItem key={index}>
+                                    <LinkMenuItem onClick={() => updateProfessorModeLocalAndState(true)} to={to} changeMode='true' >{icon} <span>{description}</span> </LinkMenuItem>
+                                </MenuItem> :
+                                <MenuItem key={index}>
+                                    <LinkMenuItem onClick={() => updateProfessorModeLocalAndState(false)} to={to} changeMode='true' >{icon} <span>{description}</span> </LinkMenuItem>
+                                </MenuItem>
+                        } else
+                            return;
+                    }
+                    else if (description === itemActive)
                         return <MenuItem key={index}>
                             <LinkMenuItem to={to} active='true'>{icon} <span>{description}</span> </LinkMenuItem>
                         </MenuItem>

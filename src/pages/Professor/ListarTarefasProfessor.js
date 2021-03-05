@@ -109,7 +109,7 @@ function ListarTarefasProfessor(props) {
             });
     }, []);
 
-    const [selectedValue, setSelectedValue] = useState('iniciado');
+    const [selectedValue, setSelectedValue] = useState('em andamento');
     useEffect(() => {
         if (isInitialMount.current) {
             isInitialMount.current = false;
@@ -119,16 +119,21 @@ function ListarTarefasProfessor(props) {
                 path = `/tarefa/projeto_tarefas/situacao/${projectId}/${selectedValue}/1/1`; //
                 if (selectedValue === 'todas')
                     path = `/tarefa/projeto_tarefas/${projectId}/1/1`;
+                if (selectedValue === 'em andamento')
+                    path = `/tarefa/projeto_tarefa/nao_concluidas/${projectId}/1/1`
             }
             else {
                 path = `/tarefa/projeto_tarefas/situacao_titulo/${projectId}/${searchText}/${selectedValue}/1/1`; //
                 if (selectedValue === 'todas')
                     path = `/tarefa/projeto_tarefas/${projectId}/${searchText}/1/1`; //
+                if (selectedValue === 'em andamento')
+                    path = `/tarefa/projeto_tarefa/nao_concluidas/${projectId}/${searchText}/1/1`
             }
             setMountedPagination(false);
             api.get(path)
                 .then(({ data }) => {
                     totalPages.current = data.totalPages;
+                    currentPage.current = data.page;
                     console.log(data.docs);
                     setSomeTaskFound(true);
                     setListTasks(data.docs);
@@ -156,6 +161,7 @@ function ListarTarefasProfessor(props) {
     }
 
     const onSubmit = e => {
+        console.debug('ONSUBMIT IS CALLED')
         setMountedPagination(false);
         e.preventDefault();
         setFormIsSubmitted(!formIsSubmitted);
@@ -180,11 +186,15 @@ function ListarTarefasProfessor(props) {
             path = `/tarefa/projeto_tarefas/situacao/${projectId}/${selectedValue}/1/${page}`; //
             if (selectedValue === 'todas')
                 path = `/tarefa/projeto_tarefas/${projectId}/1/${page}`;
+            if (selectedValue === 'em andamento')
+                path = `/tarefa/projeto_tarefa/nao_concluidas/${projectId}/1/${page}`
         }
         else {
             path = `/tarefa/projeto_tarefas/situacao_titulo/${projectId}/${searchText}/${selectedValue}/1/${page}`; //
             if (selectedValue === 'todas')
                 path = `/tarefa/projeto_tarefas/${projectId}/${searchText}/1/${page}`; //
+            if (selectedValue === 'em andamento')
+                path = `/tarefa/projeto_tarefa/nao_concluidas/${projectId}/${searchText}/1/${page}`; //
         }
         currentPage.current = page;
 
@@ -241,7 +251,9 @@ function ListarTarefasProfessor(props) {
                                     <TaskSituation>{verifyTaskSituation(situation, deadLine)}</TaskSituation>
                                 </TaskItem>
                             ) :
-                            'Nenhuma tarefa cadastrada'
+                            <TaskNotFound>
+                                Nenhuma tarefa foi encontrada
+                            </TaskNotFound>
                 }
 
             </TaskList>
@@ -335,5 +347,12 @@ const TaskSituation = styled.span`
 const Spinner = styled(ReactLoading)`
     margin: 7rem auto 7rem;
 `
+
+const TaskNotFound = styled.div`
+    color: black;
+    font-family: Roboto;
+    text-align: center;
+    padding: 10px;
+`;
 
 export default ListarTarefasProfessor;
