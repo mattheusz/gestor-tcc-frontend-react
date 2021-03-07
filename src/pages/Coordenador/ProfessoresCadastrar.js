@@ -40,6 +40,7 @@ function ProfessoresCadastrar(props) {
             registration,
             isCoordinator,
             userType: 'professor',
+            status: 'ativo',
         })
             .then(response => {
                 console.log(response.data);

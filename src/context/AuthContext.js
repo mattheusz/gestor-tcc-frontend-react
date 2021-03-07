@@ -171,6 +171,7 @@ export function AuthProvider({ children }) {
         localStorage.removeItem('urlProfileImage');
         localStorage.removeItem('username');
         localStorage.removeItem('professorMode');
+        localStorage.removeItem('reg');
         api.defaults.headers.Authorization = ``;
         setAuthenticated(false);
         history.push('/login')

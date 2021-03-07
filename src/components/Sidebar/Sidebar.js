@@ -23,6 +23,9 @@ function menuToBeDisplayed() {
     else if (userType === 'coordenador' && (mode === 'true')) {
         return coordenadorProfessor;
     }
+    else if (userType === 'coordenador' && (mode === 'false')) {
+        return coordenador;
+    }
     else if (userType === 'coordenador') {
         return coordenador;
     }
@@ -72,7 +75,7 @@ function Sidebar({ showSidebar, itemActive }) {
 
                 )}
                 <MenuItem key={11}>
-                    <LinkMenuItem to='/'>
+                    <LinkMenuItem to='/perfil'>
                         <StyledAvatar
                             style={{ paddingLeft: '0px !important' }}
                             round
