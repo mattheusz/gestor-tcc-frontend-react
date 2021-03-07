@@ -14,7 +14,7 @@ export const Nav = styled.nav`
     border-right: 1px solid rgba(0, 0, 0, 0.06);
     box-shadow: .5px 0 3px rgba(0, 0, 0, 0.1);
     z-index: 0;
-    /* z-index: 1; */
+    /*z-index: 1;*/
 
     @media ${device.mobileS} {
         

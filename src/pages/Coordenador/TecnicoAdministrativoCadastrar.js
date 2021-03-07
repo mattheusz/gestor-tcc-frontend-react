@@ -7,7 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import Button from '../../components/Button'
 import DashboardUI from '../../components/DashboardUI';
-import { FaUserAlt, FaAddressCard, FaEnvelope, FaLock } from 'react-icons/fa';
+import { FaUserAlt, FaAddressCard, FaEnvelope } from 'react-icons/fa';
 
 import IconTextField, { Input } from '../../components/IconTextField/IconTextField';
 import ErrorMessage from '../../components/Error'
@@ -17,8 +17,6 @@ import Label from '../../components/Label/Label';
 function TecnicoAdministrativoCadastrar(props) {
     const [errorMessage, setErrorMessage] = useState();
     const { register, handleSubmit, errors, watch } = useForm({ mode: 'onSubmit' });
-
-    const watchPassword = watch('password')
 
     const history = useHistory()
 

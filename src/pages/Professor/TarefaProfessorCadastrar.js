@@ -140,6 +140,7 @@ function TarefaProfessorCadastrar(props) {
                             style={{ borderColor: errors.initialDate && light.color.secondary }}
                         />
                     )}
+                    defaultValue=''
                     rules={{ required: true }}
 
                 />
@@ -153,7 +154,7 @@ function TarefaProfessorCadastrar(props) {
                 }
 
 
-                <Label htmlFor='initialDate'>Prazo de entrega</Label>
+                <Label htmlFor='deadline'>Prazo de entrega</Label>
                 <Controller
                     control={control}
                     name="deadline"
@@ -168,8 +169,10 @@ function TarefaProfessorCadastrar(props) {
                             placeholder="Prazo de entrega..."
                             style={{ borderColor: errors.deadline && light.color.secondary }}
                             initialDate={new Date()}
+
                         />
                     )}
+                    defaultValue=''
                     rules={{ required: true }}
 
                 />

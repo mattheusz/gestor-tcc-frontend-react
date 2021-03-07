@@ -221,7 +221,7 @@ const Content = styled.div`
     display: flex;
     flex-direction: column;
     transition: margin-left .3s;
-    z-index: 0;
+    z-index: -1;
 
     @media ${device.mobileM}{
         /*width: ${props => props.showSidebar ? '100%' : 'calc(100% - 256px)'};*/
@@ -231,6 +231,7 @@ const Content = styled.div`
     @media ${device.tablet}{
         width: ${props => props.showSidebar ? 'calc(100% - 256px)' : '100%'};
         margin-left: ${props => props.showSidebar ? '256px' : 0};
+        z-index: 0;
     }
 
     
