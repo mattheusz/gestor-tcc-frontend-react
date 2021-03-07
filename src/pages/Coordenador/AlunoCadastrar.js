@@ -30,17 +30,13 @@ function AlunoCadastrar(props) {
     loading.current = isSubmitting;
     console.log('issubmitting padrão', isSubmitting)
 
-    const onSubmit = ({ fullName, email, registration, password, confirmPassword, }) => {
+    const onSubmit = ({ fullName, email, registration }) => {
         console.log('isSubmitting:', isSubmitting)
         api.post('usuarios/cadastrar_aluno', {
             name: fullName,
             email,
             registration,
-            password,
-            confirmPassword,
             userType: 'aluno',
-            available: 'sim',
-            status: 'ativo'
         })
             .then(response => {
                 console.log(response.data);
@@ -134,58 +130,11 @@ function AlunoCadastrar(props) {
                     </ErrorMessage>
                 }
 
-                <Label htmlFor='password'>Senha</Label>
-                <IconTextField>
-                    <FaLock />
-                    <Input
-                        id='password'
-                        name='password'
-                        ref={register({
-                            required: true,
-                            minLength: 8
-                        })}
-                        placeholder='Senha'
-                        style={{ borderColor: errors.password && light.color.secondary }}
-                    />
-                </IconTextField>
-                {errors.password && errors.password.type === 'required' &&
-                    <ErrorMessage left marginTop marginBottom>
-                        A senha é obrigatória.
-                    </ErrorMessage>
-                }
-                {errors.password && errors.password.type === 'minLength' &&
-                    <ErrorMessage left marginTop marginBottom>A senha deve ter no mínimo 8 caracteres </ErrorMessage>
-                }
-
-                <Label htmlFor='confirmPassword'>Confirmar Senha</Label>
-                <IconTextField>
-                    <FaLock />
-                    <Input
-                        id='confirmPassword'
-                        name='confirmPassword'
-                        ref={register({
-                            required: true,
-                            validate: (value) => value === watchPassword
-                        })}
-                        placeholder='Senha'
-                        style={{ borderColor: errors.confirmPassword && light.color.secondary }}
-                    />
-                </IconTextField>
-                {errors.confirmPassword && errors.confirmPassword.type === 'required' &&
-                    <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}> A confirmação senha deve preenchida</ErrorMessage>
-                }
-
-                {errors.confirmPassword && errors.confirmPassword.type === 'validate' &&
-                    <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>As senhas digitadas não conferem </ErrorMessage>
-                }
-
-
                 {errorMessage &&
                     <ErrorMessage left style={{ marginTop: '4px', marginBottom: '7px' }}>
                         {errorMessage}
                     </ErrorMessage>
                 }
-                {console.log('loading: ', loading.current)}
                 <Button new={true} type='submit' width='100px' disabled={isSubmitting}>
                     Salvar
                 </Button>

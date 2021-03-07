@@ -30,7 +30,7 @@ function ProfessoresCadastrar(props) {
         setChecked(event.target.checked)
     }
 
-    const onSubmit = ({ fullName, email, registration, password, confirmPassword, isCoordinator }) => {
+    const onSubmit = ({ fullName, email, registration, isCoordinator }) => {
         console.log('full name:', fullName)
         console.log('email', email)
         console.log('is coordinator', isCoordinator)
@@ -38,11 +38,8 @@ function ProfessoresCadastrar(props) {
             name: fullName,
             email,
             registration,
-            password,
-            confirmPassword,
             isCoordinator,
             userType: 'professor',
-            status: 'ativo'
         })
             .then(response => {
                 console.log(response.data);
@@ -142,52 +139,6 @@ function ProfessoresCadastrar(props) {
                     <ErrorMessage left marginTop marginBottom>
                         A matrícula  é obrigatória
                     </ErrorMessage>
-                }
-
-                <Label htmlFor='password'>Senha</Label>
-                <IconTextField>
-                    <FaLock />
-                    <Input
-                        id='password'
-                        name='password'
-                        ref={register({
-                            required: true,
-                            minLength: 8
-                        })}
-                        placeholder='Senha'
-                        style={{ borderColor: errors.password && light.color.secondary }}
-                    />
-                </IconTextField>
-                {errors.password && errors.password.type === 'required' &&
-                    <ErrorMessage left marginTop marginBottom>
-                        A senha é obrigatória.
-                    </ErrorMessage>
-                }
-                {errors.password && errors.password.type === 'minLength' &&
-                    <ErrorMessage left marginTop marginBottom>A senha deve ter no mínimo 8 caracteres </ErrorMessage>
-                }
-
-
-                <Label htmlFor='confirmPassword'>Confirmar Senha</Label>
-                <IconTextField>
-                    <FaLock />
-                    <Input
-                        id='confirmPassword'
-                        name='confirmPassword'
-                        ref={register({
-                            required: true,
-                            validate: (value) => value === watchPassword
-                        })}
-                        placeholder='Senha'
-                        style={{ borderColor: errors.confirmPassword && light.color.secondary }}
-                    />
-                </IconTextField>
-                {errors.confirmPassword && errors.confirmPassword.type === 'required' &&
-                    <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}> A confirmação senha deve preenchida</ErrorMessage>
-                }
-
-                {errors.confirmPassword && errors.confirmPassword.type === 'validate' &&
-                    <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>As senhas digitadas não conferem </ErrorMessage>
                 }
 
                 <Label style={{ fontSize: '1.1rem' }}>

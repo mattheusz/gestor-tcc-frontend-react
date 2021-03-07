@@ -17,10 +17,10 @@ function ProjetoProfessor(props) {
     console.log('id', professorId.current)
 
     const history = useHistory();
-    const { id } = useParams();
+    const { projectId } = useParams();
 
     useEffect(() => {
-        api.get(`/projeto/${id}`)
+        api.get(`/projeto/${projectId}`)
             .then(({ data }) => {
                 console.log('Projeto:', data.docs[0])
                 setProjectInfos(data.docs[0]);
@@ -39,7 +39,7 @@ function ProjetoProfessor(props) {
     }, []);
 
     const deleteProject = () => {
-        api.delete(`/projeto/deletar_projeto/${id}`, {
+        api.delete(`/projeto/deletar_projeto/${projectId}`, {
             data: {
                 advisorId: JSON.stringify(professorId.current)
             }
@@ -73,7 +73,7 @@ function ProjetoProfessor(props) {
 
     return (
         <DashboardUI screenName={projectInfos.title} itemActive="Meus Projetos" isProfessorProject={true} deleteProject={deleteProject}>
-            <ProjectInfo projectId={id} projectInfos={projectInfos} />
+            <ProjectInfo projectId={projectId} projectInfos={projectInfos} />
             <ToastContainer />
         </DashboardUI>
 

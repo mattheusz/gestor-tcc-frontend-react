@@ -331,7 +331,7 @@ function VerPerfil() {
                             />
                         </div>
                         <CropButtonsContainer>
-                            <CropButton
+                            <CropButton save={true}
                                 onClick={() => onSubmit()}
                             >
                                 Salvar</CropButton>
@@ -515,7 +515,7 @@ const ContainerCropper = styled.div`
     top:0;
     left: 0;
     z-index: 999;
-	padding: 5px 0;
+	padding: 00;
 `;
 
 const CropperDiv = styled.div`
@@ -527,20 +527,23 @@ const CropperDiv = styled.div`
 const CropButtonsContainer = styled.div`
     display: flex;
     justify-content: center;
-    
+    align-items: flex-start;
+    background-color: #fff;
+    height: 100%;
 `;
 
 const CropButton = styled.div`
     width: auto;
-    padding: .2rem .5rem;
+    padding: .4rem .5rem;
     margin-top: .5rem;
     margin-right: .5rem;
     outline: none;
     border: none;
     border-radius: 5px;
-    color: ${props => props.theme.color.light};
-    background-color: ${props => props.theme.color.primary};
-    font-family: "Roboto";
+    color: white;
+    background-color: ${props => props.save ? props.theme.color.primary : props.theme.color.secondary};
+    font-family: Roboto;
+    word-spacing: 2px;
     cursor: pointer
 `;
 

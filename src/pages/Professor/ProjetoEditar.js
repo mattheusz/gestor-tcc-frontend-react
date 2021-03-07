@@ -36,7 +36,7 @@ function ProjetoEditar(props) {
     idAdvisor.current = localStorage.getItem('reg')
 
     const history = useHistory()
-    const { id } = useParams();
+    const { projectId } = useParams();
 
     const selectOptionItems = [
         {
@@ -57,7 +57,7 @@ function ProjetoEditar(props) {
         },
     ];
     useEffect(() => {
-        api.get(`/projeto/${id}`)
+        api.get(`/projeto/${projectId}`)
             .then(response => {
                 console.log(response)
                 setSituation(response.data.docs[0].situation)
@@ -140,7 +140,7 @@ function ProjetoEditar(props) {
 
         console.log(project.students[0]._id)
 
-        api.patch(`/projeto/atualizar_projeto/${id}`, {
+        api.patch(`/projeto/atualizar_projeto/${projectId}`, {
             title,
             description,
             situation,
@@ -391,7 +391,7 @@ function ProjetoEditar(props) {
                 <Button new={true} type='submit' width='100px' disabled={sucessSubmiting || isSubmitting}>
                     Salvar
                 </Button>
-                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${id}`)}>
+                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${projectId}`)}>
                     Cancelar
                 </Button>
             </form>

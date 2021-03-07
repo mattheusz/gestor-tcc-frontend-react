@@ -51,7 +51,7 @@ function ProjectInfo({ projectId, isStudent, projectInfos }) {
                     {description && description}
                 </p>
 
-                <Situation>{situation && verifyTaskSituation(situation, deadLine)}</Situation>
+                <Situation>{situation && situation}</Situation>
             </HeaderContainer>
             <CardContainer isStudent={isStudent}>
                 <TaskCard >
