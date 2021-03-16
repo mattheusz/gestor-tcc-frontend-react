@@ -241,6 +241,7 @@ function Documentos(props) {
                     onChangeSelect={onChangeSelect}
                     addUser={addDocument}
                     selectItems={selectItems}
+                    noShowSelect={true}
                 />
             </form>
             {noUserFound ? <h3 style={{ margin: ' 2.5rem', textAlign: 'center' }}>Nenhum usuário encontrado</h3> :

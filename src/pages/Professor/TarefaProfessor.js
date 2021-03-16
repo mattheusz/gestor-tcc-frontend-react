@@ -446,9 +446,9 @@ function TarefaProfessor(props) {
 
                     </TaskCommentBox>
                     <div style={{ display: 'grid', marginTop: '.5rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
-                        <Button>
+                        <Button>Editar
                         </Button>
-                        <Button onClick={() => setModalEditIsOpen(false)}>Cancelar</Button>
+                        <Button type='button' onClick={() => setModalEditIsOpen(false)}>Cancelar</Button>
                     </div>
                 </form>
             </Modal>

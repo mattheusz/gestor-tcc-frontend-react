@@ -301,8 +301,9 @@ function VerPerfil() {
                 </ProfileGrid>
 
                 <ButtonContainer >
-                    <Button onClick={() => openEditPerfil()} width='205px' new> Editar perfil</Button>
-                    <Button onClick={() => setModalChangePasswordIsOpen(true)} width='205px' new> Mudar senha</Button>
+                    <Button primary onClick={() => openEditPerfil()} width='205px' new> Editar perfil</Button>
+                    <Button primary onClick={() => setModalChangePasswordIsOpen(true)} width='205px' new> Mudar senha</Button>
+                    <Button noDesktop onClick={() => setModalChangePasswordIsOpen(false)} width='205px' new >Sair</Button>
                 </ButtonContainer>
             </Container>
             {image ? (

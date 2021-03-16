@@ -143,6 +143,8 @@ export default function Routes() {
                         <CustomRoute exact isPrivate path='/documentos/novo' roles={['coordenador', 'administrativo']} component={DocumentosCadastrar} />
                         <CustomRoute exact isPrivate path='/documentos/editar/:documentId/:documentTitle' roles={['coordenador', 'administrativo']} component={DocumentosEditar} />
                         <CustomRoute exact isPrivate path='/trabalhos_anteriores' roles={['coordenador', 'administrativo']} component={Projetos} />
+                        <CustomRoute exact isPrivate path='/administrativo' roles={['coordenador', 'administrativo']} component={Projetos} />
+
 
                         {/* Professor */}
                         <CustomRoute exact isPrivate path='/professor' roles={['professor', 'coordenador']} component={MeusProjetos} />

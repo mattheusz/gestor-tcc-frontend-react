@@ -3,7 +3,7 @@ import { device } from "../../device";
 
 const Button = styled.button`
     color: white;
-    background-color: ${props => props.theme.color.secondary};
+    background-color: ${props => props.primary ? props.theme.color.primary : props.theme.color.secondary};
     border: none;
     border-radius: ${props => props.new ? '1px' : '3px'};
     width: 100%;
@@ -20,7 +20,7 @@ const Button = styled.button`
     align-items: center;
 
     &:hover{
-        background-color: ${props => props.theme.color.secondaryShadow}
+        background-color: ${props => props.primary ? props.theme.color.primaryShadow : props.theme.color.secondaryShadow};
     }
 
     &:disabled{
@@ -41,6 +41,7 @@ const Button = styled.button`
         width: ${props => props.width ? props.width : '100%'};
         margin-top: ${props => props.new ? '0px' : '.7rem'};
         margin-left: 0;
+        display: ${props => props.noDesktop ? 'none' : ''}
     }
 
 `

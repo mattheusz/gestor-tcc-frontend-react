@@ -38,6 +38,7 @@ function AlunoCadastrar(props) {
             registration,
             userType: 'aluno',
             status: 'ativo',
+            available: 'sim'
         })
             .then(response => {
                 console.log(response.data);
