@@ -197,6 +197,7 @@ function VerPerfil() {
                         style={{
                             cursor: 'pointer',
                         }} />
+
                     <ProfileButtonContainer>
                         <input
                             type='file'
@@ -241,6 +242,13 @@ function VerPerfil() {
                                 <>
                                     <GridItem>E-mail secundário</GridItem>
                                     <GridItem>{userInfo.secondaryEmail}</GridItem>
+                                </>
+                            }
+                            {
+                                userInfo.researchLine &&
+                                <>
+                                    <GridItem>Linha de pesquisa</GridItem>
+                                    <GridItem>{userInfo.researchLine}</GridItem>
                                 </>
                             }
                             {

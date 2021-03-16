@@ -41,6 +41,7 @@ import ListarOrientacoesAluno from '../pages/Aluno/ListarOrientacoesAluno';
 import DocumentosEditar from '../pages/Coordenador/DocumentosEditar';
 import EditarPerfil from '../pages/Geral/EditarPerfil';
 import OrientacaoAluno from '../pages/Aluno/OrientacaoAluno';
+import ProjetosEditar from '../pages/Coordenador/ProjetosEditar';
 
 
 
@@ -135,6 +136,7 @@ export default function Routes() {
                         <CustomRoute exact isPrivate path='/professores/novo' roles={['coordenador', 'administrativo']} component={ProfessoresCadastrar} />
                         <CustomRoute exact isPrivate path='/professores/editar/:id' roles={['coordenador', 'administrativo']} component={ProfessoresEditar} />
                         <CustomRoute exact isPrivate path='/projetos' roles={['coordenador']} component={Projetos} />
+                        <CustomRoute exact isPrivate path='/projetos/editar/:projectId' roles={['coordenador']} component={ProjetosEditar} />
                         <CustomRoute exact isPrivate path='/tecnicos_administrativos' roles={['coordenador', 'administrativo']} component={TecnicoAdministrativo} />
                         <CustomRoute exact isPrivate path='/tecnicos_administrativos/novo' roles={['coordenador', 'administrativo']} component={TecnicoAdministrativoCadastrar} />
                         <CustomRoute exact isPrivate path='/tecnicos_administrativos/editar/:id' roles={['coordenador', 'administrativo']} component={TecnicoAdministrativoEditar} />

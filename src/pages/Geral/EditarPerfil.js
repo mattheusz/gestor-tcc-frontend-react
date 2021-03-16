@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { FaEnvelope, FaFacebookF, FaInstagram, FaLock, FaUserAlt, FaYoutube } from 'react-icons/fa';
+import { FaEnvelope, FaFacebookF, FaInstagram, FaBookReader, FaYoutube } from 'react-icons/fa';
 import { TiSocialLinkedin } from 'react-icons/ti';
 import { useHistory, useParams } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
 import api from '../../api/api';
 import Button from '../../components/Button';
+import Checkbox from '../../components/Checkbox';
 import DashboardUI from '../../components/DashboardUI';
 import ErrorMessage from '../../components/Error';
 import IconTextField, { Input } from '../../components/IconTextField';
@@ -32,19 +33,24 @@ function EditarPerfil(props) {
 
     const [userInfo, setUserInfo] = useState();
     const [fileUploading, setFileUploading] = useState();
-
+    const [checked, setChecked] = useState();
     const history = useHistory();
     const { userId } = useParams();
     const { register, handleSubmit, errors, setValue } = useForm({
         resolver: yupResolver(perfilSchema),
     });
 
+    const localUserType = localStorage.getItem('userType');
 
     useEffect(() => {
         api.get(`usuarios/perfil/${userId}`)
             .then(({ data }) => {
                 console.debug('User Info', data);
                 setUserInfo(data);
+                if (data.available === 'sim')
+                    setChecked(true);
+                else
+                    setChecked(false);
             })
             .catch(error => {
                 if (error.response) {
@@ -59,17 +65,22 @@ function EditarPerfil(props) {
             });
     }, []);
 
-    const onSubmit = ({ email, secondaryEmail, aboutProfile, lattes, linkedin, youtube, facebook, instagram, phoneNumber }) => {
+    const onSubmit = ({ email, secondaryEmail, researchLine, available, aboutProfile, lattes, linkedin, youtube, facebook, instagram, phoneNumber }) => {
+        available === true ? available = 'sim' : available = 'não';
+        console.debug('AVAILABLE', available);
         api.patch(`usuarios/atualizar_perfil/${userId}`, {
             email,
             secondaryEmail,
+            researchLine,
+            available,
             aboutProfile,
             lattes,
             linkedin,
             youtube,
             facebook,
             instagram,
-            phoneNumber
+            phoneNumber,
+
         })
             .then(response => {
                 console.log(response.data);
@@ -97,6 +108,10 @@ function EditarPerfil(props) {
                 }
 
             });
+    }
+
+    const handleCheckboxChange = event => {
+        setChecked(event.target.checked);
     }
 
     return (
@@ -131,7 +146,7 @@ function EditarPerfil(props) {
                     <Input
                         id='secondaryEmail'
                         name='secondaryEmail'
-                        type='secondaryEmail'
+                        type='email'
                         defaultValue={userInfo && userInfo.secondaryEmail && userInfo.secondaryEmail}
                         ref={register({
                             required: true
@@ -145,6 +160,35 @@ function EditarPerfil(props) {
                         Digite um e-mail válido
                     </ErrorMessage>
                 }
+
+                {(localUserType === 'professor' || localUserType === 'coordenador') &&
+                    <>
+                        <Label style={{ fontSize: '1.1rem', marginBottom: '7px', marginTop: '15px', display: 'block' }}>
+                            <Checkbox
+                                name='available'
+                                checked={checked}
+                                onChange={e => handleCheckboxChange(e)}
+                                register={register}
+                            />
+                            <span style={{ marginLeft: 8, cursor: 'pointer' }}>Disponível para orientação</span>
+                        </Label>
+
+                        <Label htmlFor='researchLine'>Linha de pesquisa</Label>
+                        <IconTextField>
+                            <FaBookReader />
+                            <Input
+                                id='researchLine'
+                                name='researchLine'
+                                type='text'
+                                defaultValue={userInfo && userInfo.researchLine && userInfo.researchLine}
+                                ref={register}
+                                placeholder='Linha de pesquisa'
+                                style={{ borderColor: errors.researchLine && light.color.secondary }}
+                            />
+                        </IconTextField>
+                    </>
+                }
+
                 <Label htmlFor='sobre'>Sobre</Label>
                 <TextArea
                     name='aboutProfile'

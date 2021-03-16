@@ -58,15 +58,15 @@ function ListarProfessoresAluno(props) {
     const history = useHistory();
     const { id } = useParams();
 
-    // carregando informações do projeto aberto
     useEffect(() => {
 
         // pegar projeto por id
         api.get(`/usuarios/professores_perfil/1`)
-            .then(({ data: { docs } }) => {
-                console.log('Professores:', docs)
-                setTeachers(docs)
-
+            .then(({ data }) => {
+                setTeachers(data.docs)
+                currentPage.current = data.page;
+                totalPages.current = data.totalPages;
+                buildPaginatorDesign();
             })
             .catch(error => {
                 if (error.response) {
@@ -81,7 +81,7 @@ function ListarProfessoresAluno(props) {
             });
     }, []);
 
-    const [selectedValue, setSelectedValue] = useState('ativo');
+    const [selectedValue, setSelectedValue] = useState('sim');
     useEffect(() => {
         if (isInitialMount.current) {
             isInitialMount.current = false;
@@ -129,9 +129,9 @@ function ListarProfessoresAluno(props) {
         let path;
         // tratando buscar por texto + status
         if (searchText === '') {
-            path = `usuarios/todos_usuarios/aluno/${selectedValue}/${page}`
+            path = `/usuarios/professores_perfil/${selectedValue}/${page}`
             if (selectedValue === 'todos')
-                path = `usuarios/todos_usuarios/aluno/${page}`
+                path = `/usuarios/professores_perfil/${page}`
         }
         else {
             path = `usuarios/listar_usuarios/aluno/${selectedValue}/${searchText}/${page}`
@@ -141,8 +141,11 @@ function ListarProfessoresAluno(props) {
         currentPage.current = page;
 
         api.get(path)
-            .then(response => {
-                console.log(response.data);
+            .then(({ data }) => {
+                setTeachers(data.docs)
+                currentPage.current = data.page;
+                totalPages.current = data.totalPages;
+                buildPaginatorDesign();
 
             })
             .catch(error => {
@@ -200,6 +203,12 @@ function ListarProfessoresAluno(props) {
                 }
 
             </ProfessorList>
+            <Paginator
+                totalPages={totalPages.current}
+                currentPage={currentPage.current}
+                paginationNumbers={paginationNumbers.current}
+                choosePage={choosePage}
+            />
             <ToastContainer />
             <Modal
                 open={modalIsOpen}

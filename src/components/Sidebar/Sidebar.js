@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import styled from 'styled-components';
 import lightTheme from '../../themes/light'
 import { coordenador, professor, alunoPreProjeto, alunoOrientando, administrativo, coordenadorProfessor } from "../../userType";
@@ -9,10 +9,10 @@ import { Nav } from './styles';
 import Avatar from 'react-avatar';
 import { AuthContext } from '../../context/AuthContext';
 
-const userType = localStorage.getItem('userType');
+let userType = localStorage.getItem('userType');
 
 function menuToBeDisplayed() {
-    const userType = localStorage.getItem('userType');
+    userType = localStorage.getItem('userType');
     const mode = localStorage.getItem('professorMode');
 
     console.debug('USER TYPE', userType, 'MODE', mode);
@@ -44,6 +44,12 @@ function Sidebar({ showSidebar, itemActive }) {
 
     const { professorMode, updateProfessorModeLocalAndState } = useContext(AuthContext);
 
+    let profileImageUrl = useRef();
+    profileImageUrl.current = localStorage.getItem('urlProfileImage');
+
+    let userName = useRef();
+    userName.current = localStorage.getItem('username');
+
     const menu = menuToBeDisplayed();
 
 
@@ -52,6 +58,7 @@ function Sidebar({ showSidebar, itemActive }) {
             <Menu>
                 {menu.map(({ icon, description, to }, index) => {
                     if (description === "Visão Professor" || description === "Visão Coordenador") {
+                        console.debug('USER TYPE RENDERING', userType)
                         if (userType === 'coordenador') {
                             return description === "Visão Professor" ?
                                 <MenuItem key={index}>
@@ -82,9 +89,10 @@ function Sidebar({ showSidebar, itemActive }) {
                             color={lightTheme.color.primary}
                             size='1.8rem'
                             textSizeRatio={.1}
-                            name='Matheus Justino'
+                            name={userName.current}
+                            src={profileImageUrl.current}
                         />
-                        <Description>Matheus Justino</Description>
+                        <Description>{userName.current} kkkkkkkkkkkkkkkkkkkkkkk</Description>
                     </LinkMenuItem>
 
                 </MenuItem>

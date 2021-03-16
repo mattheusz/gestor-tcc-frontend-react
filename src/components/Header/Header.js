@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useRef } from 'react'
 import styled from 'styled-components';
 import lightTheme from '../../themes/light'
 import Brand from '../Brand';
@@ -10,6 +10,10 @@ import { device } from '../../device';
 
 
 function Header({ setShowSidebar, setShowDropdown }) {
+    let profileImageUrl = useRef();
+    profileImageUrl.current = localStorage.getItem('urlProfileImage');
+    let userName = useRef();
+    userName.current = localStorage.getItem('username');
 
     return (
         <header style={headerStyle}>
@@ -30,11 +34,12 @@ function Header({ setShowSidebar, setShowDropdown }) {
                     color={lightTheme.color.primary}
                     size='2.5rem'
                     textSizeRatio={1.5}
-                    name='Matheus Justino'
+                    name={userName.current}
                     style={{
                         cursor: 'pointer',
                     }}
                     onClick={() => { setShowDropdown() }}
+                    src={profileImageUrl.current}
                 />
             </HeaderSideRight>
         </header >

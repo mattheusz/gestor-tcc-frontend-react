@@ -14,6 +14,7 @@ function usePaginatorNumbers() {
         totalPages.current = totPages;
     }
 
+    //array with numbers to show in paginator
     function getReadyPaginator() {
         return paginatorNumbers.current;
     }
