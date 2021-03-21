@@ -103,10 +103,6 @@ function DropdownUserAccount({ showDropdown, dropdownRef }) {
                 <BiUserCircle />
                 <span>Perfil</span>
             </ListItemDropdown>
-            <ListItemDropdown to='/'>
-                <IoMdNotificationsOutline />
-                <span>Notificações</span>
-            </ListItemDropdown>
             <ListItemDropdownLi to='' onClick={() => logout()}>
                 <AiOutlineLogout />
                 <span>Sair</span>

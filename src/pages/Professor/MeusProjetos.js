@@ -24,8 +24,7 @@ function Projetos(props) {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [mountedPagination, setMountedPagination] = useState(false);
     const [formIsSubmitted, setFormIsSubmitted] = useState(true);
-
-
+    const breadcrumb = [{ bread: 'Meus Projetos', link: '/professor/projetos' }];
 
     //const { project, setProject } = useContext(ProjectContext);
 
@@ -259,7 +258,7 @@ function Projetos(props) {
     }
 
     return (
-        <DashboardUI screenName='Meus Projetos' itemActive="Meus Projetos">
+        <DashboardUI screenName='Meus Projetos' itemActive="Meus Projetos" breadcrumb={breadcrumb}>
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}

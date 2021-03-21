@@ -81,29 +81,44 @@ function ListarProfessoresAluno(props) {
             });
     }, []);
 
-    const [selectedValue, setSelectedValue] = useState('sim');
+    const [selectedValue, setSelectedValue] = useState('todos');
     useEffect(() => {
         if (isInitialMount.current) {
             isInitialMount.current = false;
         } else {
-
+            let path;
+            if (searchText === '') {
+                path = `usuarios/professores_perfil/${selectedValue}/1`
+                if (selectedValue === 'todos')
+                    path = `usuarios/professores_perfil/1`
+            }
+            else {
+                path = `usuarios/professores_perfil/filtro/${searchText}/${selectedValue}/1`
+                if (selectedValue === 'todos')
+                    path = `usuarios/professores_perfil/filtro/${searchText}/1`
+            }
+            api.get(path)
+                .then(({ data }) => {
+                    setTeachers(data.docs)
+                    console.log('DADOS', data)
+                    currentPage.current = data.page;
+                    totalPages.current = data.totalPages;
+                    buildPaginatorDesign();
+                })
+                .catch(error => {
+                    if (error.response) {
+                        console.log(error.response);
+                    }
+                    if (error.request) {
+                        console.log(error.request);
+                    }
+                    else {
+                        console.log('Error', error.message);
+                    }
+                });
         }
-        api.get(``)
-            .then(({ data }) => {
 
-            })
-            .catch(error => {
-                if (error.response) {
-                    console.log(error.response);
-                }
-                if (error.request) {
-                    console.log(error.request);
-                }
-                else {
-                    console.log('Error', error.message);
-                }
-            });
-    }, [])
+    }, [selectedValue])
 
     const onSubmit = e => {
         setMountedPagination(false);
@@ -126,18 +141,19 @@ function ListarProfessoresAluno(props) {
     const choosePage = (e, page) => {
 
         e.preventDefault();
+
         let path;
-        // tratando buscar por texto + status
         if (searchText === '') {
-            path = `/usuarios/professores_perfil/${selectedValue}/${page}`
+            path = `usuarios/professores_perfil/${selectedValue}/${page}`
             if (selectedValue === 'todos')
-                path = `/usuarios/professores_perfil/${page}`
+                path = `usuarios/professores_perfil/${page}`
         }
         else {
-            path = `usuarios/listar_usuarios/aluno/${selectedValue}/${searchText}/${page}`
+            path = `usuarios/professores_perfil/filtro/${searchText}/${selectedValue}/${page}`
             if (selectedValue === 'todos')
-                path = `usuarios/listar_usuarios/aluno/${searchText}/${page}`
+                path = `usuarios/professores_perfil/filtro/${searchText}/${page}`
         }
+
         currentPage.current = page;
 
         api.get(path)

@@ -27,7 +27,14 @@ function TarefaProfessorCadastrar(props) {
     idAdvisor.current = localStorage.getItem('reg');
 
     const history = useHistory();
-    const { id } = useParams();
+    const { projectId } = useParams();
+
+    let breadcrumb = [
+        { bread: 'Meus Projetos', link: '/professor/projetos' },
+        { bread: 'Projeto', link: `/professor/projetos/${projectId}` },
+        { bread: 'Tarefas', link: `/professor/projetos/${projectId}/tarefas` },
+        { bread: 'Nova Tarefa', link: `` },
+    ];
 
     const onSubmit = ({ title, description, initialDate, deadline }) => {
         initialDate = format(initialDate, 'dd/MM/yyyy');
@@ -37,7 +44,7 @@ function TarefaProfessorCadastrar(props) {
         api.post('/tarefas/cadastrar_tarefas', {
             title,
             description,
-            projectId: id,
+            projectId: projectId,
             initialDate: initialDate,
             deadLine: deadline,
             userId: idAdvisor.current
@@ -52,7 +59,7 @@ function TarefaProfessorCadastrar(props) {
                     );
                 notify()
                 setTimeout(() => {
-                    history.push(`/professor/projetos/${id}/atividades`)
+                    history.push(`/professor/projetos/${projectId}/atividades`)
                 }, 2000);
 
             })
@@ -79,7 +86,7 @@ function TarefaProfessorCadastrar(props) {
     }
 
     return (
-        <DashboardUI screenName='Cadastrar Tarefa' itemActive="Meus Projetos">
+        <DashboardUI screenName='Cadastrar Tarefa' itemActive="Meus Projetos" breadcrumb={breadcrumb}>
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='title'>Título</Label>
@@ -193,7 +200,7 @@ function TarefaProfessorCadastrar(props) {
                 <Button new={true} type='submit' width='100px' disabled={isSubmitting}>
                     Salvar
                 </Button>
-                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${idAdvisor.current}/atividades`)}>
+                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${projectId}/tarefas`)}>
                     Cancelar
                 </Button>
             </form>

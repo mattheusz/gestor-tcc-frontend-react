@@ -14,10 +14,20 @@ import { useHistory, useParams } from 'react-router-dom';
 import Button from '../Button';
 import api from '../../api/api';
 import { toast, ToastContainer } from 'react-toastify';
-import useDetectOutsideClick from "../../hooks/useDetectOusideClick"
+import useDetectOutsideClick from "../../hooks/useDetectOusideClick";
+import { Breadcrumb } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 
-function DashboardUI({ screenName, itemActive, children, isProfessorActivity, isProfessorProject, deleteProject, isProfessorOrientation }) {
+function DashboardUI({ screenName,
+    itemActive,
+    children,
+    isProfessorActivity,
+    isProfessorProject,
+    deleteProject,
+    isProfessorOrientation,
+    breadcrumb }) {
 
+    console.log(breadcrumb);
     const [showSidebar, setShowSidebar] = useState(true);
     const [showDropdown, setShowDropdown] = useState(false);
     const [openDeleteActivityModal, setOpenDeleteActivityModal] = useState(false);
@@ -30,7 +40,8 @@ function DashboardUI({ screenName, itemActive, children, isProfessorActivity, is
     const redirectToOrientationList = `/professor/projetos/${projectId}/orientacoes`
 
     const dropdownRef = useRef(null);
-    useDetectOutsideClick(dropdownRef, showDropdown, setShowDropdown);
+    const avatarRef = useRef(null);
+    useDetectOutsideClick(dropdownRef, avatarRef, showDropdown, setShowDropdown);
     console.debug('REF', dropdownRef.current);
 
     const toggleToShowSidebar = useCallback(() => {
@@ -40,7 +51,7 @@ function DashboardUI({ screenName, itemActive, children, isProfessorActivity, is
     const toggleToShowDropdown = useCallback(() => {
         setShowDropdown(!showDropdown);
         console.log('toggle dropdown', showDropdown)
-    }, [showDropdown])
+    }, [showDropdown]);
 
     const deleteTask = () => {
         api.delete(`/tarefa/deletar_tarefa/${taskId}`)
@@ -92,10 +103,31 @@ function DashboardUI({ screenName, itemActive, children, isProfessorActivity, is
                 <Header
                     setShowSidebar={toggleToShowSidebar}
                     setShowDropdown={toggleToShowDropdown}
+                    avatarRef={avatarRef}
                 />
                 <Sidebar showSidebar={showSidebar} itemActive={itemActive} />
                 <Content showSidebar={showSidebar}>
                     <Main >
+                        <WrapperBreadcrumb>
+                            <Breadcrumb >
+                                {breadcrumb &&
+                                    breadcrumb.map(({ bread, link }, index) => {
+                                        if (index === breadcrumb.length - 1)
+                                            return (
+                                                <Breadcrumb.Section key={index} style={{ fontWeight: '400' }} active>{bread}</Breadcrumb.Section>
+                                            )
+                                        else
+                                            return (
+                                                <Link key={index} to={link}>
+                                                    <Breadcrumb.Section link>{bread}</Breadcrumb.Section>
+                                                    <Breadcrumb.Divider icon='right angle' />
+                                                </Link>
+                                            )
+                                    })
+                                }
+
+                            </Breadcrumb>
+                        </WrapperBreadcrumb>
                         <MainCard>
                             <MainHeader>
                                 <ViewTitle>{screenName}</ViewTitle>
@@ -282,4 +314,14 @@ const HeaderButtons = styled.div`
 const Footer = styled.footer`
     height: 70px;
     background-color: white;
-`
+`;
+
+const WrapperBreadcrumb = styled.div`
+    background-color: #44444405;
+    padding: 10px;
+    border-radius: 5px; 
+    max-width: 1050px;
+    margin: 0 auto;
+    margin-bottom: 5px;
+`;
+

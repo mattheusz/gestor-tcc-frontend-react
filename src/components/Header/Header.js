@@ -9,7 +9,7 @@ import { headerStyle } from './styles'
 import { device } from '../../device';
 
 
-function Header({ setShowSidebar, setShowDropdown }) {
+function Header({ setShowSidebar, setShowDropdown, avatarRef }) {
     let profileImageUrl = useRef();
     profileImageUrl.current = localStorage.getItem('urlProfileImage');
     let userName = useRef();
@@ -40,6 +40,7 @@ function Header({ setShowSidebar, setShowDropdown }) {
                     }}
                     onClick={() => { setShowDropdown() }}
                     src={profileImageUrl.current}
+                    ref={avatarRef}
                 />
             </HeaderSideRight>
         </header >

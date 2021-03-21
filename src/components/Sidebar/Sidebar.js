@@ -92,7 +92,7 @@ function Sidebar({ showSidebar, itemActive }) {
                             name={userName.current}
                             src={profileImageUrl.current}
                         />
-                        <Description>{userName.current} kkkkkkkkkkkkkkkkkkkkkkk</Description>
+                        <Description>{userName.current}</Description>
                     </LinkMenuItem>
 
                 </MenuItem>

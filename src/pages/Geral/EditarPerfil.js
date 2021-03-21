@@ -42,6 +42,11 @@ function EditarPerfil(props) {
 
     const localUserType = localStorage.getItem('userType');
 
+    let breadcrumb = [
+        { bread: 'Perfil', link: '/perfil' },
+        { bread: 'Editar Perfil', link: `/perfil/$userId/editar` },
+    ];
+
     useEffect(() => {
         api.get(`usuarios/perfil/${userId}`)
             .then(({ data }) => {
@@ -66,7 +71,10 @@ function EditarPerfil(props) {
     }, []);
 
     const onSubmit = ({ email, secondaryEmail, researchLine, available, aboutProfile, lattes, linkedin, youtube, facebook, instagram, phoneNumber }) => {
-        available === true ? available = 'sim' : available = 'não';
+        if (localUserType === 'professor' || localUserType === 'coordenador')
+            available === true ? available = 'sim' : available = 'não';
+        else
+            available = userInfo.available;
         console.debug('AVAILABLE', available);
         api.patch(`usuarios/atualizar_perfil/${userId}`, {
             email,
@@ -115,7 +123,7 @@ function EditarPerfil(props) {
     }
 
     return (
-        <DashboardUI screenName='Editar Perfil' itemActive="">
+        <DashboardUI screenName='Editar Perfil' itemActive="" breadcrumb={breadcrumb}>
             <form onSubmit={handleSubmit(onSubmit)} >
                 <Label htmlFor='email'>E-mail</Label>
                 <IconTextField>

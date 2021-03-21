@@ -35,8 +35,13 @@ function ProjetoEditar(props) {
     let idAdvisor = useRef();
     idAdvisor.current = localStorage.getItem('reg')
 
-    const history = useHistory()
+    const history = useHistory();
     const { projectId } = useParams();
+
+    let breadcrumb = [
+        { bread: 'Meus Projetos', link: '/professor/projetos' },
+        { bread: project && project.title, link: '' },
+    ];
 
     const selectOptionItems = [
         {
@@ -194,7 +199,7 @@ function ProjetoEditar(props) {
     }
 
     return (
-        <DashboardUI screenName='Editar Projeto' itemActive="Meus Projetos">
+        <DashboardUI screenName='Editar Projeto' itemActive="Meus Projetos" breadcrumb={breadcrumb}>
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='title'>Título</Label>

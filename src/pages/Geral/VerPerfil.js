@@ -42,6 +42,10 @@ function VerPerfil() {
 
     const watchPassword = watch('newPassword')
 
+    let breadcrumb = [
+        { bread: 'Perfil', link: '/perfil' }
+    ];
+
     useEffect(() => {
         api.get(`usuarios/perfil/${userId.current}`)
             .then(({ data }) => {
@@ -183,7 +187,7 @@ function VerPerfil() {
     }
 
     return (
-        <DashboardUI screenName='' itemActive="">
+        <DashboardUI screenName='' itemActive="" breadcrumb={breadcrumb}>
             <Container>
                 <ProfileTitle>Perfil</ProfileTitle>
                 <AvatarContainer>

@@ -12,6 +12,11 @@ function ProjetoProfessor(props) {
 
     const isInitialMount = useRef(true);
 
+    let breadcrumb = [
+        { bread: 'Meus Projetos', link: '/professor/projetos' },
+        { bread: projectInfos.title, link: '' },
+    ];
+
     let professorId = useRef();
     professorId.current = localStorage.getItem('reg')
     console.log('id', professorId.current)
@@ -72,7 +77,7 @@ function ProjetoProfessor(props) {
     console.debug('task 0', lastTask)
 
     return (
-        <DashboardUI screenName={projectInfos.title} itemActive="Meus Projetos" isProfessorProject={true} deleteProject={deleteProject}>
+        <DashboardUI screenName={projectInfos.title} itemActive="Meus Projetos" isProfessorProject={true} deleteProject={deleteProject} breadcrumb={breadcrumb}>
             <ProjectInfo projectId={projectId} projectInfos={projectInfos} />
             <ToastContainer />
         </DashboardUI>

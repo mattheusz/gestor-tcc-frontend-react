@@ -78,16 +78,25 @@ function TarefaProfessor(props) {
         setValue: setValueAskForReviewOfATask,
     } = useForm({ mode: 'onSubmit' });
 
+
+
     let modalMessage = useRef('')
 
     const history = useHistory();
-    const { id, taskId } = useParams();
+    const { id, taskId, projectId } = useParams();
 
     let commentHandled = useRef();
     let commentTextToEdit = useRef();
     let userId = useRef();
     userId.current = localStorage.getItem('reg')
     console.log('id', userId.current)
+
+    let breadcrumb = [
+        { bread: 'Meus Projetos', link: '/professor/projetos' },
+        { bread: 'Projeto', link: `/professor/projetos/${projectId}` },
+        { bread: 'Tarefas', link: `/professor/projetos/${projectId}/tarefas` },
+        { bread: task && task.title, link: `` },
+    ];
 
     useEffect(() => {
         api.get(`/tarefa/${taskId}/`)
@@ -321,7 +330,7 @@ function TarefaProfessor(props) {
     }
 
     return (
-        <DashboardUI screenName={task && task.title} itemActive="Meus Projetos" isProfessorActivity={true}>
+        <DashboardUI screenName={task && task.title} itemActive="Meus Projetos" isProfessorActivity={true} breadcrumb={breadcrumb}>
             <TaskHeader>
                 {task &&
                     <>

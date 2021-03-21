@@ -69,6 +69,7 @@ function Documentos(props) {
         api.get(`documentos/listar_todos_documentos/${currentPage}`)
             .then(({ data }) => {
                 setCurrentPage(data.page);
+                console.debug('docs:', data.docs)
                 totalPages.current = data.totalPages;
                 noUserFound && setNoUserFound(false);
                 setUser(data.docs);
@@ -89,8 +90,6 @@ function Documentos(props) {
     }, [currentPage, reloadDocuments]);
 
     // filtrando professor por todos, ativo e inativo
-    const [selectedValue, setSelectedValue] = useState('ativo');
-    const [statusUserChanged, setStatusUserChanged] = useState(false);
     useEffect(() => {
         if (isInitialMount.current) {
             isInitialMount.current = false;
@@ -98,15 +97,12 @@ function Documentos(props) {
             let path;
 
             if (searchText === '') {
-                path = `usuarios/todos_usuarios/aluno/${selectedValue}/1`
-                if (selectedValue === 'todos')
-                    path = `usuarios/todos_usuarios/aluno/1`
+                path = `documentos/listar_todos_documentos/1`;
             }
             else {
-                path = `usuarios/listar_usuarios/aluno/${selectedValue}/${searchText}/1`
-                if (selectedValue === 'todos')
-                    path = `usuarios/listar_usuarios/aluno/${searchText}/1`
+                path = `documentos/titulo/${searchText}/1`;
             }
+
             api.get(path)
                 .then(({ data }) => {
                     totalPages.current = data.totalPages;
@@ -127,17 +123,13 @@ function Documentos(props) {
                     }
                 });
         }
-    }, [selectedValue, statusUserChanged, formIsSubmitted])
+    }, [reloadDocuments, formIsSubmitted])
 
     const onSubmit = e => {
         setMountedPagination(false);
         e.preventDefault();
         setFormIsSubmitted(!formIsSubmitted);
-    }
-
-    const onChangeSelect = e => {
-        setMountedPagination(false);
-        setSelectedValue(e.target.value)
+        setReloadDocuments(!reloadDocuments);
     }
 
     const addDocument = () => {
@@ -152,7 +144,8 @@ function Documentos(props) {
         api.delete(`documentos/deletar_documento/${documentIdToDeleting.current}`)
             .then(response => {
                 console.log(response.data);
-                setReloadDocuments(!reloadDocuments)
+                setMountedPagination(false);
+                setReloadDocuments(!reloadDocuments);
                 setModalDeleteIsOpen(false)
                 const notify = () =>
                     toast.success("Documento excluído com sucesso", {
@@ -197,14 +190,9 @@ function Documentos(props) {
         // tratando buscar por texto + status
         if (searchText === '') {
             path = `documentos/listar_todos_documentos/${page}`
-            if (selectedValue === 'todos')
-                path = `usuarios/todos_usuarios/aluno/${page}`
         }
         else {
             path = `documentos/listar_todos_documentos/${page}`
-            if (selectedValue === 'todos')
-                path = `documentos/listar_todos_documentos/${page}`
-
         }
 
         setCurrentPage(page);
@@ -237,14 +225,12 @@ function Documentos(props) {
                 <SearchBar
                     searchText={searchText}
                     setSearchText={setSearchText}
-                    selectedValue={selectedValue}
-                    onChangeSelect={onChangeSelect}
                     addUser={addDocument}
                     selectItems={selectItems}
                     noShowSelect={true}
                 />
             </form>
-            {noUserFound ? <h3 style={{ margin: ' 2.5rem', textAlign: 'center' }}>Nenhum usuário encontrado</h3> :
+            {noUserFound ? <h3 style={{ margin: ' 2.5rem', textAlign: 'center' }}>Nenhum documento encontrado</h3> :
                 <Table basic='very' striped selectable>
                     <Table.Header>
                         <Table.Row>
@@ -272,7 +258,6 @@ function Documentos(props) {
                                             onClick={() => { editDocument(_id, title) }}
                                             color={light.color.primary}
                                             size='1.7rem' />
-                                        &nbsp;&nbsp;
                                         <AiFillDelete
                                             title='Excluir'
                                             cursor='pointer'

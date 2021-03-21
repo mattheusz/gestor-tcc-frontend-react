@@ -76,7 +76,13 @@ function ListarTarefasProfessor(props) {
 
     const history = useHistory();
     const { projectId } = useParams();
-    console.log('project id', projectId);
+
+    let breadcrumb = [
+        { bread: 'Meus Projetos', link: '/professor/projetos' },
+        { bread: 'Projeto', link: `/professor/projetos/${projectId}` },
+        { bread: 'Tarefas', link: `` },
+    ];
+
 
     // listando tarefas
     useEffect(() => {
@@ -157,7 +163,7 @@ function ListarTarefasProfessor(props) {
     }, [selectedValue, formIsSubmitted]);
 
     const addTask = () => {
-        history.push(`/professor/projetos/${projectId}/atividades/novo`);
+        history.push(`/professor/projetos/${projectId}/tarefas/novo`);
     }
 
     const onSubmit = e => {
@@ -227,7 +233,7 @@ function ListarTarefasProfessor(props) {
 
 
     return (
-        <DashboardUI screenName='Tarefas' itemActive="Meus Projetos">
+        <DashboardUI screenName='Tarefas' itemActive="Meus Projetos" breadcrumb={breadcrumb}>
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}

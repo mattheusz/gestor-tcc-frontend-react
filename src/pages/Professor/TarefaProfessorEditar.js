@@ -56,7 +56,15 @@ function TarefaProfessorEditar(props) {
     ];
 
     const history = useHistory();
-    const { id, taskId } = useParams();
+    const { id, projectId, taskId } = useParams();
+
+    let breadcrumb = [
+        { bread: 'Meus Projetos', link: '/professor/projetos' },
+        { bread: 'Projeto', link: `/professor/projetos/${projectId}` },
+        { bread: 'Tarefas', link: `/professor/projetos/${projectId}/tarefas` },
+        { bread: task && task.title, link: `/professor/projetos/${projectId}/tarefas/${taskId}` },
+        { bread: 'Editar Tarefa', link: `` },
+    ];
 
     useEffect(() => {
         api.get(`/tarefa/${taskId}/`)
@@ -157,7 +165,7 @@ function TarefaProfessorEditar(props) {
     }
 
     return (
-        <DashboardUI screenName='Editar Tarefa' itemActive="Meus Projetos">
+        <DashboardUI screenName='Editar Tarefa' itemActive="Meus Projetos" breadcrumb={breadcrumb}>
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='title'>Título</Label>

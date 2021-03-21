@@ -11,7 +11,7 @@ import { convertUTCToZonedTime } from '../../utils/convertDate';
 
 function ProjectInfo({ projectId, isStudent, projectInfos }) {
 
-    const redirectToTask = isStudent ? `/aluno-orientando/projeto/${projectId}/tarefas` : `/professor/projetos/${projectId}/atividades`
+    const redirectToTask = isStudent ? `/aluno-orientando/projeto/${projectId}/tarefas` : `/professor/projetos/${projectId}/tarefas`
     const redirectToOrientation = isStudent ? `/aluno-orientando/projeto/${projectId}/orientacoes` : `/professor/projetos/${projectId}/orientacoes`
     const { students, description, situation, tasks, orientation, advisor, deadLine } = projectInfos;
     const history = useHistory();

@@ -163,19 +163,9 @@ export const professor = [
     },
 
     {
-        icon: <BsCalendar />,
-        description: 'Datas Importantes*',
-        to: '/datas_importantes'
-    },
-    {
         icon: <CgFileDocument />,
         description: 'Documentos',
         to: '/documentos/visualizar'
-    },
-    {
-        icon: <RiGitRepositoryLine />,
-        description: 'Repositório*',
-        to: '/trabalhos_anteriores'
     },
 ];
 

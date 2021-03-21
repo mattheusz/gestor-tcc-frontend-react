@@ -76,6 +76,12 @@ function ListarOrientacoesProfessor(props) {
     const history = useHistory();
     const { projectId } = useParams();
 
+    let breadcrumb = [
+        { bread: 'Meus Projetos', link: '/professor/projetos' },
+        { bread: 'Projeto', link: `/professor/projetos/${projectId}` },
+        { bread: 'Orientações', link: `` },
+    ];
+
     // carregando todas orientações
     useEffect(() => {
         // pegar projeto por id
@@ -201,7 +207,7 @@ function ListarOrientacoesProfessor(props) {
         setModalIsOpen(true);
     }
     return (
-        <DashboardUI screenName='Orientações' itemActive="Meus Projetos">
+        <DashboardUI screenName='Orientações' itemActive="Meus Projetos" breadcrumb={breadcrumb}>
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}

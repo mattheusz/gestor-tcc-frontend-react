@@ -41,6 +41,14 @@ function OrientacaoProfessorEditar(props) {
     const history = useHistory()
     const { orientationId, projectId } = useParams();
 
+    let breadcrumb = [
+        { bread: 'Meus Projetos', link: '/professor/projetos' },
+        { bread: 'Projeto', link: `/professor/projetos/${projectId}` },
+        { bread: 'Orientações', link: `/professor/projetos/${projectId}/orientacoes` },
+        { bread: orientation && orientation.title, link: `/professor/projetos/${projectId}/orientacoes/${orientationId}` },
+        { bread: 'Editar Orientação', link: `` },
+    ];
+
     useEffect(() => {
         api.get(`/orientacao/${orientationId}`)
             .then(({ data: { docs } }) => {
@@ -67,7 +75,7 @@ function OrientacaoProfessorEditar(props) {
 
     const onSubmit = ({ title, description, customRegisterOrientationDate }) => {
         console.debug('ORIENTATION DATE', format(customRegisterOrientationDate, 'dd/MM/yyyy'));
-        api.patch(`/orientacao/atualizar_orientacao/${orientationId}`, {
+        api.patch(`/ orientacao / atualizar_orientacao / ${orientationId}`, {
             title,
             description,
             dateOrientation: convertZonedTimeToUTC(customRegisterOrientationDate),
@@ -81,7 +89,7 @@ function OrientacaoProfessorEditar(props) {
                     );
                 notify()
                 setTimeout(() => {
-                    history.push(`/professor/projetos/${projectId}/orientacoes/${orientationId}`)
+                    history.push(`/ professor / projetos / ${projectId} / orientacoes / ${orientationId}`)
                 }, 2000);
 
             })
@@ -119,7 +127,7 @@ function OrientacaoProfessorEditar(props) {
     }
 
     return (
-        <DashboardUI screenName='Editar Orientação' itemActive="Meus Projetos">
+        <DashboardUI screenName='Editar Orientação' itemActive="Meus Projetos" breadcrumb={breadcrumb}>
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='title'>Título</Label>
@@ -190,7 +198,7 @@ function OrientacaoProfessorEditar(props) {
                 <Button new={true} type='submit' width='100px' disabled={isSubmitting}>
                     Salvar
                 </Button>
-                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${projectId}/orientacoes/${orientationId}`)}>
+                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/ professor / projetos / ${projectId} / orientacoes / ${orientationId}`)}>
                     Cancelar
                 </Button>
             </form>

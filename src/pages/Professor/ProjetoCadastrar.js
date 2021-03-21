@@ -29,7 +29,12 @@ function ProjetoCadastrar(props) {
     const watchAddStudentTwo = watch('addStudendTwo');
 
     let id = useRef();
-    id.current = localStorage.getItem('reg')
+    id.current = localStorage.getItem('reg');
+
+    let breadcrumb = [
+        { bread: 'Meus Projetos', link: '/professor/projetos' },
+        { bread: 'Novo Projeto', link: '' },
+    ];
 
     const history = useHistory()
 
@@ -131,7 +136,7 @@ function ProjetoCadastrar(props) {
     }
 
     return (
-        <DashboardUI screenName='Cadastrar Projeto' itemActive="Meus Projetos">
+        <DashboardUI screenName='Cadastrar Projeto' itemActive="Meus Projetos" breadcrumb={breadcrumb}>
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='title'>Título</Label>

@@ -9,7 +9,15 @@ import { convertUTCToZonedTime } from '../../utils/convertDate';
 function OrientacaoProfessor(props) {
     const [orientation, setOrientation] = useState();
 
-    const { orientationId } = useParams();
+    const { projectId, orientationId } = useParams();
+
+    let breadcrumb = [
+        { bread: 'Meus Projetos', link: '/professor/projetos' },
+        { bread: 'Projeto', link: `/professor/projetos/${projectId}` },
+        { bread: 'Orientações', link: `/professor/projetos/${projectId}/orientacoes` },
+        { bread: orientation && orientation.title, link: `` },
+    ];
+
     useEffect(() => {
         api.get(`/orientacao/${orientationId}`)
             .then(({ data }) => {
@@ -30,7 +38,7 @@ function OrientacaoProfessor(props) {
     }, []);
 
     return (
-        <DashboardUI screenName={orientation && orientation.title} itemActive="Meus Projetos" isProfessorOrientation={true}>
+        <DashboardUI screenName={orientation && orientation.title} itemActive="Meus Projetos" isProfessorOrientation={true} breadcrumb={breadcrumb}>
             <OrientationHeader>
                 <OrientationDescription>
                     {orientation && orientation.description}

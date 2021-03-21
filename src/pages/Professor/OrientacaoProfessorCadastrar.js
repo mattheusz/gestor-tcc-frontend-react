@@ -36,6 +36,13 @@ function OrientacaoProfessorCadastrar(props) {
     const history = useHistory()
     const { projectId } = useParams();
 
+    let breadcrumb = [
+        { bread: 'Meus Projetos', link: '/professor/projetos' },
+        { bread: 'Projeto', link: `/professor/projetos/${projectId}` },
+        { bread: 'Orientações', link: `/professor/projetos/${projectId}/orientacoes` },
+        { bread: 'Registrar Orientação', link: `` },
+    ];
+
     const onSubmit = ({ title, description, customRegisterOrientationDate }) => {
 
         format(customRegisterOrientationDate, 'dd/MM/yyyy');
@@ -93,7 +100,7 @@ function OrientacaoProfessorCadastrar(props) {
     }
 
     return (
-        <DashboardUI screenName='Registrar Orientação' itemActive="Meus Projetos">
+        <DashboardUI screenName='Registrar Orientação' itemActive="Meus Projetos" breadcrumb={breadcrumb}>
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='title'>Título</Label>
