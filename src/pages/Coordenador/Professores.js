@@ -64,6 +64,10 @@ function Professores(props) {
 
     const history = useHistory();
 
+    let breadcrumb = [
+        { bread: 'Professores', link: '/professores' },
+    ];
+
     // carregando todos os professores ao montar componente
     useEffect(() => {
         if (mountedPagination)
@@ -256,7 +260,7 @@ function Professores(props) {
     }
 
     return (
-        <DashboardUI screenName='Professores' itemActive="Professores">
+        <DashboardUI screenName='Professores' itemActive="Professores" breadcrumb={breadcrumb}>
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}

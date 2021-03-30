@@ -36,6 +36,11 @@ function DocumentosEditar() {
 
 
     const history = useHistory()
+
+    let breadcrumb = [
+        { bread: 'Documentos', link: '/documentos' },
+        { bread: 'Editar Documento', link: `` },
+    ];
     const { documentId, documentTitle } = useParams();
 
     useEffect(() => {
@@ -96,7 +101,7 @@ function DocumentosEditar() {
     }
 
     return (
-        <DashboardUI screenName='Editar Documento' itemActive="Documentos">
+        <DashboardUI screenName='Editar Documento' itemActive="Documentos" breadcrumb={breadcrumb}>
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='title'>Título</Label>
                 <IconTextField>

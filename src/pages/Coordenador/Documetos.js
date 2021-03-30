@@ -61,6 +61,10 @@ function Documentos(props) {
 
     const history = useHistory();
 
+    let breadcrumb = [
+        { bread: 'Documentos', link: '/documentos' }
+    ];
+
     // carregando todos os tec administrativos ao montar componente
     useEffect(() => {
         if (mountedPagination)
@@ -220,7 +224,7 @@ function Documentos(props) {
     }
 
     return (
-        <DashboardUI screenName='Documentos' itemActive="Documentos">
+        <DashboardUI screenName='Documentos' itemActive="Documentos" breadcrumb={breadcrumb}>
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}

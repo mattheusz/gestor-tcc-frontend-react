@@ -59,6 +59,9 @@ function TecnicoAdministrativo(props) {
     Modal.setAppElement('#root');
 
     const history = useHistory();
+    let breadcrumb = [
+        { bread: 'Técnicos Administrativos', link: 'tecnicos_administrativos' },
+    ];
 
     // carregando todos os tec administrativos ao montar componente
     useEffect(() => {
@@ -248,7 +251,7 @@ function TecnicoAdministrativo(props) {
     }
 
     return (
-        <DashboardUI screenName='Técnicos Adiministrativos' itemActive="Técnicos Administrativos">
+        <DashboardUI screenName='Técnicos Adiministrativos' itemActive="Técnicos Administrativos" breadcrumb={breadcrumb}>
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}

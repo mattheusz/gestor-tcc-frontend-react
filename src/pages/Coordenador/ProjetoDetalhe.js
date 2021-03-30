@@ -3,8 +3,9 @@ import api from '../../api/api'
 import DashboardUI from '../../components/DashboardUI';
 import { ToastContainer, toast } from 'react-toastify';
 import ProjectInfo from '../../components/ProjectInfo/ProjectInfo';
+import { useHistory, useParams } from 'react-router';
 
-function ProjetoAluno(props) {
+function ProjetoDetalhe(props) {
     const [projectInfo, setProjectInfo] = useState({});
 
     let studentId = useRef();
@@ -12,11 +13,15 @@ function ProjetoAluno(props) {
     console.log('id', studentId.current)
 
     let breadcrumb = [
+        { bread: 'Projetos', link: '/projetos' },
         { bread: projectInfo.title, link: '' },
     ];
 
+    const history = useHistory();
+    const { projectId } = useParams();
+
     useEffect(() => {
-        api.get(`/projeto/aluno_projetos/${studentId.current}`)
+        api.get(`/projeto/${projectId}`)
             .then(({ data }) => {
                 console.log('Projeto:', data.docs[0])
                 setProjectInfo(data.docs[0]);
@@ -24,10 +29,6 @@ function ProjetoAluno(props) {
             .catch(error => {
                 if (error.response) {
                     console.log(error.response);
-                    const notify = () => toast.error(
-                        "Erro interno no servidor. Recarregue a página novamente.",
-                        {});
-                    notify()
                 }
                 if (error.request) {
                     console.log(error.request, 'R E Q U I S I Ç Ã O');
@@ -39,12 +40,12 @@ function ProjetoAluno(props) {
     }, []);
 
     return (
-        <DashboardUI screenName={projectInfo && projectInfo.title} itemActive="Meu Projeto" breadcrumb={breadcrumb} >
-            <ProjectInfo projectId={projectInfo && projectInfo._id} isStudent={true} projectInfos={projectInfo} />
+        <DashboardUI screenName={projectInfo && projectInfo.title} itemActive="Projetos" breadcrumb={breadcrumb} >
+            <ProjectInfo projectId={projectInfo && projectInfo._id} isCoordinator={true} projectInfos={projectInfo} />
             <ToastContainer />
         </DashboardUI>
 
     );
 }
 
-export default ProjetoAluno;
+export default ProjetoDetalhe;

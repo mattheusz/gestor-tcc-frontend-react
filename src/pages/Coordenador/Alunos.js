@@ -60,6 +60,10 @@ function Alunos(props) {
 
     const history = useHistory();
 
+    let breadcrumb = [
+        { bread: 'Alunos', link: '/alunos' },
+    ];
+
     // carregando todos os tec administrativos ao montar componente
     useEffect(() => {
         if (mountedPagination)
@@ -245,7 +249,7 @@ function Alunos(props) {
     }
 
     return (
-        <DashboardUI screenName='Alunos' itemActive="Alunos">
+        <DashboardUI screenName='Alunos' itemActive="Alunos" breadcrumb={breadcrumb}>
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}

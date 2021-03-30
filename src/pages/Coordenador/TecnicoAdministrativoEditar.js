@@ -24,6 +24,11 @@ function TecnicoAdministrativoEditar(props) {
     const { userRegistration } = useContext(UserRegistrationContext)
     const { _id, registration, name, email, status } = userRegistration;
 
+    let breadcrumb = [
+        { bread: 'Técnicos Administrativos', link: '/tecnicos_administrativos' },
+        { bread: 'Editar Técnico Administrativo', link: `` },
+    ];
+
     const onSubmit = ({ fullName, email, registration }) => {
         api.patch('usuarios/todos_usuarios/atualizar_administrativo', {
             id: _id,
@@ -62,7 +67,7 @@ function TecnicoAdministrativoEditar(props) {
     }
 
     return (
-        <DashboardUI screenName='Editar Técnico Administrativo' itemActive="Técnicos Administrativos">
+        <DashboardUI screenName='Editar Técnico Administrativo' itemActive="Técnicos Administrativos" breadcrumb={breadcrumb}>
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='fullName'>Nome completo</Label>

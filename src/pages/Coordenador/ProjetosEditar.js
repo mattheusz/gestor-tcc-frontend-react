@@ -15,6 +15,7 @@ import ErrorMessage from '../../components/Error'
 import light from '../../themes/light';
 import Label from '../../components/Label/Label';
 import { UserRegistrationContext } from '../../context/UserRegistrationContext';
+import Select from '../../components/Select';
 
 function ProjetosEditar(props) {
 
@@ -29,6 +30,11 @@ function ProjetosEditar(props) {
 
     const { userRegistration: { _id } } = useContext(UserRegistrationContext)
     console.log('ID', _id);
+
+    let breadcrumb = [
+        { bread: 'Projetos', link: '/projetos' },
+        { bread: `Editar projeto ${name}`, link: '/projetos' },
+    ];
 
     const handleCheckboxChange = event => {
         console.debug('Checkbox', event.target.checked)
@@ -77,90 +83,24 @@ function ProjetosEditar(props) {
     }
 
     return (
-        <DashboardUI screenName='Editar Projeto' itemActive="Projetos">
+        <DashboardUI screenName='Editar Projeto' itemActive="Projetos" breadcrumb={breadcrumb}>
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
-                <Label htmlFor='fullName'>Nome completo</Label>
-                <IconTextField>
-                    <FaUserAlt />
-                    <Input
-                        id='fullName'
-                        name='fullName'
-                        defaultValue={name}
-                        ref={register({
-                            required: true
-                        })}
-                        placeholder='Nome Completo'
-                        style={{ borderColor: errors.fullName && light.color.secondary }}
-                    />
-                </IconTextField>
-                {errors.fullName &&
-                    <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>
-                        O nome completo é obrigatório
-                    </ErrorMessage>
-                }
-
-                <Label htmlFor='email'>E-mail</Label>
-                <IconTextField>
-                    <FaEnvelope />
-                    <Input
-                        id='email'
-                        name='email'
-                        type='email'
-                        defaultValue={email}
-                        ref={register({
-                            required: true
-                        })}
-                        placeholder='E-mail'
-                        style={{ borderColor: errors.email && light.color.secondary }}
-                    />
-                </IconTextField>
-                {errors.email &&
-                    <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>
-                        O e-mail é obrigatório
-                    </ErrorMessage>
-                }
+                <Label htmlFor='advisor'>Alterar orientador</Label>
+                <Select
+                    formSelect={true}
+                    value=''
+                    ref={register}
+                    onChange={e => { }}
+                    name='studentOne'
+                    id='studentOne'
+                >
+                    {
 
 
-                <Label htmlFor='registration'>Matrícula</Label>
-                <IconTextField>
-                    <FaAddressCard />
-                    <Input
-                        id='registration'
-                        name='registration'
-                        defaultValue={registration}
-                        ref={register({
-                            required: true
-                        })}
-                        placeholder='Matrícula'
-                        style={{ borderColor: errors.registration && light.color.secondary }}
-                    />
-                </IconTextField>
-                {errors.registration &&
-                    <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>
-                        A matrícula é obrigatória
-                    </ErrorMessage>
-                }
+                    }
+                </Select>
 
-
-                {errors.password &&
-                    <ErrorMessage left style={{ marginTop: '-10px', marginBottom: '3px' }}>
-                        A senha é obrigatória.
-                    </ErrorMessage>
-                }
-
-                <Label style={{ fontSize: '1.1rem' }}>
-                    <Checkbox
-                        name='isCoordinator'
-                        checked={checked}
-                        onChange={e => handleCheckboxChange(e)}
-                        register={register}
-                    />
-                    <span style={{ marginLeft: 8, cursor: 'pointer' }}>Coordenador</span>
-                </Label>
-
-
-                <br />
                 <Button new={true} type='submit' width='100px'>
                     Salvar
                 </Button>

@@ -25,6 +25,11 @@ function ProfessoresCadastrar(props) {
 
     const history = useHistory()
 
+    let breadcrumb = [
+        { bread: 'Professores', link: '/professores' },
+        { bread: 'Cadastrar Professor', link: `` },
+    ];
+
     const handleCheckboxChange = event => {
         console.debug('Checkbox', 'foi clicado')
         setChecked(event.target.checked)
@@ -80,7 +85,7 @@ function ProfessoresCadastrar(props) {
     }
 
     return (
-        <DashboardUI screenName='Cadastrar Professor' itemActive="Professores">
+        <DashboardUI screenName='Cadastrar Professor' itemActive="Professores" breadcrumb={breadcrumb}>
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='fullName'>Nome completo</Label>

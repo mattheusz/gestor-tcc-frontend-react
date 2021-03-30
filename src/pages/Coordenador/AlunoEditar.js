@@ -24,6 +24,11 @@ function AlunoEditar(props) {
     const { userRegistration } = useContext(UserRegistrationContext)
     const { _id, registration, name, email, status } = userRegistration;
 
+    let breadcrumb = [
+        { bread: 'Alunos', link: '/alunos' },
+        { bread: 'Editar Aluno', link: `` },
+    ];
+
     const onSubmit = ({ fullName, email, registration }) => {
         api.patch('usuarios/todos_usuarios/atualizar_aluno', {
             id: _id,
@@ -62,7 +67,7 @@ function AlunoEditar(props) {
     }
 
     return (
-        <DashboardUI screenName='Editar Aluno' itemActive="Alunos">
+        <DashboardUI screenName='Editar Aluno' itemActive="Alunos" breadcrumb={breadcrumb}>
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='fullName'>Nome completo</Label>

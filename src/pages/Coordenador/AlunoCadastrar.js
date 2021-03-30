@@ -19,9 +19,10 @@ function AlunoCadastrar(props) {
 
     let loading = useRef();
 
-    useEffect(() => {
-
-    })
+    let breadcrumb = [
+        { bread: 'Alunos', link: '/alunos' },
+        { bread: 'Cadastrar Aluno', link: `` },
+    ];
 
     const { register, handleSubmit, errors, formState: { isSubmitting }, watch } = useForm({ mode: 'onSubmit' });
     const watchPassword = watch('password');
@@ -70,7 +71,7 @@ function AlunoCadastrar(props) {
     }
 
     return (
-        <DashboardUI screenName='Cadastrar Aluno' itemActive="Alunos">
+        <DashboardUI screenName='Cadastrar Aluno' itemActive="Alunos" breadcrumb={breadcrumb}>
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='fullName'>Nome completo</Label>

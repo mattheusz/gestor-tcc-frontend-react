@@ -30,6 +30,11 @@ function ProfessoresEditar(props) {
     const { userRegistration: { _id } } = useContext(UserRegistrationContext)
     console.log('ID', _id);
 
+    let breadcrumb = [
+        { bread: 'Professores', link: '/professores' },
+        { bread: 'Editar Professor', link: `` },
+    ];
+
     const handleCheckboxChange = event => {
         console.debug('Checkbox', event.target.checked)
         setChecked(event.target.checked)
@@ -77,7 +82,7 @@ function ProfessoresEditar(props) {
     }
 
     return (
-        <DashboardUI screenName='Editar Professor' itemActive="Professores">
+        <DashboardUI screenName='Editar Professor' itemActive="Professores" breadcrumb={breadcrumb}>
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='fullName'>Nome completo</Label>

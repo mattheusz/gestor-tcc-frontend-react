@@ -24,7 +24,7 @@ import styled from 'styled-components';
 import { device } from '../../device';
 import { convertUTCToZonedTime } from '../../utils/convertDate';
 
-function ListarOrientacoesAluno(props) {
+function ProjetoDetalhesOrientacoes(props) {
 
     const [searchText, setSearchText] = useState('');
     const [noProjectFound, setNoProjectFound] = useState(false);
@@ -35,6 +35,7 @@ function ListarOrientacoesAluno(props) {
     const [isLoading, setIsLoading] = useState(true);
     const [someOrientationFound, setSomeOrientationFound] = useState(false);
     const [modalOrientationInfo, setModalOrientationInfo] = useState();
+    const [projectName, setProjectName] = useState();
 
     const isInitialMount = useRef(true);
 
@@ -53,9 +54,29 @@ function ListarOrientacoesAluno(props) {
     const { projectId } = useParams();
 
     let breadcrumb = [
-        { bread: 'Projeto', link: `/aluno-orientando/` },
-        { bread: 'Orientações', link: `` },
+        { bread: 'Projetos', link: `/projetos` },
+        { bread: projectName, link: `/projetos/${projectId}` },
+        { bread: 'Orientações', link: `/projetos/${projectId}/orientacoes` },
     ];
+
+    useEffect(() => {
+        api.get(`/projeto/${projectId}`)
+            .then(({ data }) => {
+                console.log('Projeto:', data.docs[0])
+                setProjectName(data.docs[0].title);
+            })
+            .catch(error => {
+                if (error.response) {
+                    console.log(error.response);
+                }
+                if (error.request) {
+                    console.log(error.request, 'R E Q U I S I Ç Ã O');
+                }
+                else {
+                    console.log('Error', error.message);
+                }
+            });
+    }, []);
 
     // carregando todas orientações
     useEffect(() => {
@@ -173,11 +194,11 @@ function ListarOrientacoesAluno(props) {
     }
 
     const openOrientation = (orientationId) => {
-        history.push(`/aluno-orientando/projeto/${projectId}/orientacoes/${orientationId}`)
+        history.push(`/projetos/${projectId}/orientacoes/${orientationId}`)
     }
 
     return (
-        <DashboardUI screenName='Orientações' itemActive="Meus Projetos" breadcrumb={breadcrumb}>
+        <DashboardUI screenName='Orientações' itemActive="Projetos" breadcrumb={breadcrumb}>
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}
@@ -298,4 +319,4 @@ const Spinner = styled(ReactLoading)`
 `;
 
 
-export default ListarOrientacoesAluno;
+export default ProjetoDetalhesOrientacoes;

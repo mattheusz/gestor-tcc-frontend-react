@@ -12,7 +12,7 @@ import 'semantic-ui-css/semantic.min.css';
 import { ToastContainer, toast } from 'react-toastify';
 import Switch from 'react-input-switch';
 import Modal from 'react-modal';
-import { AiOutlineEdit } from 'react-icons/ai';
+import { AiOutlineEdit, AiOutlineEye } from 'react-icons/ai';
 import usePaginatorNumbers from '../../hooks/usePaginator';
 import ActionModal from '../../components/ActionModal';
 import Paginator from '../../components/Paginator/Paginator';
@@ -67,6 +67,10 @@ function Projetos(props) {
     Modal.setAppElement('#root');
 
     const history = useHistory();
+
+    let breadcrumb = [
+        { bread: 'Projetos', link: '/projetos' },
+    ];
 
     // carregando todos os tec administrativos ao montar componente
     useEffect(() => {
@@ -157,6 +161,11 @@ function Projetos(props) {
         history.push(`/projetos/editar/${_id}`);
     }
 
+    const seeProject = (_id) => {
+        //setProject({ _id, registration, name, email, status })
+        history.push(`/projetos/${_id}`);
+    }
+
     const changeStatusUser = () => {
 
         api.put('usuarios/atualizar_status', {
@@ -240,7 +249,7 @@ function Projetos(props) {
     }
 
     return (
-        <DashboardUI screenName='Projetos' itemActive="Projetos">
+        <DashboardUI screenName='Projetos' itemActive="Projetos" breadcrumb={breadcrumb}>
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}
@@ -258,7 +267,8 @@ function Projetos(props) {
                             <Table.HeaderCell width={5}>Projeto</Table.HeaderCell>
                             <Table.HeaderCell width={5}>Orientandos</Table.HeaderCell>
                             <Table.HeaderCell width={3}>Orientador</Table.HeaderCell>
-                            <Table.HeaderCell width={3}>Ações</Table.HeaderCell>
+                            <Table.HeaderCell width={1}>Situação</Table.HeaderCell>
+                            <Table.HeaderCell width={2}>Ações</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
 
@@ -272,6 +282,7 @@ function Projetos(props) {
                                         {students[1] && students[1].name}
                                     </Table.Cell>
                                     <Table.Cell>{name}</Table.Cell>
+                                    <Table.Cell>{situation}</Table.Cell>
                                     <Table.Cell style={{ display: 'flex !important', alignItems: 'center', position: 'relative' }}>
                                         <AiOutlineEdit title='Editar orientador' cursor='pointer' onClick={
                                             () => { editProject(_id, title, name, situation, status) }
@@ -279,6 +290,15 @@ function Projetos(props) {
                                             color={light.color.primary}
                                             size='2rem'
                                         /> &nbsp;&nbsp;
+                                        <AiOutlineEye
+                                            title='Editar orientador'
+                                            cursor='pointer'
+                                            color={light.color.primary}
+                                            size='2rem'
+                                            onClick={
+                                                () => { seeProject(_id) }
+                                            }
+                                        />
                                     </Table.Cell>
                                 </Table.Row>
                             ))

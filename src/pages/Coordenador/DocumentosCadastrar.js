@@ -30,6 +30,11 @@ function DocumentosCadastrar() {
         //setFileUploading(acceptedFiles[0].name)
     }, []);
 
+    let breadcrumb = [
+        { bread: 'Documentos', link: '/documentos' },
+        { bread: 'Cadastrar Documento', link: `` },
+    ];
+
     const history = useHistory()
 
     useEffect(() => {
@@ -89,7 +94,7 @@ function DocumentosCadastrar() {
     }
 
     return (
-        <DashboardUI screenName='Cadastrar Documento' itemActive="Documentos">
+        <DashboardUI screenName='Cadastrar Documento' itemActive="Documentos" breadcrumb={breadcrumb}>
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='title'>Título</Label>
                 <IconTextField>

@@ -9,10 +9,17 @@ import { utcToZonedTime } from 'date-fns-tz';
 import { verifyTaskSituation } from '../../utils/taskUtils';
 import { convertUTCToZonedTime } from '../../utils/convertDate';
 
-function ProjectInfo({ projectId, isStudent, projectInfos }) {
+function ProjectInfo({ projectId, isStudent, isCoordinator, projectInfos }) {
 
-    const redirectToTask = isStudent ? `/aluno-orientando/projeto/${projectId}/tarefas` : `/professor/projetos/${projectId}/tarefas`
-    const redirectToOrientation = isStudent ? `/aluno-orientando/projeto/${projectId}/orientacoes` : `/professor/projetos/${projectId}/orientacoes`
+    let redirectToTask = isStudent ? `/aluno-orientando/projeto/${projectId}/tarefas` : `/professor/projetos/${projectId}/tarefas`
+    let redirectToOrientation = isStudent ? `/aluno-orientando/projeto/${projectId}/orientacoes` : `/professor/projetos/${projectId}/orientacoes`
+
+    if (isCoordinator) {
+        redirectToTask = `/projetos/${projectId}/tarefas`;
+        redirectToOrientation = `/projetos/${projectId}/orientacoes`;
+    }
+
+
     const { students, description, situation, tasks, orientation, advisor, deadLine } = projectInfos;
     const history = useHistory();
     console.debug('STUDENTS', students);
@@ -27,6 +34,8 @@ function ProjectInfo({ projectId, isStudent, projectInfos }) {
         let path = `/professor/projetos/${projectId}/tarefas/${taskId}`;
         if (isStudent)
             path = `/aluno-orientando/projeto/${projectId}/tarefas/${taskId}`;
+        if (isCoordinator)
+            path = `/projetos/${projectId}/tarefas/${taskId}`;
         history.push(path)
     }
 
@@ -35,6 +44,8 @@ function ProjectInfo({ projectId, isStudent, projectInfos }) {
         let path = `/professor/projetos/${projectId}/orientacoes/${orientationId}`;
         if (isStudent)
             path = `/aluno-orientando/projeto/${projectId}/orientacoes/${orientationId}`;
+        if (isCoordinator)
+            path = `/projetos/${projectId}/orientacoes/${orientationId}`;
 
         history.push(path);
     }

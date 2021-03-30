@@ -18,7 +18,12 @@ function TecnicoAdministrativoCadastrar(props) {
     const [errorMessage, setErrorMessage] = useState();
     const { register, handleSubmit, errors, watch } = useForm({ mode: 'onSubmit' });
 
-    const history = useHistory()
+    const history = useHistory();
+
+    let breadcrumb = [
+        { bread: 'Técnicos Administrativos', link: '/tecnicos_administrativos' },
+        { bread: 'Cadastrar Técnico Administrativo', link: `` },
+    ];
 
     const onSubmit = ({ fullName, email, registration }) => {
         api.post('usuarios/cadastrar_administrativo', {
@@ -54,7 +59,7 @@ function TecnicoAdministrativoCadastrar(props) {
     }
 
     return (
-        <DashboardUI screenName='Cadastrar Técnico Administrativo' itemActive="Técnicos Administrativos">
+        <DashboardUI screenName='Cadastrar Técnico Administrativo' itemActive="Técnicos Administrativos" breadcrumb={breadcrumb}>
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='fullName'>Nome completo</Label>

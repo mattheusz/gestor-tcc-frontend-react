@@ -1,29 +1,24 @@
 import React, { useRef, useEffect, useState, useContext } from 'react';
 import { useHistory, useParams } from 'react-router-dom'
-import light from '../../themes/light';
-
 import api from '../../api/api'
-
 import DashboardUI from '../../components/DashboardUI';
 import SearchBar from '../../components/SearchBar';
-
 import 'semantic-ui-css/semantic.min.css';
-import ReactLoading from 'react-loading';
 
 import { ToastContainer, toast } from 'react-toastify';
-
 import Modal from 'react-modal';
-
 import usePaginatorNumbers from '../../hooks/usePaginator';
 import Paginator from '../../components/Paginator/Paginator';
 import styled from 'styled-components';
 import { device } from '../../device';
+import light from '../../themes/light';
 import format from 'date-fns/format'
+import ReactLoading from 'react-loading';
 import { utcToZonedTime } from 'date-fns-tz';
 import { verifyTaskSituation } from '../../utils/taskUtils';
 import { convertUTCToZonedTime } from '../../utils/convertDate';
 
-function ListarTarefasProfessor(props) {
+function ProjetoDetalheTarefas(props) {
 
     const [searchText, setSearchText] = useState('');
 
@@ -33,6 +28,7 @@ function ListarTarefasProfessor(props) {
     const [mountedPagination, setMountedPagination] = useState(false);
     const [formIsSubmitted, setFormIsSubmitted] = useState(true);
     const [listTasks, setListTasks] = useState();
+    const [projectName, setProjectName] = useState();
 
     const selectItems = [
         {
@@ -59,10 +55,6 @@ function ListarTarefasProfessor(props) {
 
     const isInitialMount = useRef(true);
 
-    let userName = useRef('');
-    let userId = useRef('');
-    let userStatus = useRef('');
-
     let totalPages = useRef();
     let currentPage = useRef();
     let paginationNumbers = useRef([]);
@@ -78,11 +70,29 @@ function ListarTarefasProfessor(props) {
     const { projectId } = useParams();
 
     let breadcrumb = [
-        { bread: 'Meus Projetos', link: '/professor/projetos' },
-        { bread: 'Projeto', link: `/professor/projetos/${projectId}` },
-        { bread: 'Tarefas', link: `` },
+        { bread: 'Projetos', link: `/projetos` },
+        { bread: projectName, link: `/projetos/${projectId}` },
+        { bread: 'Tarefas', link: `/projetos/${projectId}/tarefas` },
     ];
 
+    useEffect(() => {
+        api.get(`/projeto/${projectId}`)
+            .then(({ data }) => {
+                console.log('Projeto:', data.docs[0])
+                setProjectName(data.docs[0].title);
+            })
+            .catch(error => {
+                if (error.response) {
+                    console.log(error.response);
+                }
+                if (error.request) {
+                    console.log(error.request, 'R E Q U I S I Ç Ã O');
+                }
+                else {
+                    console.log('Error', error.message);
+                }
+            });
+    }, []);
     // listando tarefas
     useEffect(() => {
         if (mountedPagination)
@@ -92,6 +102,7 @@ function ListarTarefasProfessor(props) {
             .then(({ data }) => {
                 console.debug('total pages', data.totalPages)
                 console.debug('registers', data)
+                console.debug('PROJETO', data.docs)
                 currentPage.current = data.page;
                 totalPages.current = data.totalPages;
                 console.debug('Data zonedTimetoUtc sem format', format(utcToZonedTime(data.docs[0].deadLine), 'dd/MM/yyyy HH:MM:sszz'));
@@ -113,6 +124,8 @@ function ListarTarefasProfessor(props) {
                 }
             });
     }, []);
+
+
 
     const [selectedValue, setSelectedValue] = useState('em andamento');
     useEffect(() => {
@@ -138,7 +151,6 @@ function ListarTarefasProfessor(props) {
             api.get(path)
                 .then(({ data }) => {
                     totalPages.current = data.totalPages;
-                    currentPage.current = data.page;
                     console.log(data.docs);
                     setSomeTaskFound(true);
                     setListTasks(data.docs);
@@ -157,16 +169,20 @@ function ListarTarefasProfessor(props) {
                         console.log('Error', error.message);
                     }
                 });
+
         }
 
     }, [selectedValue, formIsSubmitted]);
 
-    const addTask = () => {
-        history.push(`/professor/projetos/${projectId}/tarefas/novo`);
+    const addUser = () => {
+        history.push(`/professor/projetos/${projectId}/atividades/novo`);
+    }
+
+    const editInfoProject = () => {
+
     }
 
     const onSubmit = e => {
-        console.debug('ONSUBMIT IS CALLED')
         setMountedPagination(false);
         e.preventDefault();
         setFormIsSubmitted(!formIsSubmitted);
@@ -226,21 +242,19 @@ function ListarTarefasProfessor(props) {
     };
 
     const openActivity = (e, idActivity) => {
-        history.push(`/professor/projetos/${projectId}/tarefas/${idActivity}`)
+        history.push(`/projetos/${projectId}/tarefas/${idActivity}`)
     }
-
-
-
     return (
-        <DashboardUI screenName='Tarefas' itemActive="Meus Projetos" breadcrumb={breadcrumb}>
+        <DashboardUI screenName='Tarefas' itemActive="Projetos" breadcrumb={breadcrumb}>
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}
                     setSearchText={setSearchText}
                     selectedValue={selectedValue}
                     onChangeSelect={onChangeSelect}
-                    addUser={addTask}
+                    addUser={addUser}
                     selectItems={selectItems}
+                    showAddButton={true}
                 />
             </form>
             <TaskList>
@@ -252,6 +266,7 @@ function ListarTarefasProfessor(props) {
                                     <TaskTitle>{title}</TaskTitle><br />
                                     <TaskDeadline>
                                         Prazo de entrega: {convertUTCToZonedTime(deadLine)}
+                                        {console.log('deadline', deadLine)}
                                     </TaskDeadline>
                                     <TaskSituation>{verifyTaskSituation(situation, deadLine)}</TaskSituation>
                                 </TaskItem>
@@ -260,7 +275,6 @@ function ListarTarefasProfessor(props) {
                                 Nenhuma tarefa foi encontrada
                             </TaskNotFound>
                 }
-
             </TaskList>
             <Paginator
                 totalPages={totalPages.current}
@@ -360,4 +374,4 @@ const TaskNotFound = styled.div`
     padding: 10px;
 `;
 
-export default ListarTarefasProfessor;
+export default ProjetoDetalheTarefas;

@@ -6,17 +6,38 @@ import DashboardUI from '../../components/DashboardUI';
 import { device } from '../../device';
 import { convertUTCToZonedTime } from '../../utils/convertDate';
 
-function OrientacaoAluno(props) {
+function ProjetoDetalhesUmaOrientacao(props) {
 
     const [orientation, setOrientation] = useState();
+    const [projectName, setProjectName] = useState();
 
     const { projectId, orientationId } = useParams();
 
     let breadcrumb = [
-        { bread: 'Projeto', link: `/aluno-orientando/` },
-        { bread: 'Orientações', link: `/aluno-orientando/projeto/${projectId}/orientacoes` },
+        { bread: 'Projetos', link: `/projetos` },
+        { bread: projectName, link: `/projetos/${projectId}` },
+        { bread: 'Orientações', link: `/projetos/${projectId}/orientacoes` },
         { bread: orientation && orientation.title, link: `` },
     ];
+
+    useEffect(() => {
+        api.get(`/projeto/${projectId}`)
+            .then(({ data }) => {
+                console.log('Projeto:', data.docs[0])
+                setProjectName(data.docs[0].title);
+            })
+            .catch(error => {
+                if (error.response) {
+                    console.log(error.response);
+                }
+                if (error.request) {
+                    console.log(error.request, 'R E Q U I S I Ç Ã O');
+                }
+                else {
+                    console.log('Error', error.message);
+                }
+            });
+    }, []);
 
     useEffect(() => {
         api.get(`/orientacao/${orientationId}`)
@@ -38,7 +59,7 @@ function OrientacaoAluno(props) {
     }, []);
 
     return (
-        <DashboardUI screenName={orientation && orientation.title} itemActive="Meus Projetos" i breadcrumb={breadcrumb}>
+        <DashboardUI screenName={orientation && orientation.title} itemActive="Projetos" i breadcrumb={breadcrumb}>
             <OrientationHeader>
                 <OrientationDescription>
                     {orientation && orientation.description}
@@ -51,7 +72,7 @@ function OrientacaoAluno(props) {
     );
 }
 
-export default OrientacaoAluno;
+export default ProjetoDetalhesUmaOrientacao;
 
 const OrientationHeader = styled.div`
     border-bottom: 1px solid ${props => props.theme.color.grey}55;

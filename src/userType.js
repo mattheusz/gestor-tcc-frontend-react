@@ -23,11 +23,6 @@ export const coordenador = [
         description: 'Visão Professor',
         to: '/professor'
     },
-    {
-        icon: <AiOutlineHome />,
-        description: 'Página Inicial',
-        to: '/coordenador'
-    },
 
     {
         icon: <VscProject />,
@@ -50,19 +45,9 @@ export const coordenador = [
         to: '/tecnicos_administrativos'
     },
     {
-        icon: <BsCalendar />,
-        description: 'Datas Importantes*',
-        to: '/datas_importantes'
-    },
-    {
         icon: <CgFileDocument />,
         description: 'Documentos',
         to: '/documentos'
-    },
-    {
-        icon: <RiGitRepositoryLine />,
-        description: 'Repositório*',
-        to: '/trabalhos_anteriores'
     },
 ]
 
@@ -138,19 +123,9 @@ export const alunoOrientando = [
     },
 
     {
-        icon: <BsCalendar />,
-        description: 'Datas Importantes*',
-        to: '/datas_importantes'
-    },
-    {
         icon: <CgFileDocument />,
         description: 'Documentos',
         to: '/documentos/visualizar'
-    },
-    {
-        icon: <RiGitRepositoryLine />,
-        description: 'Repositório*',
-        to: '/trabalhos_anteriores'
     },
 ]
 
@@ -182,19 +157,9 @@ export const coordenadorProfessor = [
     },
 
     {
-        icon: <BsCalendar />,
-        description: 'Datas Importantes*',
-        to: '/datas_importantes'
-    },
-    {
         icon: <CgFileDocument />,
         description: 'Documentos',
         to: '/documentos/visualizar'
-    },
-    {
-        icon: <RiGitRepositoryLine />,
-        description: 'Repositório*',
-        to: '/trabalhos_anteriores'
     },
 ]
 

@@ -21,7 +21,7 @@ import ErrorMessage from '../../components/Error';
 import { verifyTaskSituation } from '../../utils/taskUtils';
 import { convertUTCToZonedTime } from '../../utils/convertDate';
 
-function TarefaAluno(props) {
+function ProjetoDetalhesUmaTarefa(props) {
 
     const [task, setTask] = useState();
     const [fileUploading, setFileUploading] = useState();
@@ -31,6 +31,7 @@ function TarefaAluno(props) {
     const [errorMessage, setErrorMessage] = useState();
     const [commentAddedOrDeleted, setCommentAddedOrDeleted] = useState(false);
     const [taskDelivered, setTaskDelivered] = useState(false);
+    const [projectName, setProjectName] = useState();
 
     let commentHandled = useRef();
     let commentTextToEdit = useRef();
@@ -65,15 +66,36 @@ function TarefaAluno(props) {
     const { id, taskId, projectId } = useParams();
     console.log('PROJECT ID', projectId);
     let breadcrumb = [
-        { bread: 'Projeto', link: `/aluno-orientando/` },
-        { bread: 'Tarefas', link: `/aluno-orientando/projeto/${projectId}/tarefas` },
-        { bread: task && task.title, link: `` },
+        { bread: 'Projetos', link: `/projetos` },
+        { bread: projectName, link: `/projetos/${projectId}` },
+        { bread: 'Tarefas', link: `/projetos/${projectId}/tarefas` },
+        { bread: task && task.title, link: `/projetos/${projectId}/tarefas/${taskId}` },
     ];
 
     useEffect(() => {
         registerDeliver("file", { required: watchLink ? false : true });
         console.log("File sendo registrado")
     }, [register, watchLink])
+
+
+    useEffect(() => {
+        api.get(`/projeto/${projectId}`)
+            .then(({ data }) => {
+                console.log('Projeto:', data.docs[0])
+                setProjectName(data.docs[0].title);
+            })
+            .catch(error => {
+                if (error.response) {
+                    console.log(error.response);
+                }
+                if (error.request) {
+                    console.log(error.request, 'R E Q U I S I Ç Ã O');
+                }
+                else {
+                    console.log('Error', error.message);
+                }
+            });
+    }, []);
 
     useEffect(() => {
         api.get(`/tarefa/${taskId}/`)
@@ -261,7 +283,7 @@ function TarefaAluno(props) {
 
 
     return (
-        <DashboardUI screenName={task && task.title} itemActive="Meu Projeto" breadcrumb={breadcrumb}>
+        <DashboardUI screenName={task && task.title} itemActive="Projetos" breadcrumb={breadcrumb}>
             <TaskHeader>
                 <TaskDescription>
                     {task && task.description}
@@ -269,30 +291,8 @@ function TarefaAluno(props) {
                 <TaskDeadline>Prazo de entrega: {task && convertUTCToZonedTime(task.deadLine)}</TaskDeadline>
                 {console.log(task && addHours(new Date(task.deadLine), 3))}
                 <TaskSituation>{task && verifyTaskSituation(task.situation, task.deadLine)}</TaskSituation>
-                <Button type='button' width='150px' onClick={() => setModalSendActivityIsOpen(true)}>
-                    Entregar tarefa
-                </Button>
 
             </TaskHeader>
-            <TaskCommentBox>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <textarea
-                        name='comment'
-                        ref={register({
-                            required: true,
-                        })}
-                        rows={4}
-                        placeholder='Digite o seu comentário...'
-                        style={errors.comment && { borderColor: lightTheme.color.secondary }}
-
-                    />
-                    {errors.comment && errors.comment.type === 'required' && <ErrorMessage left>Um texto é obrigatório para efetuar um comentário</ErrorMessage>}
-                    <Button type='submit' width='100px' disabled={isSubmitting}>
-                        Comentar
-                    </Button>
-                </form>
-
-            </TaskCommentBox>
             <TaskCommentList>
                 {task && task.comments && task.comments.length > 0 ?
                     task.comments.map(({ comment, commentUser, createdAt, _id }) =>
@@ -463,7 +463,7 @@ function TarefaAluno(props) {
     );
 }
 
-export default TarefaAluno;
+export default ProjetoDetalhesUmaTarefa;
 
 const TaskHeader = styled.div`
     border-bottom: 1px solid ${props => props.theme.color.grey}55;

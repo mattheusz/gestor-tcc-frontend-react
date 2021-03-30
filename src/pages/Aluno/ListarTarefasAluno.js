@@ -66,17 +66,25 @@ function ListarTarefasAluno(props) {
     Modal.setAppElement('#root');
 
     const history = useHistory();
-    const { id: projectId } = useParams();
+    const { projectId } = useParams();
+
+    let breadcrumb = [
+        { bread: 'Projeto', link: `/aluno-orientando` },
+        { bread: 'Tarefas', link: `` },
+    ];
 
     // listando tarefas
     useEffect(() => {
         if (mountedPagination)
             return;
         setMountedPagination(false);
-        api.get(`/tarefa/projeto_tarefas/${projectId}/1/1`)
+        api.get(`/tarefa/projeto_tarefa/nao_concluidas/${projectId}/1/1`)
             .then(({ data }) => {
+                console.debug('total pages', data.totalPages)
+                console.debug('registers', data)
                 currentPage.current = data.page;
                 totalPages.current = data.totalPages;
+                console.debug('Data zonedTimetoUtc sem format', format(utcToZonedTime(data.docs[0].deadLine), 'dd/MM/yyyy HH:MM:sszz'));
                 setListTasks(data.docs);
                 setSomeTaskFound(true);
                 setIsLoading(false);
@@ -96,7 +104,7 @@ function ListarTarefasAluno(props) {
             });
     }, []);
 
-    const [selectedValue, setSelectedValue] = useState('iniciado');
+    const [selectedValue, setSelectedValue] = useState('em andamento');
     useEffect(() => {
         if (isInitialMount.current) {
             isInitialMount.current = false;
@@ -106,11 +114,15 @@ function ListarTarefasAluno(props) {
                 path = `/tarefa/projeto_tarefas/situacao/${projectId}/${selectedValue}/1/1`; //
                 if (selectedValue === 'todas')
                     path = `/tarefa/projeto_tarefas/${projectId}/1/1`;
+                if (selectedValue === 'em andamento')
+                    path = `/tarefa/projeto_tarefa/nao_concluidas/${projectId}/1/1`
             }
             else {
                 path = `/tarefa/projeto_tarefas/situacao_titulo/${projectId}/${searchText}/${selectedValue}/1/1`; //
                 if (selectedValue === 'todas')
                     path = `/tarefa/projeto_tarefas/${projectId}/${searchText}/1/1`; //
+                if (selectedValue === 'em andamento')
+                    path = `/tarefa/projeto_tarefa/nao_concluidas/${projectId}/${searchText}/1/1`
             }
             setMountedPagination(false);
             api.get(path)
@@ -172,11 +184,15 @@ function ListarTarefasAluno(props) {
             path = `/tarefa/projeto_tarefas/situacao/${projectId}/${selectedValue}/1/${page}`; //
             if (selectedValue === 'todas')
                 path = `/tarefa/projeto_tarefas/${projectId}/1/${page}`;
+            if (selectedValue === 'em andamento')
+                path = `/tarefa/projeto_tarefa/nao_concluidas/${projectId}/1/${page}`
         }
         else {
             path = `/tarefa/projeto_tarefas/situacao_titulo/${projectId}/${searchText}/${selectedValue}/1/${page}`; //
             if (selectedValue === 'todas')
                 path = `/tarefa/projeto_tarefas/${projectId}/${searchText}/1/${page}`; //
+            if (selectedValue === 'em andamento')
+                path = `/tarefa/projeto_tarefa/nao_concluidas/${projectId}/${searchText}/1/${page}`; //
         }
         currentPage.current = page;
 
@@ -206,7 +222,7 @@ function ListarTarefasAluno(props) {
         history.push(`/aluno-orientando/projeto/${projectId}/tarefas/${idActivity}`)
     }
     return (
-        <DashboardUI screenName='Tarefas' itemActive="Meu Projeto">
+        <DashboardUI screenName='Tarefas' itemActive="Meu Projeto" breadcrumb={breadcrumb}>
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import Avatar from 'react-avatar';
 import Cropper from 'react-easy-crop';
 import { useHistory } from 'react-router-dom';
@@ -19,6 +19,7 @@ import { useForm } from 'react-hook-form';
 import ErrorMessage from '../../components/Error/ErrorMessage';
 import Label from '../../components/Label/Label';
 import { InputGroup } from '../../styled';
+import { AuthContext } from '../../context/AuthContext';
 
 function VerPerfil() {
     // crop image states
@@ -40,7 +41,8 @@ function VerPerfil() {
 
     const { register, handleSubmit, errors, watch } = useForm({ mode: 'onSubmit' });
 
-    const watchPassword = watch('newPassword')
+    const watchPassword = watch('newPassword');
+    const { logout } = useContext(AuthContext);
 
     let breadcrumb = [
         { bread: 'Perfil', link: '/perfil' }
@@ -315,7 +317,7 @@ function VerPerfil() {
                 <ButtonContainer >
                     <Button primary onClick={() => openEditPerfil()} width='205px' new> Editar perfil</Button>
                     <Button primary onClick={() => setModalChangePasswordIsOpen(true)} width='205px' new> Mudar senha</Button>
-                    <Button noDesktop onClick={() => setModalChangePasswordIsOpen(false)} width='205px' new >Sair</Button>
+                    <Button noDesktop onClick={() => logout()} width='205px' new >Sair</Button>
                 </ButtonContainer>
             </Container>
             {image ? (
