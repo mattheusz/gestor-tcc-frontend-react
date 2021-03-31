@@ -126,7 +126,7 @@ function DocumentosEditar() {
 
                 <Label style={{ fontSize: '1.1rem', display: 'block' }}>
                     <Checkbox
-                        marked={watchUpdateDocumentFileCheck}
+                        checked={watchUpdateDocumentFileCheck}
                         name='updateDocumentFileCheck'
                         register={register}
                     />
