@@ -80,7 +80,7 @@ function ProjetoEditar(props) {
                     console.log('Error', error.message);
                 }
             });
-    }, [])
+    }, []);
 
     useEffect(() => {
         api.get(`usuarios/listar_usuarios/aluno_sem_projeto/1`)
@@ -101,7 +101,7 @@ function ProjetoEditar(props) {
                     console.log('Error', error.message);
                 }
             });
-    }, [])
+    }, []);
 
     const handleCheckboxChangeStudents = event => {
         setCheckedChangeStudents(event.target.checked)

@@ -282,7 +282,7 @@ function Projetos(props) {
                                         {students[1] && students[1].name}
                                     </Table.Cell>
                                     <Table.Cell>{name}</Table.Cell>
-                                    <Table.Cell>{situation}</Table.Cell>
+                                    <Table.Cell >{situation}</Table.Cell>
                                     <Table.Cell style={{ display: 'flex !important', alignItems: 'center', position: 'relative' }}>
                                         <AiOutlineEdit title='Editar orientador' cursor='pointer' onClick={
                                             () => { editProject(_id, title, name, situation, status) }

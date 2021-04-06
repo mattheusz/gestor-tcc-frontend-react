@@ -1,6 +1,6 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import api from '../../api/api'
 import 'semantic-ui-css/semantic.min.css';
 import { ToastContainer, toast } from 'react-toastify';
@@ -19,12 +19,17 @@ import Select from '../../components/Select';
 
 function ProjetosEditar(props) {
 
+    const [availableProfessors, setAvailableProfessors] = useState();
+    const [currentAdvisor, setCurrentAdvisor] = useState();
+
     const { register, handleSubmit, errors } = useForm({ mode: 'onSubmit' });
 
     const history = useHistory()
+    const { projectId } = useParams();
 
     const { userRegistration } = useContext(UserRegistrationContext)
     const { registration, name, email, isCoordinator, status } = userRegistration;
+
     const [checked, setChecked] = useState(isCoordinator);
     console.log('checked? ', checked)
 
@@ -36,23 +41,55 @@ function ProjetosEditar(props) {
         { bread: `Editar projeto ${name}`, link: '/projetos' },
     ];
 
+    useEffect(() => {
+        api.get(`usuarios/professores_sempaginacao`)
+            .then(response => {
+                console.log(response)
+                setAvailableProfessors(response.data);
+            })
+            .catch(error => {
+                if (error.response) {
+                    console.log(error.response);
+                    setAvailableProfessors('-');
+                }
+                if (error.request) {
+                    console.log(error.request);
+                }
+                else {
+                    console.log('Error', error.message);
+                }
+            });
+    }, []);
+
+    useEffect(() => {
+        api.get(`/projeto/${projectId}`)
+            .then(response => {
+                console.log('current advisor', response);
+                setCurrentAdvisor(response.data.docs[0].advisor);
+            })
+            .catch(error => {
+                if (error.response) {
+                    console.log(error.response);
+                    setCurrentAdvisor('-')
+                }
+                if (error.request) {
+                    console.log(error.request);
+                }
+                else {
+                    console.log('Error', error.message);
+                }
+            });
+    }, []);
+
     const handleCheckboxChange = event => {
         console.debug('Checkbox', event.target.checked)
         setChecked(event.target.checked)
     }
 
-    const onSubmit = ({ fullName, email, registration, isCoordinator }) => {
-        console.log('full name:', fullName)
-        console.log('email', email)
-        console.log('is coordinator', isCoordinator)
-        api.patch('usuarios/todos_usuarios/atualizar_professor', {
-            id: _id,
-            name: fullName,
-            email,
-            registration,
-            isCoordinator: isCoordinator,
-            userType: 'professor',
-            status
+    const onSubmit = ({ advisor }) => {
+        console.log('advisor:', advisor);
+        api.patch(`/projeto/coordenacao/atualizar/${projectId}`, {
+            advisor,
         })
             .then(response => {
                 console.log(response.data);
@@ -63,7 +100,7 @@ function ProjetosEditar(props) {
                     );
                 notify()
                 setTimeout(() => {
-                    history.push('/professores')
+                    history.push('/projetos');
                 }, 2000);
 
             })
@@ -82,6 +119,10 @@ function ProjetosEditar(props) {
             });
     }
 
+    const onChangeAdvisor = e => {
+        setCurrentAdvisor(e.target.value)
+    }
+
     return (
         <DashboardUI screenName='Editar Projeto' itemActive="Projetos" breadcrumb={breadcrumb}>
 
@@ -89,22 +130,46 @@ function ProjetosEditar(props) {
                 <Label htmlFor='advisor'>Alterar orientador</Label>
                 <Select
                     formSelect={true}
-                    value=''
+                    defaultValue={currentAdvisor && currentAdvisor.name}
                     ref={register}
-                    onChange={e => { }}
-                    name='studentOne'
-                    id='studentOne'
+                    onChange={e => { onChangeAdvisor(e) }}
+                    name='advisor'
+                    id='advisor'
                 >
+                    <option
+                        key={currentAdvisor && currentAdvisor._id}
+                        value={currentAdvisor && currentAdvisor._id}
+                        style={{ width: '100%' }}
+                    >
+                        {currentAdvisor && currentAdvisor.name}
+                    </option>
                     {
-
-
+                        availableProfessors ?
+                            availableProfessors.map(({ _id, name }) => {
+                                if (name === (currentAdvisor && currentAdvisor.name)) return;
+                                console.log('professor id 1 id + name', _id, name);
+                                return (<option
+                                    key={_id}
+                                    value={_id}
+                                    style={{ width: '100%' }}
+                                >
+                                    {name}
+                                </option>);
+                            }) :
+                            <option
+                                key={1}
+                                value={1}
+                                style={{ width: '100%' }}
+                            >
+                                Nenhum professor disponível
+                            </option>
                     }
                 </Select>
 
                 <Button new={true} type='submit' width='100px'>
                     Salvar
                 </Button>
-                <Button new={true} type='button' width='100px' onClick={() => history.replace('/professores')}>
+                <Button new={true} type='button' width='100px' onClick={() => history.replace('/projetos')}>
                     Cancelar
                 </Button>
             </form>
