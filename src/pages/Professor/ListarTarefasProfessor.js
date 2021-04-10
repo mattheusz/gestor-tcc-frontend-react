@@ -48,10 +48,6 @@ function ListarTarefasProfessor(props) {
             displayValue: 'Concluída'
         },
         {
-            value: 'recusada',
-            displayValue: 'Recusada'
-        },
-        {
             value: 'todas',
             displayValue: 'Todas'
         }

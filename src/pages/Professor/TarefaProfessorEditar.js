@@ -116,7 +116,7 @@ function TarefaProfessorEditar(props) {
                     );
                 notify()
                 setTimeout(() => {
-                    history.push(`/professor/projetos/${id}/tarefas/${taskId}`)
+                    history.push(`/professor/projetos/${projectId}/tarefas/${taskId}`)
                 }, 2000);
 
             })

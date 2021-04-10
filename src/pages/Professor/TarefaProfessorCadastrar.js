@@ -33,7 +33,7 @@ function TarefaProfessorCadastrar(props) {
         { bread: 'Meus Projetos', link: '/professor/projetos' },
         { bread: 'Projeto', link: `/professor/projetos/${projectId}` },
         { bread: 'Tarefas', link: `/professor/projetos/${projectId}/tarefas` },
-        { bread: 'Nova Tarefa', link: `` },
+        { bread: 'Cadastrar Tarefa', link: `` },
     ];
 
     const onSubmit = ({ title, description, initialDate, deadline }) => {
@@ -59,7 +59,7 @@ function TarefaProfessorCadastrar(props) {
                     );
                 notify()
                 setTimeout(() => {
-                    history.push(`/professor/projetos/${projectId}/atividades`)
+                    history.push(`/professor/projetos/${projectId}/tarefas`)
                 }, 2000);
 
             })
@@ -67,7 +67,7 @@ function TarefaProfessorCadastrar(props) {
                 if (error.response) {
                     const msg = error.response.data;
                     console.log(msg);
-                    setErrorMessage(msg)
+                    setErrorMessage("Ver erro")
                 }
                 if (error.request) {
                     console.log(error.request);

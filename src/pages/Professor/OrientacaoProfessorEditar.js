@@ -198,7 +198,7 @@ function OrientacaoProfessorEditar(props) {
                 <Button new={true} type='submit' width='100px' disabled={isSubmitting}>
                     Salvar
                 </Button>
-                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/ professor / projetos / ${projectId} / orientacoes / ${orientationId}`)}>
+                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${projectId}/orientacoes/${orientationId}`)}>
                     Cancelar
                 </Button>
             </form>
