@@ -56,7 +56,7 @@ function TarefaProfessorEditar(props) {
     ];
 
     const history = useHistory();
-    const { id, projectId, taskId } = useParams();
+    const { projectId, taskId } = useParams();
 
     let breadcrumb = [
         { bread: 'Meus Projetos', link: '/professor/projetos' },
@@ -280,7 +280,7 @@ function TarefaProfessorEditar(props) {
                 <Button new={true} type='submit' width='100px' disabled={isSubmitting}>
                     Salvar
                 </Button>
-                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${id}/tarefas/${taskId}`)}>
+                <Button new={true} type='button' width='100px' onClick={() => history.replace(`/professor/projetos/${projectId}/tarefas/${taskId}`)}>
                     Cancelar
                 </Button>
             </form>

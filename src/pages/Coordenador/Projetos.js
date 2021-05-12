@@ -1,8 +1,9 @@
-import React, { useRef, useEffect, useState, useContext } from 'react';
+import React, { useRef, useEffect, useState, useContext, useMemo } from 'react';
 import { useHistory } from 'react-router-dom'
 import light from '../../themes/light';
 
-import api from '../../api/api'
+import api from '../../api/api';
+import jwt_decode from "jwt-decode";
 
 import DashboardUI from '../../components/DashboardUI';
 import SearchBar from '../../components/SearchBar';
@@ -17,6 +18,7 @@ import usePaginatorNumbers from '../../hooks/usePaginator';
 import ActionModal from '../../components/ActionModal';
 import Paginator from '../../components/Paginator/Paginator';
 import { ProjectContext } from '../../context/ProjectContext';
+import { detectUserType } from '../../utils/detectUserType';
 
 function Projetos(props) {
     const [searchText, setSearchText] = useState('');
@@ -28,12 +30,24 @@ function Projetos(props) {
     const [mountedPagination, setMountedPagination] = useState(false);
     const [formIsSubmitted, setFormIsSubmitted] = useState(true);
 
+    const userTypeRef = useRef();
+
+
+
+    useMemo(() => {
+        const token = localStorage.getItem('token');
+        const decoded = jwt_decode(token);
+        const { userType, isCoordinator, available } = decoded;
+        userTypeRef.current = (detectUserType(userType, isCoordinator, available));
+        console.debug("ZOIN APARECENDO", userTypeRef.current)
+    })
+
     //const { project, setProject } = useContext(ProjectContext);
 
     const selectItems = [
         {
-            value: 'pré-tcc',
-            displayValue: 'Pré-TCC'
+            value: 'pré-projeto',
+            displayValue: 'Pré-Projeto'
         },
         {
             value: 'tcc1',
@@ -290,15 +304,17 @@ function Projetos(props) {
                                             color={light.color.primary}
                                             size='2rem'
                                         /> &nbsp;&nbsp;
-                                        <AiOutlineEye
-                                            title='Editar orientador'
-                                            cursor='pointer'
-                                            color={light.color.primary}
-                                            size='2rem'
-                                            onClick={
-                                                () => { seeProject(_id) }
-                                            }
-                                        />
+                                        {userTypeRef.current === 'coordenador' &&
+                                            <AiOutlineEye
+                                                title='Editar orientador'
+                                                cursor='pointer'
+                                                color={light.color.primary}
+                                                size='2rem'
+                                                onClick={
+                                                    () => { seeProject(_id) }
+                                                }
+                                            />
+                                        }
                                     </Table.Cell>
                                 </Table.Row>
                             ))

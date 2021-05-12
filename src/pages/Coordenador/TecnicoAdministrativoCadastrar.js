@@ -21,8 +21,8 @@ function TecnicoAdministrativoCadastrar(props) {
     const history = useHistory();
 
     let breadcrumb = [
-        { bread: 'Técnicos Administrativos', link: '/tecnicos_administrativos' },
-        { bread: 'Cadastrar Técnico Administrativo', link: `` },
+        { bread: 'Administrativos', link: '/tecnicos_administrativos' },
+        { bread: 'Cadastrar Administrativo', link: `` },
     ];
 
     const onSubmit = ({ fullName, email, registration }) => {
@@ -59,7 +59,7 @@ function TecnicoAdministrativoCadastrar(props) {
     }
 
     return (
-        <DashboardUI screenName='Cadastrar Técnico Administrativo' itemActive="Técnicos Administrativos" breadcrumb={breadcrumb}>
+        <DashboardUI screenName='Cadastrar Administrativo' itemActive="Administrativos" breadcrumb={breadcrumb}>
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='fullName'>Nome completo</Label>

@@ -139,7 +139,7 @@ function ProjetoCadastrar(props) {
         <DashboardUI screenName='Cadastrar Projeto' itemActive="Meus Projetos" breadcrumb={breadcrumb}>
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
-                <Label htmlFor='title'>Título</Label>
+                <Label htmlFor='title'>Tema</Label>
                 <IconTextField>
                     <MdTitle />
                     <Input
@@ -148,14 +148,14 @@ function ProjetoCadastrar(props) {
                         ref={register({
                             required: true
                         })}
-                        placeholder='Título'
+                        placeholder='Tema'
                         autoFocus
                         style={{ borderColor: errors.title && light.color.secondary }}
                     />
                 </IconTextField>
                 {errors.title &&
                     <ErrorMessage left marginTop marginBottom>
-                        O título é obrigatório
+                        O tema é obrigatório
                     </ErrorMessage>
                 }
 

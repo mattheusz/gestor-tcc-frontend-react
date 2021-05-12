@@ -41,7 +41,7 @@ export const coordenador = [
     },
     {
         icon: <BiUserCircle />,
-        description: 'Técnicos Administrativos',
+        description: 'Administrativos',
         to: '/tecnicos_administrativos'
     },
     {
@@ -56,7 +56,7 @@ export const administrativo = [
     {
         icon: <VscProject />,
         description: 'Projetos',
-        to: '/administrativo/projetos'
+        to: '/projetos'
     },
     {
         icon: <IoMdSchool />,
@@ -70,23 +70,13 @@ export const administrativo = [
     },
     {
         icon: <BiUserCircle />,
-        description: 'Técnicos Administrativos',
+        description: 'Administrativos',
         to: '/tecnicos_administrativos'
-    },
-    {
-        icon: <BsCalendar />,
-        description: 'Datas Importantes*',
-        to: '/datas_importantes'
     },
     {
         icon: <CgFileDocument />,
         description: 'Documentos',
         to: '/documentos'
-    },
-    {
-        icon: <RiGitRepositoryLine />,
-        description: 'Repositório*',
-        to: '/trabalhos_anteriores'
     },
 ]
 
@@ -97,21 +87,10 @@ export const alunoPreProjeto = [
         description: 'Professores',
         to: '/aluno-pre'
     },
-
-    {
-        icon: <BsCalendar />,
-        description: 'Datas Importantes*',
-        to: '/datas_importantes'
-    },
     {
         icon: <CgFileDocument />,
         description: 'Documentos',
         to: '/documentos/visualizar'
-    },
-    {
-        icon: <RiGitRepositoryLine />,
-        description: 'Repositório*',
-        to: '/trabalhos_anteriores'
     },
 ]
 

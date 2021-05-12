@@ -53,7 +53,7 @@ function TarefaProfessorCadastrar(props) {
             .then(response => {
                 console.log(response.data);
                 const notify = () =>
-                    toast.success("Atividade cadastrada com sucesso", {
+                    toast.success("Tarefa cadastrada com sucesso", {
                         autoClose: 2000,
                     }
                     );

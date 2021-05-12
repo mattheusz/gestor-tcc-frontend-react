@@ -75,7 +75,7 @@ function OrientacaoProfessorEditar(props) {
 
     const onSubmit = ({ title, description, customRegisterOrientationDate }) => {
         console.debug('ORIENTATION DATE', format(customRegisterOrientationDate, 'dd/MM/yyyy'));
-        api.patch(`/ orientacao / atualizar_orientacao / ${orientationId}`, {
+        api.patch(`/orientacao/atualizar_orientacao/${orientationId}`, {
             title,
             description,
             dateOrientation: convertZonedTimeToUTC(customRegisterOrientationDate),
@@ -89,7 +89,7 @@ function OrientacaoProfessorEditar(props) {
                     );
                 notify()
                 setTimeout(() => {
-                    history.push(`/ professor / projetos / ${projectId} / orientacoes / ${orientationId}`)
+                    history.push(`/professor/projetos/${projectId}/orientacoes/${orientationId}`)
                 }, 2000);
 
             })

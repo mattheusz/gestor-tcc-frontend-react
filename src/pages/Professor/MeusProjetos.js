@@ -38,8 +38,8 @@ function Projetos(props) {
             displayValue: 'Todos'
         },
         {
-            value: 'pré-tcc',
-            displayValue: 'Pré-TCC'
+            value: 'pré-projeto',
+            displayValue: 'Pré-Projeto'
         },
         {
             value: 'tcc1',

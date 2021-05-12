@@ -260,7 +260,7 @@ function TarefaProfessor(props) {
                 notify();
                 setModalTaskDelivered(false);
                 setTimeout(() => {
-                    history.push(`/professor/projetos/${id}/tarefas/${taskId}`)
+                    history.push(`/professor/projetos/${projectId}/tarefas/${taskId}`)
                 }, 2000);
 
             })
@@ -303,7 +303,7 @@ function TarefaProfessor(props) {
                 notify();
                 setModalTaskDelivered(false);
                 setTimeout(() => {
-                    history.push(`/professor/projetos/${id}/tarefas/${taskId}`)
+                    history.push(`/professor/projetos/${projectId}/tarefas/${taskId}`)
                 }, 2000);
 
             })
@@ -409,7 +409,7 @@ function TarefaProfessor(props) {
                                     color={lightTheme.color.primary}
                                     size='1.5rem'
                                     textSizeRatio={1}
-                                    name='Matheus Justino'
+                                    name='T'
                                     style={{
                                         cursor: 'pointer',
                                     }}
@@ -516,14 +516,14 @@ function TarefaProfessor(props) {
                         {checked &&
                             <>
                                 <form onSubmit={handleSubmitAskForReviewOfATask(onSubmitAskForReviewOfATask)}>
-                                    <Label style={{ display: 'block', marginTop: '7px' }} htmlFor='deadline'>Alterar data de entrega</Label>
+                                    <Label style={{ display: 'block', marginTop: '7px' }} htmlFor='deadline'>Alterar prazo de entrega</Label>
                                     <StyledDatePicker
                                         value={deadline}
                                         onChange={value => handleChangeDeadline(value)}
                                         locale='pt-BR'
                                         timeIntervals={15}
                                         error={errorsAskForReviewOfATask.customRegisterDeadline}
-                                        placeholder="Nova data de entrega"
+                                        placeholder="Novo prazo de entrega"
                                         style={{ borderColor: errorsAskForReviewOfATask.customRegisterDeadline && light.color.secondary }}
                                     />
 

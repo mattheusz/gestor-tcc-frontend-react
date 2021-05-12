@@ -265,9 +265,9 @@ function Alunos(props) {
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell width={2}>Matrícula</Table.HeaderCell>
-                            <Table.HeaderCell width={6}>Nome</Table.HeaderCell>
+                            <Table.HeaderCell width={5}>Nome</Table.HeaderCell>
                             <Table.HeaderCell width={6}>E-mail</Table.HeaderCell>
-                            <Table.HeaderCell width={2}>Ações</Table.HeaderCell>
+                            <Table.HeaderCell width={3}>Ações</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
 

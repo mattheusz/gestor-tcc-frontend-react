@@ -44,6 +44,10 @@ function ListarProfessoresAluno(props) {
         }
     ]
 
+    let breadcrumb = [
+        { bread: 'Professores', link: '' }
+    ];
+
     const isInitialMount = useRef(true);
 
     let totalPages = useRef();
@@ -64,6 +68,7 @@ function ListarProfessoresAluno(props) {
         api.get(`/usuarios/professores_perfil/1`)
             .then(({ data }) => {
                 setTeachers(data.docs)
+                console.log('DOCS', data.docs)
                 currentPage.current = data.page;
                 totalPages.current = data.totalPages;
                 buildPaginatorDesign();
@@ -189,7 +194,7 @@ function ListarProfessoresAluno(props) {
     }
 
     return (
-        <DashboardUI screenName='Professores' itemActive="Professores">
+        <DashboardUI screenName='Professores' itemActive="Professores" breadcrumb={breadcrumb}>
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}
@@ -205,11 +210,12 @@ function ListarProfessoresAluno(props) {
                     teachers.map((value, index) =>
                         <ProfessorCard key={index}>
                             <ProfessorCardImage>
-                                <img alt={value.name} src='https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' />
+                                <img alt={value.name} src={value && value.profilePicture && value.profilePicture.url ? value.profilePicture.url : 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Missing_avatar.svg/425px-Missing_avatar.svg.png'} />
+                                {/**'https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'**/}
                             </ProfessorCardImage>
                             <ProfessorCardBody>
                                 <ProfessorCardBodyName>{value.name}</ProfessorCardBodyName>
-                                <ProfessorCardBodyAboutProfile>{value.aboutProfile}</ProfessorCardBodyAboutProfile>
+                                <ProfessorCardBodyAboutProfile>{value.researchLine}</ProfessorCardBodyAboutProfile>
                                 <ProfessorAvailability available={value.available}>{value.available === 'sim' ? 'Disponível 🟢' : 'Indisponível 🔴'}</ProfessorAvailability>
                                 <ProfessorCardBodyButton onClick={() => openModal(value)}>Ver mais</ProfessorCardBodyButton>
                             </ProfessorCardBody>
@@ -237,11 +243,14 @@ function ListarProfessoresAluno(props) {
 
             >
                 <ModalImage>
-                    <img alt='Professor' src='https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80' />
+                    <img alt='Professor' src={modalTeacherInfo && modalTeacherInfo.profilePicture && modalTeacherInfo.profilePicture.url ? modalTeacherInfo.profilePicture.url : 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Missing_avatar.svg/425px-Missing_avatar.svg.png'} />
                 </ModalImage>
                 <ProfessorCardBodyName>
                     {modalTeacherInfo && modalTeacherInfo.name}
                 </ProfessorCardBodyName>
+                <p style={{ wordBreak: 'break-all', marginBottom: '5px' }}>
+                    {modalTeacherInfo && modalTeacherInfo.researchLine}
+                </p>
                 <p>
                     Desenvolvimento de sistemas web com ênfase em Java, além de especialização elementos
                     modelagem orientada a objeto.
@@ -249,6 +258,8 @@ function ListarProfessoresAluno(props) {
                 <p style={{ wordBreak: 'break-all' }}>
                     {modalTeacherInfo && modalTeacherInfo.email}
                 </p>
+
+                <ProfessorAvailability available={modalTeacherInfo && modalTeacherInfo.available}>{modalTeacherInfo && modalTeacherInfo.available === 'sim' ? 'Disponível 🟢' : 'Indisponível 🔴'}</ProfessorAvailability>
                 <SocialMedias>
                     {modalTeacherInfo && modalTeacherInfo.links && modalTeacherInfo.links.lattes &&
                         <img src={Lattes} id='lattes' alt='Lattes' />
@@ -262,7 +273,7 @@ function ListarProfessoresAluno(props) {
                     {modalTeacherInfo && modalTeacherInfo.links && modalTeacherInfo.links.instagram &&
                         <FaInstagram id='instagram' />
                     }
-                    {modalTeacherInfo && modalTeacherInfo.links && modalTeacherInfo.links.youtubex &&
+                    {modalTeacherInfo && modalTeacherInfo.links && modalTeacherInfo.links.youtube &&
                         <FaYoutube id='youtube' />
                     }
                     {console.debug('Modal is rendering')}
@@ -416,7 +427,7 @@ const ModalImage = styled.div`
     }
 `;
 const SocialMedias = styled.div`
-    display: inline-block;
+    display: block;
 
     svg, img{
         width: 40px;
@@ -426,6 +437,7 @@ const SocialMedias = styled.div`
         padding: 8px;
         border-radius: 50%;
         margin: 0 5px;
+        margin-top:15px;
         background-color: ${props => props.theme.color.primary};
         color: white;
         fill: white;

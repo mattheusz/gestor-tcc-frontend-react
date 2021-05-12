@@ -21,6 +21,7 @@ function ProjetosEditar(props) {
 
     const [availableProfessors, setAvailableProfessors] = useState();
     const [currentAdvisor, setCurrentAdvisor] = useState();
+    const [projectName, setProjectName] = useState();
 
     const { register, handleSubmit, errors } = useForm({ mode: 'onSubmit' });
 
@@ -38,7 +39,7 @@ function ProjetosEditar(props) {
 
     let breadcrumb = [
         { bread: 'Projetos', link: '/projetos' },
-        { bread: `Editar projeto ${name}`, link: '/projetos' },
+        { bread: `Editar o orientador do projeto ${projectName ? projectName : ''}`, link: '/projetos' },
     ];
 
     useEffect(() => {
@@ -66,6 +67,7 @@ function ProjetosEditar(props) {
             .then(response => {
                 console.log('current advisor', response);
                 setCurrentAdvisor(response.data.docs[0].advisor);
+                setProjectName(response.data.docs[0].title)
             })
             .catch(error => {
                 if (error.response) {
@@ -124,7 +126,7 @@ function ProjetosEditar(props) {
     }
 
     return (
-        <DashboardUI screenName='Editar Projeto' itemActive="Projetos" breadcrumb={breadcrumb}>
+        <DashboardUI screenName='Editar Orientador' itemActive="Projetos" breadcrumb={breadcrumb}>
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
                 <Label htmlFor='advisor'>Alterar orientador</Label>

@@ -43,10 +43,6 @@ function ListarTarefasAluno(props) {
             displayValue: 'Concluída'
         },
         {
-            value: 'recusada',
-            displayValue: 'Recusada'
-        },
-        {
             value: 'todas',
             displayValue: 'Todas'
         }

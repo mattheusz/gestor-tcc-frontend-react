@@ -52,7 +52,7 @@ function ProjetoProfessor(props) {
             .then(({ data }) => {
                 console.log('Dados que vem ao remover com sucesso:', data);
                 const notify = () =>
-                    toast.success("Projeto excluído com sucesso", {
+                    toast.success("Projeto excluído com sucesso!", {
                         autoClose: 2000,
                     });
                 notify()

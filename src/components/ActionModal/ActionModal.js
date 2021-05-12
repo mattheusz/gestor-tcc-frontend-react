@@ -22,7 +22,7 @@ function ActionModal({ modalIsOpen, setModalIsOpen, modalMessage, handleConfirmA
                 }
             }}
         >
-            <h2>{modalMessage}</h2>
+            <h1 className='h1CustomModel'>{modalMessage}</h1>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
                 <Button onClick={() => handleConfirmAction()}>Sim</Button>
                 <Button onClick={() => setModalIsOpen(false)}>Cancelar</Button>

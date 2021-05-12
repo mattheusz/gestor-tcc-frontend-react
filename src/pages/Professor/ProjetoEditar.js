@@ -45,8 +45,8 @@ function ProjetoEditar(props) {
 
     const selectOptionItems = [
         {
-            value: 'pré-tcc',
-            displayValue: 'Pré-TCC'
+            value: 'pré-projeto',
+            displayValue: 'Pré-Projeto'
         },
         {
             value: 'tcc1',
@@ -156,7 +156,7 @@ function ProjetoEditar(props) {
             .then(response => {
                 console.log(response.data);
                 const notify = () =>
-                    toast.success("Projeto cadastrado com sucesso", {
+                    toast.success("Projeto atualizado com sucesso", {
                         autoClose: 2000,
                     }
                     );
@@ -202,7 +202,7 @@ function ProjetoEditar(props) {
         <DashboardUI screenName='Editar Projeto' itemActive="Meus Projetos" breadcrumb={breadcrumb}>
 
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='nope'>
-                <Label htmlFor='title'>Título</Label>
+                <Label htmlFor='title'>Tema</Label>
                 <IconTextField>
                     <MdTitle />
                     <Input
@@ -212,14 +212,14 @@ function ProjetoEditar(props) {
                         ref={register({
                             required: true
                         })}
-                        placeholder='Título'
+                        placeholder='Tema'
                         autoFocus
                         style={{ borderColor: errors.fullName && light.color.secondary }}
                     />
                 </IconTextField>
                 {errors.title &&
                     <ErrorMessage left marginTop marginBottom>
-                        O título é obrigatório
+                        O tema é obrigatório
                     </ErrorMessage>
                 }
 

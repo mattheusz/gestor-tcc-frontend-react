@@ -131,7 +131,7 @@ function VerPerfil() {
         })
             .then(response => {
                 console.log(response.data);
-                toast.success("O seu perfil atualizado com sucesso", {
+                toast.success("A sua foto de perfil atualizada com sucesso", {
                     autoClose: 2000,
                 });
                 clearInputFile();

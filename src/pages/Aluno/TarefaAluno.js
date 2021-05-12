@@ -399,7 +399,7 @@ function TarefaAluno(props) {
 
                         <div style={{ display: 'grid', marginTop: '.5rem', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
                             <Button type='submit'>Entregar</Button>
-                            <Button onClick={() => closeTaskDeliverModal()}>Cancelar</Button>
+                            <Button type='button' onClick={() => closeTaskDeliverModal()}>Cancelar</Button>
                         </div>
                     </form>
 

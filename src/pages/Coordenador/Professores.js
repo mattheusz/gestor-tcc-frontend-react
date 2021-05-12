@@ -100,6 +100,7 @@ function Professores(props) {
     const [selectedValue, setSelectedValue] = useState('ativo');
     const [statusProfessorChanged, setStatusProfessorChanged] = useState(false);
     useEffect(() => {
+        console.debug('VALOR SELECIONADO:', selectedValue)
         if (isInitialMount.current) {
             isInitialMount.current = false;
         } else {
@@ -276,9 +277,9 @@ function Professores(props) {
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell width={2}>Matrícula</Table.HeaderCell>
-                            <Table.HeaderCell width={6}>Nome</Table.HeaderCell>
+                            <Table.HeaderCell width={5}>Nome</Table.HeaderCell>
                             <Table.HeaderCell width={6}>E-mail</Table.HeaderCell>
-                            <Table.HeaderCell width={2}>Ações</Table.HeaderCell>
+                            <Table.HeaderCell width={3}>Ações</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
 
@@ -335,7 +336,7 @@ function Professores(props) {
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -70%)',
-                        height: '180px', width: '500px', maxWidth: '90%',
+                        height: '150px', width: '350px', maxWidth: '90%',
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'space-around'
@@ -346,7 +347,7 @@ function Professores(props) {
                     }
                 }}
             >
-                <h1>{modalMessage.current}</h1>
+                <h1 className='h1CustomModel'>{modalMessage.current}</h1>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px 15px' }}>
                     <Button onClick={() => changeStatusProfessor()}>Sim</Button>
                     <Button onClick={() => setModalIsOpen(false)}>Cancelar</Button>

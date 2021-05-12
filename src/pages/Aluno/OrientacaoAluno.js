@@ -38,7 +38,7 @@ function OrientacaoAluno(props) {
     }, []);
 
     return (
-        <DashboardUI screenName={orientation && orientation.title} itemActive="Meus Projetos" i breadcrumb={breadcrumb}>
+        <DashboardUI screenName={orientation && orientation.title} itemActive="Meu Projeto" i breadcrumb={breadcrumb}>
             <OrientationHeader>
                 <OrientationDescription>
                     {orientation && orientation.description}

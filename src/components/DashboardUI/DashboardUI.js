@@ -60,7 +60,7 @@ function DashboardUI({ screenName,
                 toast.success("Tarefa excluída com sucesso", {
                     autoClose: 2000,
                 });
-                history.push(`/professor/projetos/${projectId}/atividades`)
+                history.push(`/professor/projetos/${projectId}/tarefas`)
             })
             .catch(error => {
                 if (error.response) {
@@ -79,7 +79,7 @@ function DashboardUI({ screenName,
         api.delete(`/orientacao/deletar_orientacao/${orientationId}`)
             .then(response => {
                 console.log(response.data);
-                toast.success("Tarefa excluída com sucesso", {
+                toast.success("Orientação excluída com sucesso", {
                     autoClose: 2000,
                 });
                 history.push(redirectToOrientationList)
@@ -133,21 +133,21 @@ function DashboardUI({ screenName,
                                 <ViewTitle>{screenName}</ViewTitle>
                                 {isProfessorActivity &&
                                     <HeaderButtons>
-                                        <MdModeEdit onClick={() => history.push(`/professor/projetos/${projectId}/tarefas/editar/${taskId}`)} />
-                                        <MdDelete onClick={() => setOpenDeleteActivityModal(true)} />
+                                        <MdModeEdit title="Editar" onClick={() => history.push(`/professor/projetos/${projectId}/tarefas/editar/${taskId}`)} />
+                                        <MdDelete title="Excluir" onClick={() => setOpenDeleteActivityModal(true)} />
                                     </HeaderButtons>
                                 }
                                 {isProfessorProject &&
                                     <HeaderButtons>
-                                        <MdModeEdit onClick={() => history.push(`/professor/projetos/editar/${projectId}`)} />
-                                        <MdDelete onClick={() => setOpenDeleteProjectModal(true)} />
+                                        <MdModeEdit title="Editar" onClick={() => history.push(`/professor/projetos/editar/${projectId}`)} />
+                                        <MdDelete title="Excluir" onClick={() => setOpenDeleteProjectModal(true)} />
                                     </HeaderButtons>
                                 }
 
                                 {isProfessorOrientation &&
                                     <HeaderButtons>
-                                        <MdModeEdit onClick={() => history.push(`/professor/projetos/${projectId}/orientacoes/editar/${orientationId}`)} />
-                                        <MdDelete onClick={() => setOpenDeleteOrientationModal(true)} />
+                                        <MdModeEdit title="Editar" onClick={() => history.push(`/professor/projetos/${projectId}/orientacoes/editar/${orientationId}`)} />
+                                        <MdDelete title="Excluir" onClick={() => setOpenDeleteOrientationModal(true)} />
                                     </HeaderButtons>
                                 }
 
@@ -173,7 +173,7 @@ function DashboardUI({ screenName,
                 }}
             >
                 <h2>
-                    Deseja realmente excluir este projeto em andamento?
+                    Deseja realmente excluir este projeto?
                 </h2>
                 <p>
                     Esta ação é irreversível e deve ser tomada com cautela.

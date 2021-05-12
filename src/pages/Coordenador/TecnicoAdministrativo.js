@@ -60,7 +60,7 @@ function TecnicoAdministrativo(props) {
 
     const history = useHistory();
     let breadcrumb = [
-        { bread: 'Técnicos Administrativos', link: 'tecnicos_administrativos' },
+        { bread: 'Administrativos', link: 'tecnicos_administrativos' },
     ];
 
     // carregando todos os tec administrativos ao montar componente
@@ -251,7 +251,7 @@ function TecnicoAdministrativo(props) {
     }
 
     return (
-        <DashboardUI screenName='Técnicos Adiministrativos' itemActive="Técnicos Administrativos" breadcrumb={breadcrumb}>
+        <DashboardUI screenName='Adiministrativos' itemActive="Administrativos" breadcrumb={breadcrumb}>
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}
@@ -267,9 +267,9 @@ function TecnicoAdministrativo(props) {
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell width={2}>Matrícula</Table.HeaderCell>
-                            <Table.HeaderCell width={6}>Nome</Table.HeaderCell>
+                            <Table.HeaderCell width={5}>Nome</Table.HeaderCell>
                             <Table.HeaderCell width={6}>E-mail</Table.HeaderCell>
-                            <Table.HeaderCell width={2}>Ações</Table.HeaderCell>
+                            <Table.HeaderCell width={3}>Ações</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
 

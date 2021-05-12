@@ -92,24 +92,44 @@ function ListarOrientacoesAluno(props) {
             isInitialMount.current = false;
         } else {
 
+            api.get(`/orientacao/orientacoes_projeto/${projectId}/1/1`)
+
+            let path;
+            if (searchText === '') {
+                path = `/orientacao/orientacoes_projeto/${projectId}/1/1`;
+            }
+            else {
+                path = `/orientacao/orientacoes_projeto/titulo/${projectId}/${searchText}/1/1`;
+            }
+            setMountedPagination(false);
+            api.get(path)
+                .then(({ data }) => {
+                    console.debug('ORIENTAÇÕES:', data);
+                    setListOrientations(data.docs)
+                    totalPages.current = data.totalPages;
+                    currentPage.current = data.page;
+                    buildPaginatorDesign();
+                    setSomeOrientationFound(true);
+                    setIsLoading(false);
+                    console.debug('PAGINATOR MONTADO:');
+                })
+                .catch(error => {
+                    if (error.response) {
+                        console.log(error.response);
+                        totalPages.current = 1;
+                        setSomeOrientationFound(false)
+                    }
+                    if (error.request) {
+                        console.log(error.request);
+                    }
+                    else {
+                        console.log('Error', error.message);
+                    }
+                });
+
         }
-        api.get(``)
-            .then(({ data }) => {
 
-            })
-            .catch(error => {
-                if (error.response) {
-                    console.log(error.response);
-                }
-                if (error.request) {
-                    console.log(error.request);
-                }
-                else {
-                    console.log('Error', error.message);
-                }
-            });
-    }, [])
-
+    }, [selectedValue, formIsSubmitted]);
     const addUser = () => {
         history.push(`/professor/projetos/${projectId}/orientacoes/novo`);
     }
@@ -177,7 +197,7 @@ function ListarOrientacoesAluno(props) {
     }
 
     return (
-        <DashboardUI screenName='Orientações' itemActive="Meus Projetos" breadcrumb={breadcrumb}>
+        <DashboardUI screenName='Orientações' itemActive="Meu Projeto" breadcrumb={breadcrumb}>
             <form onSubmit={(e) => onSubmit(e)}>
                 <SearchBar
                     searchText={searchText}
